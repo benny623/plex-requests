@@ -1,6 +1,16 @@
 import Image from "next/image";
+import axios from "axios";
 
-export default function Home() {
+export async function getServerSideProps() {
+  const res = await axios.get("http://localhost:5000/api/users");
+  const users = res.data;
+
+  return {
+    props: { users },
+  };
+}
+
+export default function Home({ users }) {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
