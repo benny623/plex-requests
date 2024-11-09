@@ -7,6 +7,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import RequstForm from '../components/send-request';
+
 export default async function Home() {
   // Get requests json
   const res = await fetch("http://localhost:5000/api/requests");
@@ -14,6 +16,7 @@ export default async function Home() {
 
   return (
     <div className="">
+      <RequstForm />
       <div className="m-20 text-foreground">
         <Table>
           <TableHeader>
