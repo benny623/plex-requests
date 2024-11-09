@@ -37,7 +37,7 @@ app.post("/api/send", async (req, res) => {
     // Run SQL query to insert data
     const result = await pool.query(
       "INSERT INTO requests(request_title, request_year, request_requestor, request_status, request_timestamp, request_type) VALUES($1, $2, $3, $4, NOW(), $5) RETURNING *",
-      [title, year, requestor, status, type]
+      [title, parseInt(year) || null, requestor, status, type]
     );
 
     // Send back the inserted data
