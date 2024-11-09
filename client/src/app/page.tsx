@@ -1,40 +1,43 @@
-import React from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 
 export default async function Home() {
-  const res = await fetch('http://localhost:5000/api/requests');
+  // Get requests json
+  const res = await fetch("http://localhost:5000/api/requests");
   const requests = await res.json();
 
   return (
-    <div>
-      <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Title</TableHead>
-          <TableHead>Release Year</TableHead>
-          <TableHead>Requestor</TableHead>
-          <TableHead>Status</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {requests.map((requests) => (
-          <TableRow key={requests.title}>
-            <TableCell>{requests.title}</TableCell>
-            <TableCell>{requests.release_year}</TableCell>
-            <TableCell>{requests.requestor}</TableCell>
-            <TableCell>{requests.status}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <div className="">
+      <div className="m-20 text-foreground">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Title</TableHead>
+              <TableHead>Release Year</TableHead>
+              <TableHead>Requestor</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {requests.map((requests: any) => (
+              <TableRow key={requests.request_title}>
+                <TableCell>{requests.request_title}</TableCell>
+                <TableCell>{requests.request_year}</TableCell>
+                <TableCell>{requests.request_requestor}</TableCell>
+                <TableCell>{requests.request_type}</TableCell>
+                <TableCell>{requests.request_status}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
