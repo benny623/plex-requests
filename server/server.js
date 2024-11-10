@@ -51,6 +51,36 @@ app.post("/api/send", async (req, res) => {
   }
 });
 
+app.put("/api/update/:id", async (req, res) => {
+  const { id } = req.params;
+
+  console.log(`Update recieved ${JSON.stringify(req.body)}`);
+  // Get updated data
+  const { status } = req.body;
+
+  try {
+    const query = `
+      UPDATE requests
+      SET request_status = $1
+      WHERE request_id = $2
+      RETURNING *
+    `;
+
+    const { rows } = await pool.query(query, [status, id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Request not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Request update successful", request: rows[0] });
+  } catch (err) {
+    console.error("Error updating request:", err);
+    res.status(500).json({ error: "Error updating request" });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
