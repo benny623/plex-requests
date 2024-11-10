@@ -12,6 +12,7 @@ import {
 
 // Define the Request type
 interface Request {
+  request_id: number;
   request_title: string;
   request_year: number;
   request_requestor: string;
@@ -31,7 +32,7 @@ export default function RequestTable() {
     loading: true,
     error: null,
   });
-  //const [query, setQuery] = useState("");
+  const [updatedRequests, setUpdatedRequests] = useState(requests);
 
   // Get requests json
   useEffect(() => {
@@ -53,6 +54,41 @@ export default function RequestTable() {
 
     fetchData();
   }, []);
+
+  const handleStatusChange = async (e: any, requestId: number) => {
+    const newStatus = e.target.value;
+    
+    // Update the status locally for immediate feedback
+    const updatedRequestList = updatedRequests.map((request) =>
+      request.request_id === requestId ? { ...request, request_status: newStatus } : request
+    );
+    setUpdatedRequests(updatedRequestList);
+
+    // Send update to server
+    try {
+      const response = await fetch(`http://localhost:5000/api/update/${requestId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update status")
+      }
+
+      const updatedRequest = await response.json();
+      console.log("Status updated", updatedRequest);
+    } catch (error) {
+      console.error("Error updating status:", error);
+
+      const revertedRequestList = updatedRequests.map((request) =>
+        request.request_id === requestId ? { ...request, request_status: request.request_status } : request
+      );
+      setUpdatedRequests(revertedRequestList)
+    }
+  }
 
   return (
     <div className="m-20 text-foreground">
@@ -79,9 +115,7 @@ export default function RequestTable() {
                     id="status"
                     name="status"
                     value={request.request_status}
-                    onChange={(e) => {
-                      // Handle select change logic here
-                    }}
+                    onChange={(e) => handleStatusChange(e, request.request_id)}
                   >
                     <option value="new">New</option>
                     <option value="in progress">In Progress</option>

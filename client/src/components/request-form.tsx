@@ -16,7 +16,6 @@ export default function RequestForm() {
       ...formState,
       [e.target.name]: e.target.value,
     });
-    console.log(formState);
   };
 
   const handleSubmit = async (e: any) => {
