@@ -109,27 +109,35 @@ export default function RequestTable() {
         </TableHeader>
         <TableBody>
           {requests.length > 0 ? (
-            requests.map((request) => (
-              <TableRow key={request.request_title}>
-                <TableCell>{request.request_title}</TableCell>
-                <TableCell>{request.request_year}</TableCell>
-                <TableCell>{request.request_requestor}</TableCell>
-                <TableCell>{request.request_type}</TableCell>
-                <TableCell>
-                  <select
-                    id="status"
-                    name="status"
-                    value={request.request_status}
-                    onChange={(e) => handleStatusChange(e, request.request_id)}
-                  >
-                    <option value="New">New</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Complete">Complete</option>
-                  </select>
-                </TableCell>
-              </TableRow>
-            ))
+            // Add all rows from DB
+            requests.map((request) => {
+              if (request.request_status != "Complete") {
+                return (
+                  <TableRow key={request.request_title}>
+                    <TableCell>{request.request_title}</TableCell>
+                    <TableCell>{request.request_year}</TableCell>
+                    <TableCell>{request.request_requestor}</TableCell>
+                    <TableCell>{request.request_type}</TableCell>
+                    <TableCell>
+                      <select
+                        id="status"
+                        name="status"
+                        value={request.request_status}
+                        onChange={(e) =>
+                          handleStatusChange(e, request.request_id)
+                        }
+                      >
+                        <option value="New">New</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Complete">Complete</option>
+                      </select>
+                    </TableCell>
+                  </TableRow>
+                );
+              }
+            })
           ) : (
+            // If no requests are found
             <TableRow>
               <TableCell colSpan={5}>No requests found</TableCell>
             </TableRow>
