@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { fetchAllRequests } from "@/lib/fetchAllRequests";
 import {
   Table,
   TableBody,
@@ -21,74 +22,78 @@ interface Request {
 }
 
 // Define the state type for `stat`
-interface Stat {
+interface Status {
   loading: boolean;
   error: string | null;
 }
 
 export default function RequestTable() {
   const [requests, setRequests] = useState<Request[]>([]);
-  const [stat, setStat] = useState<Stat>({
+  const [updatedRequests, setUpdatedRequests] = useState(requests);
+  const [status, setStatus] = useState<Status>({
     loading: true,
     error: null,
   });
-  const [updatedRequests, setUpdatedRequests] = useState(requests);
+
+  const fetchData = async () => {
+    setStatus({ loading: true, error: null });
+    try {
+      const result = await fetchAllRequests();
+      setRequests(result);
+    } catch (err: unknown) {
+      setStatus({ loading: false, error: (err as Error).message });
+    } finally {
+      setStatus((prev) => ({ ...prev, loading: false }));
+    }
+  };
 
   // Get requests json
   useEffect(() => {
-    const fetchData = async () => {
-      setStat({ loading: true, error: null });
-      try {
-        const res = await fetch("http://localhost:5000/api/requests");
-        if (!res.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const result = await res.json();
-        setRequests(result); // Send data to State
-      } catch (err: unknown) {
-        setStat({ loading: false, error: (err as Error).message }); // Ensure correct type
-      } finally {
-        setStat((prev) => ({ ...prev, loading: false })); // Fetch complete
-      }
-    };
-
     fetchData();
   }, []);
 
   const handleStatusChange = async (e: any, requestId: number) => {
     const newStatus = e.target.value;
-    
+
     // Update the status locally for immediate feedback
     const updatedRequestList = updatedRequests.map((request) =>
-      request.request_id === requestId ? { ...request, request_status: newStatus } : request
+      request.request_id === requestId
+        ? { ...request, request_status: newStatus }
+        : request
     );
     setUpdatedRequests(updatedRequestList);
 
     // Send update to server
     try {
-      const response = await fetch(`http://localhost:5000/api/update/${requestId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/update/${requestId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
 
       if (!response.ok) {
-        throw new Error("Failed to update status")
+        throw new Error("Failed to update status");
       }
 
       const updatedRequest = await response.json();
       console.log("Status updated", updatedRequest);
+      await fetchData();
     } catch (error) {
       console.error("Error updating status:", error);
 
       const revertedRequestList = updatedRequests.map((request) =>
-        request.request_id === requestId ? { ...request, request_status: request.request_status } : request
+        request.request_id === requestId
+          ? { ...request, request_status: request.request_status }
+          : request
       );
-      setUpdatedRequests(revertedRequestList)
+      setUpdatedRequests(revertedRequestList);
     }
-  }
+  };
 
   return (
     <div className="m-20 text-foreground">
@@ -117,9 +122,9 @@ export default function RequestTable() {
                     value={request.request_status}
                     onChange={(e) => handleStatusChange(e, request.request_id)}
                   >
-                    <option value="new">New</option>
-                    <option value="in progress">In Progress</option>
-                    <option value="complete">Complete</option>
+                    <option value="New">New</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Complete">Complete</option>
                   </select>
                 </TableCell>
               </TableRow>

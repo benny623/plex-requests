@@ -7,7 +7,7 @@ export default function RequestForm() {
     title: "",
     year: "",
     requestor: "",
-    status: "new",
+    status: "New",
     type: "Movie",
   });
 
