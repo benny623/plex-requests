@@ -11,7 +11,7 @@ export default function RequestForm() {
     type: "Movie",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setFormState({
       ...formState,
       [e.target.name]: e.target.value,
@@ -19,7 +19,7 @@ export default function RequestForm() {
     console.log(formState);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
       const res = await fetch("http://localhost:5000/api/send", {
