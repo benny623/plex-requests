@@ -20,7 +20,11 @@ app.use(cors());
 // Get all requests
 app.get("/api/requests", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM requests r");
+    const result = await pool.query(`
+        SELECT *
+        FROM requests r
+        ORDER BY request_timestamp ASC;
+      `);
     res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -51,6 +55,7 @@ app.get("/api/completed-requests", async (req, res) => {
         SELECT *
         FROM requests
         WHERE request_status = 'Complete'
+        ORDER BY request_timestamp ASC;
       `);
     res.json(result.rows);
   } catch (err) {
@@ -67,7 +72,11 @@ app.post("/api/send", async (req, res) => {
   try {
     // Run SQL query to insert data
     const result = await pool.query(
-      "INSERT INTO requests(request_title, request_year, request_requestor, request_status, request_timestamp, request_type) VALUES($1, $2, $3, $4, NOW(), $5) RETURNING *",
+      `
+        INSERT INTO requests(request_title, request_year, request_requestor, request_status, request_timestamp, request_type)
+        VALUES($1, $2, $3, $4, NOW(), $5)
+        RETURNING *
+      `,
       [title, parseInt(year) || null, requestor, status, type]
     );
 
