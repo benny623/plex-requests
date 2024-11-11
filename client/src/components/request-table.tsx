@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchAllRequests } from "@/lib/fetchAllRequests";
+import { fetchCurrentRequests } from "@/lib/fetchRequests";
 import {
   Table,
   TableBody,
@@ -38,7 +38,7 @@ export default function RequestTable() {
   const fetchData = async () => {
     setStatus({ loading: true, error: null });
     try {
-      const result = await fetchAllRequests();
+      const result = await fetchCurrentRequests();
       setRequests(result);
     } catch (err: unknown) {
       setStatus({ loading: false, error: (err as Error).message });

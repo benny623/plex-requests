@@ -17,9 +17,9 @@ const pool = new Pool({
 app.use(express.json());
 app.use(cors());
 
+// Get all requests
 app.get("/api/requests", async (req, res) => {
   try {
-    // Get all requests
     const result = await pool.query("SELECT * FROM requests r");
     res.json(result.rows);
   } catch (err) {
@@ -28,10 +28,40 @@ app.get("/api/requests", async (req, res) => {
   }
 });
 
+// Get only New/In Progress requests
+app.get("/api/current-requests", async (req, res) => {
+  try {
+    const result = await pool.query(`
+        SELECT *
+        FROM requests
+        WHERE request_status <> 'Complete'
+      `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Get completed requests
+app.get("/api/current-requests", async (req, res) => {
+  try {
+    const result = await pool.query(`
+        SELECT *
+        FROM requests
+        WHERE request_status = 'Complete'
+      `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Add new request
 app.post("/api/send", async (req, res) => {
   console.log(`Request recieved ${JSON.stringify(req.body)}`);
-  // Get form and user data
-  const { title, year, requestor, status, type } = req.body;
+  const { title, year, requestor, status, type } = req.body; // Get form and user data
 
   try {
     // Run SQL query to insert data
@@ -51,12 +81,12 @@ app.post("/api/send", async (req, res) => {
   }
 });
 
+// Update request via ID
 app.put("/api/update/:id", async (req, res) => {
-  const { id } = req.params;
-
   console.log(`Update recieved ${JSON.stringify(req.body)}`);
-  // Get updated data
-  const { status } = req.body;
+
+  const { id } = req.params;
+  const { status } = req.body; // Get updated data
 
   try {
     const query = `
