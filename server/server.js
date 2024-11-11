@@ -35,6 +35,7 @@ app.get("/api/current-requests", async (req, res) => {
         SELECT *
         FROM requests
         WHERE request_status <> 'Complete'
+        ORDER BY request_timestamp ASC;
       `);
     res.json(result.rows);
   } catch (err) {
