@@ -52,7 +52,6 @@ export default function CompletedRequests() {
         </TableHeader>
         <TableBody>
           {requests.length > 0 ? (
-            // Add all rows from DB
             requests.map((request) => (
               <TableRow key={request.request_title}>
                 <TableCell>{request.request_title}</TableCell>
