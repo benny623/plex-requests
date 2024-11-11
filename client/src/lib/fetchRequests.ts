@@ -17,3 +17,13 @@ export const fetchCurrentRequests = async () => {
 
   return await response.json();
 };
+
+export const fetchCompletedRequests = async () => {
+  const response = await fetch("http://localhost:5000/api/completed-requests");
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch all requests");
+  }
+
+  return await response.json();
+};

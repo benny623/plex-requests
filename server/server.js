@@ -44,7 +44,7 @@ app.get("/api/current-requests", async (req, res) => {
 });
 
 // Get completed requests
-app.get("/api/current-requests", async (req, res) => {
+app.get("/api/completed-requests", async (req, res) => {
   try {
     const result = await pool.query(`
         SELECT *
