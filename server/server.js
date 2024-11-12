@@ -23,7 +23,7 @@ app.get("/api/requests", async (req, res) => {
     const result = await pool.query(`
         SELECT *
         FROM requests r
-        ORDER BY request_timestamp ASC;
+        ORDER BY request_timestamp;
       `);
     res.json(result.rows);
   } catch (err) {
@@ -39,7 +39,7 @@ app.get("/api/current-requests", async (req, res) => {
         SELECT *
         FROM requests
         WHERE request_status <> 'Complete'
-        ORDER BY request_timestamp ASC;
+        ORDER BY request_timestamp;
       `);
     res.json(result.rows);
   } catch (err) {
@@ -55,7 +55,7 @@ app.get("/api/completed-requests", async (req, res) => {
         SELECT *
         FROM requests
         WHERE request_status = 'Complete'
-        ORDER BY request_timestamp ASC;
+        ORDER BY request_timestamp;
       `);
     res.json(result.rows);
   } catch (err) {
