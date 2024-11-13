@@ -25,6 +25,9 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   const server = express();
 
+  // Middleware to parse JSON bodies
+  server.use(express.json());
+
   // Get all requests
   server.get("/api/requests", async (req, res) => {
     try {
