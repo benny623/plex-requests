@@ -21,7 +21,7 @@ export default function RequestForm() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:5000/api/send", {
+      const res = await fetch("/api/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

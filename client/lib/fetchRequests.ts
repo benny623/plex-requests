@@ -1,5 +1,5 @@
 export const fetchAllRequests = async () => {
-  const response = await fetch("http://localhost:5000/api/requests");
+  const response = await fetch("/api/requests");
 
   if (!response.ok) {
     throw new Error("Failed to fetch all requests");
@@ -9,7 +9,7 @@ export const fetchAllRequests = async () => {
 };
 
 export const fetchCurrentRequests = async () => {
-  const response = await fetch("http://localhost:5000/api/current-requests");
+  const response = await fetch("/api/current-requests");
 
   if (!response.ok) {
     throw new Error("Failed to fetch all requests");
@@ -19,7 +19,7 @@ export const fetchCurrentRequests = async () => {
 };
 
 export const fetchCompletedRequests = async () => {
-  const response = await fetch("http://localhost:5000/api/completed-requests");
+  const response = await fetch("/api/completed-requests");
 
   if (!response.ok) {
     throw new Error("Failed to fetch all requests");

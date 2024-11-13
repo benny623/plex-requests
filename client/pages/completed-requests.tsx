@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchCompletedRequests } from "@/lib/fetchRequests";
+import { fetchCompletedRequests } from "../lib/fetchRequests";
 import {
   Table,
   TableBody,
@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "../components/ui/table";
 
 // Define the Request type
 interface Request {

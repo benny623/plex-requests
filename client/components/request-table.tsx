@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchCurrentRequests } from "@/lib/fetchRequests";
+import { fetchCurrentRequests } from "../lib/fetchRequests";
 import {
   Table,
   TableBody,
@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "./ui/table";
 
 // Define the Request type
 interface Request {
@@ -66,7 +66,7 @@ export default function RequestTable() {
     // Send update to server
     try {
       const response = await fetch(
-        `http://localhost:5000/api/update/${requestId}`,
+        `/api/update/${requestId}`,
         {
           method: "PUT",
           headers: {
