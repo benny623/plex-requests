@@ -2,12 +2,6 @@ const express = require("express");
 const next = require("next");
 const { Pool } = require("pg");
 require("dotenv").config();
-//const cors = require("cors");
-
-// const app = express();
-// const port = process.env.PORT || 5000;
-// app.use(express.json());
-// app.use(cors());
 
 const pool = new Pool({
   user: process.env.PG_USER,
@@ -17,7 +11,7 @@ const pool = new Pool({
   port: process.env.PG_PORT || 5432,
 });
 
-// Next.js setup
+// Next.js server setup
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
