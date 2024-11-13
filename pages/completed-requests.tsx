@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../components/ui/table";
+} from "../src/components/ui/table";
 
 // Define the Request type
 interface Request {
