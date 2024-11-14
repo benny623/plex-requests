@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 
-export default function RequestForm() {
+type RequestFormProps = {
+  refetch: boolean, // Ensure requestsData is an array
+};
+
+const RequestForm: React.FC<RequestFormProps> = ({ refetch }) => {
   const [formState, setFormState] = useState({
     title: "",
     year: "",
@@ -39,6 +43,7 @@ export default function RequestForm() {
           year: "",
           type: "Movie",
         });
+        refetch = !refetch;
       } else {
         console.log(`POST Failure: ${result.error || "An error occured"}`);
       }
@@ -87,3 +92,5 @@ export default function RequestForm() {
     </form>
   );
 }
+
+export default RequestForm;
