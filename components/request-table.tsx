@@ -1,16 +1,7 @@
 "use client";
 
-import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { fetchCurrentRequests } from "../lib/fetchRequests";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../src/components/ui/table";
+import { fetchCurrentRequests } from "@/lib/fetchRequests";
 
 // Define the Request type
 interface Request {
@@ -27,130 +18,128 @@ type RequestTableProps = {
 };
 
 // Define the state type for `stat`
-// interface Status {
-//   loading: boolean;
-//   error: string | null;
-// }
+interface Status {
+  loading: boolean;
+  error: string | null;
+}
 
-const RequestTable: React.FC<RequestTableProps> = ({ requestsData }) => {
-  //const [requests, setRequests] = useState<Request[]>([]);
-  const [updatedRequests, setUpdatedRequests] = useState(requestsData);
-  // const [status, setStatus] = useState<Status>({
-  //   loading: true,
-  //   error: null,
-  // });
+export default function RequestTable() {
+  const [requests, setRequests] = useState<Request[]>([]);
+  const [updatedRequests, setUpdatedRequests] = useState(requests);
+  const [status, setStatus] = useState<Status>({
+    loading: true,
+    error: null,
+  });
 
-  // const fetchData = async () => {
-  //   setStatus({ loading: true, error: null });
-  //   try {
-  //     const result = await fetchCurrentRequests();
-  //     setRequests(result);
-  //   } catch (err: unknown) {
-  //     setStatus({ loading: false, error: (err as Error).message });
-  //   } finally {
-  //     setStatus((prev) => ({ ...prev, loading: false }));
-  //   }
-  // };
+  const fetchData = async () => {
+    setStatus({ loading: true, error: null });
+    try {
+      const result = await fetchCurrentRequests();
+      setRequests(result);
+    } catch (err: unknown) {
+      setStatus({ loading: false, error: (err as Error).message });
+    } finally {
+      setStatus((prev) => ({ ...prev, loading: false }));
+    }
+  };
 
   // Get requests json
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  // const handleStatusChange = async (e: any, requestId: number) => {
-  //   const newStatus = e.target.value;
+  const handleStatusChange = async (e: any, requestId: number) => {
+    const newStatus = e.target.value;
 
-  //   // Update the status locally for immediate feedback
-  //   const updatedRequestList = updatedRequests.map((request) =>
-  //     request.request_id === requestId
-  //       ? { ...request, request_status: newStatus }
-  //       : request
-  //   );
-  //   setUpdatedRequests(updatedRequestList);
+    // Update the status locally for immediate feedback
+    const updatedRequestList = updatedRequests.map((request: any) =>
+      request.request_id === requestId
+        ? { ...request, request_status: newStatus }
+        : request
+    );
+    setUpdatedRequests(updatedRequestList);
 
-  //   // Send update to server
-  //   try {
-  //     const response = await fetch(
-  //       `/api/update/${requestId}`,
-  //       {
-  //         method: "PUT",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ status: newStatus }),
-  //       }
-  //     );
+    // Send update to server
+    try {
+      const response = await fetch(
+        `/api/update/${requestId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
 
-  //     if (!response.ok) {
-  //       throw new Error("Failed to update status");
-  //     }
+      if (!response.ok) {
+        throw new Error("Failed to update status");
+      }
 
-  //     const updatedRequest = await response.json();
-  //     console.log("Status updated", updatedRequest);
-  //     await fetchData();
-  //   } catch (error) {
-  //     console.error("Error updating status:", error);
+      const updatedRequest = await response.json();
+      console.log("Status updated", updatedRequest);
+      await fetchData();
+    } catch (error) {
+      console.error("Error updating status:", error);
 
-  //     const revertedRequestList = updatedRequests.map((request) =>
-  //       request.request_id === requestId
-  //         ? { ...request, request_status: request.request_status }
-  //         : request
-  //     );
-  //     setUpdatedRequests(revertedRequestList);
-  //   }
-  // };
+      const revertedRequestList = updatedRequests.map((request) =>
+        request.request_id === requestId
+          ? { ...request, request_status: request.request_status }
+          : request
+      );
+      setUpdatedRequests(revertedRequestList);
+    }
+  };
 
   return (
-    <div className="m-20 text-foreground">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Title</TableHead>
-            <TableHead>Release Year</TableHead>
-            <TableHead>Requestor</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {requestsData.length > 0 ? (
+    <div className="overflow-x-auto">
+      <table className="table table-xs table-pin-rows">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Release Year</th>
+            <th>Requestor</th>
+            <th>Type</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+        {requests.length > 0 ? (
             // Add all rows from DB
-            requestsData.map((request: any) => {
+            requests.map((request: any) => {
               if (request.request_status != "Complete") {
                 return (
-                  <TableRow key={request.request_title}>
-                    <TableCell>{request.request_title}</TableCell>
-                    <TableCell>{request.request_year}</TableCell>
-                    <TableCell>{request.request_requestor}</TableCell>
-                    <TableCell>{request.request_type}</TableCell>
-                    <TableCell>
+                  <tr key={request.request_title}>
+                    <td>{request.request_title}</td>
+                    <td>{request.request_year}</td>
+                    <td>{request.request_requestor}</td>
+                    <td>{request.request_type}</td>
+                    <td>
                       <select
                         id="status"
                         name="status"
                         value={request.request_status}
-                        // onChange={(e) =>
-                        //   handleStatusChange(e, request.request_id)
-                        // }
+                        onChange={(e) =>
+                          handleStatusChange(e, request.request_id)
+                        }
                       >
                         <option value="New">New</option>
                         <option value="In Progress">In Progress</option>
                         <option value="Complete">Complete</option>
                       </select>
-                    </TableCell>
-                  </TableRow>
+                    </td>
+                  </tr>
                 );
               }
             })
           ) : (
             // If no requests are found
-            <TableRow>
-              <TableCell colSpan={5}>No requests found</TableCell>
-            </TableRow>
+            <tr>
+              <td>No requests found</td>
+            </tr>
           )}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
     </div>
   );
 }
-
-export default RequestTable;
