@@ -1,15 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchCompletedRequests } from "../lib/fetchRequests";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../src/components/ui/table";
+import { fetchCompletedRequests } from "@/lib/fetchRequests";
 
 // Define the Request type
 interface Request {
@@ -39,49 +31,52 @@ export default function CompletedRequests() {
   }, []);
 
   return (
-    <div className="m-20 text-foreground">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Title</TableHead>
-            <TableHead>Release Year</TableHead>
-            <TableHead>Requestor</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+    <div className="h-96 overflow-x-auto">
+      <table className="table table-pin-rows">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Release Year</th>
+            <th>Requestor</th>
+            <th>Type</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
           {requests.length > 0 ? (
-            requests.map((request) => (
-              <TableRow key={request.request_title}>
-                <TableCell>{request.request_title}</TableCell>
-                <TableCell>{request.request_year}</TableCell>
-                <TableCell>{request.request_requestor}</TableCell>
-                <TableCell>{request.request_type}</TableCell>
-                <TableCell>
-                  <select
-                    id="status"
-                    name="status"
-                    value={request.request_status}
-                    // onChange={(e) =>
-                    //   handleStatusChange(e, request.request_id)
-                    // }
-                  >
-                    <option value="New">New</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Complete">Complete</option>
-                  </select>
-                </TableCell>
-              </TableRow>
-            ))
+            // Add all rows from DB
+            requests.map((request: any) => {
+              if (request.request_status != "Complete") {
+                return (
+                  <tr key={request.request_title}>
+                    <td>{request.request_title}</td>
+                    <td>{request.request_year}</td>
+                    <td>{request.request_requestor}</td>
+                    <td>{request.request_type}</td>
+                    <td>
+                      <select
+                        id="status"
+                        name="status"
+                        value={request.request_status}
+                        className="select select-bordered select-sm w-full max-w-xs"
+                      >
+                        <option value="New">New</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Complete">Complete</option>
+                      </select>
+                    </td>
+                  </tr>
+                );
+              }
+            })
           ) : (
             // If no requests are found
-            <TableRow>
-              <TableCell colSpan={5}>No requests found</TableCell>
-            </TableRow>
+            <tr>
+              <td>No requests found</td>
+            </tr>
           )}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
     </div>
   );
 }

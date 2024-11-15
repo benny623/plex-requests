@@ -3,7 +3,7 @@ import RequstForm from "@/components/request-form";
 
 export default function Home() {
   return (
-    <div className="bg-slate-600">
+    <div className="h-screen">
       <RequstForm />
       <RequestTable />
     </div>

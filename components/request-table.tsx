@@ -92,8 +92,8 @@ export default function RequestTable() {
   };
 
   return (
-    <div className="overflow-x-auto">
-      <table className="table table-xs table-pin-rows">
+    <div className="h-96 overflow-x-auto">
+      <table className="table table-pin-rows">
         <thead>
           <tr>
             <th>Title</th>
@@ -122,6 +122,7 @@ export default function RequestTable() {
                         onChange={(e) =>
                           handleStatusChange(e, request.request_id)
                         }
+                        className="select select-bordered select-sm w-full max-w-xs"
                       >
                         <option value="New">New</option>
                         <option value="In Progress">In Progress</option>
