@@ -18,37 +18,8 @@ export default function RequestForm() {
     });
   };
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    try {
-      const res = await fetch("/api/send", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formState),
-      });
-
-      const result = await res.json();
-
-      if (res.ok) {
-        console.log("POST Success");
-        setFormState({
-          ...formState,
-          title: "",
-          year: "",
-          type: "Movie",
-        });
-      } else {
-        console.log(`POST Failure: ${result.error || "An error occured"}`);
-      }
-    } catch (err) {
-      console.error("Error:", err);
-    }
-  };
-
   return (
-    <form className="w-full max-w-lg form-control" onSubmit={handleSubmit}>
+    <form className="w-full max-w-lg form-control">
       <div className="flex flex-wrap -mx-3 mb-6">
         <div className="w-full px-3">
           <label className="input input-bordered flex items-center">
@@ -59,7 +30,7 @@ export default function RequestForm() {
               placeholder="Title"
               value={formState.title}
               onChange={handleChange}
-              className="grow"
+              className="input input-bordered flex items-center grow"
             />
           </label>
         </div>

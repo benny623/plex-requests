@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchCurrentRequests } from "@/lib/fetchRequests";
+import { fetchCompletedRequests } from "@/lib/fetchRequests";
 import Link from "next/link";
 
 // Define the Request type
@@ -24,7 +24,7 @@ interface Status {
   error: string | null;
 }
 
-export default function RequestTable() {
+export default function CompletedRequests() {
   const [requests, setRequests] = useState<Request[]>([]);
   const [updatedRequests, setUpdatedRequests] = useState(requests);
   const [status, setStatus] = useState<Status>({
@@ -35,7 +35,7 @@ export default function RequestTable() {
   const fetchData = async () => {
     setStatus({ loading: true, error: null });
     try {
-      const result = await fetchCurrentRequests();
+      const result = await fetchCompletedRequests();
       setRequests(result);
     } catch (err: unknown) {
       setStatus({ loading: false, error: (err as Error).message });
@@ -92,14 +92,16 @@ export default function RequestTable() {
   function statusColor(status: string) {
     switch (status) {
       case "New":
-        return "select-secondary";
-      case "In Progress":
         return "select-primary";
+      case "In Progress":
+        return "select-secondary";
+      case "Complete":
+        return "select-success";
     }
   }
 
   return (
-    <div id="requests-table" className="min-h-screen flex justify-center items-center py-10">
+    <div className="min-h-screen flex justify-center items-center py-10">
       <table className="table w-full max-w-4xl border-collapse table-pin-rows">
         <thead>
           <tr>
@@ -114,39 +116,35 @@ export default function RequestTable() {
           {requests.length > 0 ? (
             // Add all rows from DB
             requests.map((request: any) => {
-              if (request.request_status != "Complete") {
-                return (
-                  <tr key={request.request_title}>
-                    <td>{request.request_title}</td>
-                    <td>{request.request_year}</td>
-                    <td>{request.request_requestor}</td>
-                    <td>{request.request_type}</td>
-                    <td>
-                      <select
-                        id="status"
-                        name="status"
-                        value={request.request_status}
-                        onChange={(e) =>
-                          handleStatusChange(e, request.request_id)
-                        }
-                        className={`select w-full max-w-xs select-sm ${statusColor(
-                          request.request_status
-                        )}`}
-                      >
-                        <option className="bg-secondary" value="New">
-                          New
-                        </option>
-                        <option className="bg-primary" value="In Progress">
-                          In Progress
-                        </option>
-                        <option className="bg-success" value="Complete">
-                          Complete
-                        </option>
-                      </select>
-                    </td>
-                  </tr>
-                );
-              }
+              return (
+                <tr key={request.request_title}>
+                  <td>{request.request_title}</td>
+                  <td>{request.request_year}</td>
+                  <td>{request.request_requestor}</td>
+                  <td>{request.request_type}</td>
+                  <td>
+                    <select
+                      id="status"
+                      name="status"
+                      value={request.request_status}
+                      onChange={(e) =>
+                        handleStatusChange(e, request.request_id)
+                      }
+                      className="select w-full max-w-xs select-sm select-success"
+                    >
+                      <option className="bg-secondary" value="New">
+                        New
+                      </option>
+                      <option className="bg-primary" value="In Progress">
+                        In Progress
+                      </option>
+                      <option className="bg-success" value="Complete">
+                        Complete
+                      </option>
+                    </select>
+                  </td>
+                </tr>
+              );
             })
           ) : (
             // If no requests are found
@@ -158,9 +156,8 @@ export default function RequestTable() {
         <tfoot>
           <tr>
             <td colSpan={5} style={{ textAlign: "center" }}>
-              Don't see your request? Check here:{" "}
               <strong>
-                <Link href={"/completed-requests"}>Completed Requests</Link>
+                <Link href={"/#requests-table"}>Go Back</Link>
               </strong>
             </td>
           </tr>
