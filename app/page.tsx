@@ -78,7 +78,7 @@ export default function Home() {
     setStatus({ loading: true, error: "", success: false });
 
     try {
-      const res = await fetch("/api/send", {
+      const res = await fetch("/api/send-request", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
