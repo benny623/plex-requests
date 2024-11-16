@@ -2,7 +2,9 @@ import { query } from "@/lib/db";
 
 export default async function handler(req, res) {
   console.log(`Request recieved ${JSON.stringify(req.body)}`);
+
   const { title, year, requestor, status, type } = req.body; // Get form and user data
+  
   try {
     // Run SQL query to insert data
     const result = await query(
@@ -16,7 +18,7 @@ export default async function handler(req, res) {
     // Send back the inserted data
     res.status(201).json({
       message: "POST success",
-      item: result.rows[0],
+      item: result.rows,
     });
   } catch (err) {
     console.error("POST failure:", err);

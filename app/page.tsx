@@ -25,18 +25,6 @@ export default function Home() {
     success: false,
   });
 
-  const handleChange = (e: any) => {
-    setFormState({
-      ...formState,
-      [e.target.name]: e.target.value,
-    });
-    // Clear any existing errors for the field
-    setFormErrors({
-      ...formErrors,
-      [e.target.name]: "",
-    });
-  };
-
   const validateForm = () => {
     let valid = true;
     const errors = {
@@ -65,6 +53,18 @@ export default function Home() {
 
     setFormErrors(errors);
     return valid;
+  };
+
+  const handleChange = (e: any) => {
+    setFormState({
+      ...formState,
+      [e.target.name]: e.target.value,
+    });
+    // Clear any existing errors for the field
+    setFormErrors({
+      ...formErrors,
+      [e.target.name]: "",
+    });
   };
 
   const handleSubmit = useCallback(async (e: any) => {

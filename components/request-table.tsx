@@ -42,7 +42,7 @@ export default function RequestTable({ requests }: RequestTableProps) {
 
     // Send update to server
     try {
-      const response = await fetch(`/api/update/${requestId}`, {
+      const response = await fetch(`/api/update-request/${requestId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
