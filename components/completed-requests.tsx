@@ -14,10 +14,6 @@ interface Request {
   request_status: string;
 }
 
-type RequestTableProps = {
-  requestsData: Request[]; // Ensure requestsData is an array
-};
-
 // Define the state type for `stat`
 interface Status {
   loading: boolean;
@@ -88,17 +84,6 @@ export default function CompletedRequests() {
       setUpdatedRequests(revertedRequestList);
     }
   };
-
-  function statusColor(status: string) {
-    switch (status) {
-      case "New":
-        return "select-primary";
-      case "In Progress":
-        return "select-secondary";
-      case "Complete":
-        return "select-success";
-    }
-  }
 
   return (
     <div className="min-h-screen flex justify-center items-center py-10">

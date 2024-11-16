@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import RequestTable from "@/components/request-table";
-//import RequstForm from "@/components/request-form";
+import { fetchCurrentRequests } from "@/lib/fetchRequests";
 import Link from "next/link";
 
 export default function Home() {
+  const [requests, setRequests] = useState([]);
   const [formState, setFormState] = useState({
     title: "",
     year: "",
@@ -13,6 +14,11 @@ export default function Home() {
     status: "New",
     type: "Movie",
   });
+    const [status, setStatus] = useState({
+    loading: true,
+    error: "",
+  });
+
 
   const handleChange = (e: any) => {
     setFormState({
@@ -20,7 +26,8 @@ export default function Home() {
       [e.target.name]: e.target.value,
     });
   };
-  const handleSubmit = async (e: any) => {
+
+  const handleSubmit = useCallback(async (e: any) => {
     e.preventDefault();
     try {
       const res = await fetch("/api/send", {
@@ -36,18 +43,39 @@ export default function Home() {
       if (res.ok) {
         console.log("POST Success");
         setFormState({
-          ...formState,
           title: "",
           year: "",
+          requestor: "",
+          status: "New",
           type: "Movie",
         });
+
+        // Refetch requests data for table
+        fetchData();
       } else {
         console.log(`POST Failure: ${result.error || "An error occured"}`);
       }
     } catch (err) {
       console.error("Error:", err);
     }
+  }, [formState]);
+
+  const fetchData = async () => {
+    setStatus({ loading: true, error: "" });
+    try {
+      const result = await fetchCurrentRequests();
+      setRequests(result);
+    } catch (err: unknown) {
+      setStatus({ loading: false, error: (err as Error).message });
+    } finally {
+      setStatus((prev) => ({ ...prev, loading: false }));
+    }
   };
+
+  // Initial GET request
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="h-screen">
@@ -58,7 +86,9 @@ export default function Home() {
             <p className="py-6">
               Submit a media request by filling out the form!
             </p>
-            <Link href="/#requests-table" className="text-info font-bold">See current requests</Link>
+            <Link href="/#requests-table" className="text-info font-bold">
+              See current requests
+            </Link>
           </div>
           <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
             <form className="card-body" onSubmit={handleSubmit}>
@@ -128,8 +158,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {/* <RequstForm onSubmit={handleSubmit} /> */}
-      <RequestTable />
+      <RequestTable requests={requests} />
     </div>
   );
 }

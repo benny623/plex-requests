@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { fetchCurrentRequests } from "@/lib/fetchRequests";
+import { useState } from "react";
 import Link from "next/link";
 
 // Define the Request type
@@ -15,39 +14,21 @@ interface Request {
 }
 
 type RequestTableProps = {
-  requestsData: Request[]; // Ensure requestsData is an array
+  requests: Request[]; // Ensure requestsData is an array
 };
 
 // Define the state type for `stat`
-interface Status {
-  loading: boolean;
-  error: string | null;
-}
+// interface Status {
+//   loading: boolean;
+//   error: string | null;
+// }
 
-export default function RequestTable() {
-  const [requests, setRequests] = useState<Request[]>([]);
+export default function RequestTable({ requests }: RequestTableProps) {
   const [updatedRequests, setUpdatedRequests] = useState(requests);
-  const [status, setStatus] = useState<Status>({
-    loading: true,
-    error: null,
-  });
-
-  const fetchData = async () => {
-    setStatus({ loading: true, error: null });
-    try {
-      const result = await fetchCurrentRequests();
-      setRequests(result);
-    } catch (err: unknown) {
-      setStatus({ loading: false, error: (err as Error).message });
-    } finally {
-      setStatus((prev) => ({ ...prev, loading: false }));
-    }
-  };
-
-  // Get requests json
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // const [status, setStatus] = useState<Status>({
+  //   loading: true,
+  //   error: null,
+  // });
 
   const handleStatusChange = async (e: any, requestId: number) => {
     const newStatus = e.target.value;
@@ -76,11 +57,10 @@ export default function RequestTable() {
 
       const updatedRequest = await response.json();
       console.log("Status updated", updatedRequest);
-      await fetchData();
     } catch (error) {
       console.error("Error updating status:", error);
 
-      const revertedRequestList = updatedRequests.map((request) =>
+      const revertedRequestList = updatedRequests.map((request: Request) =>
         request.request_id === requestId
           ? { ...request, request_status: request.request_status }
           : request
@@ -115,41 +95,39 @@ export default function RequestTable() {
         </thead>
         <tbody>
           {requests.length > 0 ? (
-            // Add all rows from DB
+            // Get all current requests
             requests.map((request: any) => {
-              if (request.request_status != "Complete") {
-                return (
-                  <tr key={request.request_title}>
-                    <td>{request.request_title}</td>
-                    <td>{request.request_year}</td>
-                    <td>{request.request_requestor}</td>
-                    <td>{request.request_type}</td>
-                    <td>
-                      <select
-                        id="status"
-                        name="status"
-                        value={request.request_status}
-                        onChange={(e) =>
-                          handleStatusChange(e, request.request_id)
-                        }
-                        className={`select w-full max-w-xs select-sm ${statusColor(
-                          request.request_status
-                        )}`}
-                      >
-                        <option className="bg-secondary" value="New">
-                          New
-                        </option>
-                        <option className="bg-primary" value="In Progress">
-                          In Progress
-                        </option>
-                        <option className="bg-success" value="Complete">
-                          Complete
-                        </option>
-                      </select>
-                    </td>
-                  </tr>
-                );
-              }
+              return (
+                <tr key={request.request_title}>
+                  <td>{request.request_title}</td>
+                  <td>{request.request_year}</td>
+                  <td>{request.request_requestor}</td>
+                  <td>{request.request_type}</td>
+                  <td>
+                    <select
+                      id="status"
+                      name="status"
+                      value={request.request_status}
+                      onChange={(e) =>
+                        handleStatusChange(e, request.request_id)
+                      }
+                      className={`select w-full max-w-xs select-sm ${statusColor(
+                        request.request_status
+                      )}`}
+                    >
+                      <option className="bg-secondary" value="New">
+                        New
+                      </option>
+                      <option className="bg-primary" value="In Progress">
+                        In Progress
+                      </option>
+                      <option className="bg-success" value="Complete">
+                        Complete
+                      </option>
+                    </select>
+                  </td>
+                </tr>
+              );
             })
           ) : (
             // If no requests are found

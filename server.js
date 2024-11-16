@@ -28,7 +28,7 @@ app.prepare().then(() => {
       const result = await pool.query(`
         SELECT *
         FROM requests r
-        ORDER BY request_timestamp;
+        ORDER BY request_timestamp DESC;
       `);
       res.json(result.rows);
     } catch (err) {
@@ -44,7 +44,7 @@ app.prepare().then(() => {
         SELECT *
         FROM requests
         WHERE request_status <> 'Complete'
-        ORDER BY request_timestamp;
+        ORDER BY request_timestamp DESC;
       `);
       res.json(result.rows);
     } catch (err) {
@@ -60,7 +60,7 @@ app.prepare().then(() => {
         SELECT *
         FROM requests
         WHERE request_status = 'Complete'
-        ORDER BY request_timestamp;
+        ORDER BY request_timestamp DESC;
       `);
       res.json(result.rows);
     } catch (err) {
