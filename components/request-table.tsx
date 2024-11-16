@@ -99,7 +99,10 @@ export default function RequestTable() {
   }
 
   return (
-    <div id="requests-table" className="min-h-screen flex justify-center items-center py-10">
+    <div
+      id="requests-table"
+      className="min-h-screen flex justify-center items-center py-10"
+    >
       <table className="table w-full max-w-4xl border-collapse table-pin-rows">
         <thead>
           <tr>
@@ -151,7 +154,9 @@ export default function RequestTable() {
           ) : (
             // If no requests are found
             <tr>
-              <td colSpan={5} style={{ textAlign: "center" }}>No requests found</td>
+              <td colSpan={5} style={{ textAlign: "center" }}>
+                No requests found
+              </td>
             </tr>
           )}
         </tbody>
@@ -159,9 +164,12 @@ export default function RequestTable() {
           <tr>
             <td colSpan={5} style={{ textAlign: "center" }}>
               Don't see your request? Check here:{" "}
-              <strong>
-                <Link href={"/completed-requests"}>Completed Requests</Link>
-              </strong>
+              <Link
+                href={"/completed-requests"}
+                className="text-info font-bold"
+              >
+                Completed Requests
+              </Link>
             </td>
           </tr>
         </tfoot>

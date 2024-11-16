@@ -149,7 +149,9 @@ export default function CompletedRequests() {
           ) : (
             // If no requests are found
             <tr>
-              <td colSpan={5} style={{ textAlign: "center" }}>No requests found</td>
+              <td colSpan={5} style={{ textAlign: "center" }}>
+                No requests found
+              </td>
             </tr>
           )}
         </tbody>
@@ -157,7 +159,9 @@ export default function CompletedRequests() {
           <tr>
             <td colSpan={5} style={{ textAlign: "center" }}>
               <strong>
-                <Link href={"/#requests-table"}>Go Back</Link>
+                <Link href={"/#requests-table"} className="text-info font-bold">
+                  Go Back
+                </Link>
               </strong>
             </td>
           </tr>
