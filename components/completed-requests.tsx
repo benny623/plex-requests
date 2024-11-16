@@ -86,7 +86,7 @@ export default function CompletedRequests() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center py-10">
+    <div className="min-h-screen flex justify-center items-center py-10 bg-base-100">
       <table className="table w-full max-w-4xl border-collapse table-pin-rows">
         <thead>
           <tr>

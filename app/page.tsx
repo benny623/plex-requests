@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import RequestTable from "@/components/request-table";
 import { fetchCurrentRequests } from "@/lib/fetchRequests";
+import RequestTable from "@/components/request-table";
 import Link from "next/link";
 
 export default function Home() {
@@ -94,7 +94,7 @@ export default function Home() {
             <form className="card-body" onSubmit={handleSubmit}>
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Title</span>
+                  <span className="label-text">Title *</span>
                 </label>
                 <input
                   id="title"
@@ -123,7 +123,7 @@ export default function Home() {
               </div>
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Requestor</span>
+                  <span className="label-text">Requestor *</span>
                 </label>
                 <input
                   id="requestor"
@@ -137,7 +137,7 @@ export default function Home() {
               </div>
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Type</span>
+                  <span className="label-text">Type *</span>
                 </label>
                 <select
                   id="type"
@@ -150,6 +150,9 @@ export default function Home() {
                   <option value="TV Show">TV Show</option>
                   <option value="Anime">Anime</option>
                 </select>
+              </div>
+              <div className="form-control mt-4 flex items-center">
+                <p className="label-text text-warning">* Required</p>
               </div>
               <div className="form-control mt-6">
                 <button className="btn btn-primary">Submit</button>
