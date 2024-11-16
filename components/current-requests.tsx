@@ -131,7 +131,7 @@ export default function RequestTable({ requests }: RequestTableProps) {
           ) : (
             <tr>
               <td colSpan={5} style={{ textAlign: "center" }}>
-                No requests found
+                No current requests
               </td>
             </tr>
           )}

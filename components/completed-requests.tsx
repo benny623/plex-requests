@@ -138,7 +138,7 @@ export default function CompletedRequests() {
             // If no requests are found
             <tr>
               <td colSpan={5} style={{ textAlign: "center" }}>
-                No requests found
+                No completed requests found
               </td>
             </tr>
           )}

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { fetchCurrentRequests } from "@/lib/fetchRequests";
-import RequestTable from "@/components/request-table";
+import RequestTable from "@/components/current-requests";
 import Link from "next/link";
 
 export default function Home() {
