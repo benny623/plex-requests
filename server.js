@@ -70,7 +70,7 @@ app.prepare().then(() => {
   });
 
   // Add new request
-  server.post("/api/send", async (req, res) => {
+  server.post("/api/send-request", async (req, res) => {
     console.log(`Request recieved ${JSON.stringify(req.body)}`);
     const { title, year, requestor, status, type } = req.body; // Get form and user data
 
@@ -97,7 +97,7 @@ app.prepare().then(() => {
   });
 
   // Update request via ID
-  server.put("/api/update/:id", async (req, res) => {
+  server.put("/api/update-request/:id", async (req, res) => {
     console.log(`Update recieved ${JSON.stringify(req.body)}`);
 
     const { id } = req.params;
