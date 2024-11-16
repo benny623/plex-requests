@@ -14,21 +14,69 @@ export default function Home() {
     status: "New",
     type: "Movie",
   });
-    const [status, setStatus] = useState({
-    loading: true,
-    error: "",
+  const [formErrors, setFormErrors] = useState({
+    title: "",
+    requestor: "",
+    year: "",
   });
-
+  const [status, setStatus] = useState({
+    loading: false,
+    error: "",
+    success: false,
+  });
 
   const handleChange = (e: any) => {
     setFormState({
       ...formState,
       [e.target.name]: e.target.value,
     });
+    // Clear any existing errors for the field
+    setFormErrors({
+      ...formErrors,
+      [e.target.name]: "",
+    });
+  };
+
+  const validateForm = () => {
+    let valid = true;
+    const errors = {
+      title: "",
+      requestor: "",
+      year: "",
+    };
+
+    // Title Validation
+    if (!formState.title) {
+      errors.title = "Title is required";
+      valid = false;
+    }
+
+    // Requestor Validation
+    if (!formState.requestor) {
+      errors.requestor = "Requestor is required";
+      valid = false;
+    }
+
+    // Year Validation
+    if (formState.year && !/^\d{4}$/.test(formState.year)) {
+      errors.year = "Year must be a 4-digit number";
+      valid = false;
+    }
+
+    setFormErrors(errors);
+    return valid;
   };
 
   const handleSubmit = useCallback(async (e: any) => {
     e.preventDefault();
+
+    // Validate the form before submission
+    if (!validateForm()) {
+      return;
+    }
+
+    setStatus({ loading: true, error: "", success: false });
+
     try {
       const res = await fetch("/api/send", {
         method: "POST",
@@ -52,21 +100,24 @@ export default function Home() {
 
         // Refetch requests data for table
         fetchData();
+        setStatus({ loading: false, error: "", success: true });
       } else {
-        console.log(`POST Failure: ${result.error || "An error occured"}`);
+        console.log(`POST Failure: ${result.error || "An error occurred"}`);
+        setStatus({ loading: false, error: result.error || "An error occurred", success: false });
       }
     } catch (err) {
       console.error("Error:", err);
+      setStatus({ loading: false, error: "An unexpected error occurred", success: false });
     }
   }, [formState]);
 
   const fetchData = async () => {
-    setStatus({ loading: true, error: "" });
+    setStatus({ loading: true, error: "", success: false });
     try {
       const result = await fetchCurrentRequests();
       setRequests(result);
     } catch (err: unknown) {
-      setStatus({ loading: false, error: (err as Error).message });
+      setStatus({ loading: false, error: (err as Error).message, success: false });
     } finally {
       setStatus((prev) => ({ ...prev, loading: false }));
     }
@@ -105,6 +156,9 @@ export default function Home() {
                   onChange={handleChange}
                   className="input input-bordered flex items-center"
                 />
+                {formErrors.title && (
+                  <p className="text-sm text-red-500">{formErrors.title}</p>
+                )}
               </div>
               <div className="form-control">
                 <label className="label">
@@ -120,6 +174,9 @@ export default function Home() {
                   onChange={handleChange}
                   className="grow input input-bordered flex items-center gap-2"
                 />
+                {formErrors.year && (
+                  <p className="text-sm text-red-500">{formErrors.year}</p>
+                )}
               </div>
               <div className="form-control">
                 <label className="label">
@@ -134,6 +191,9 @@ export default function Home() {
                   onChange={handleChange}
                   className="grow input input-bordered flex items-center"
                 />
+                {formErrors.requestor && (
+                  <p className="text-sm text-red-500">{formErrors.requestor}</p>
+                )}
               </div>
               <div className="form-control">
                 <label className="label">
@@ -155,8 +215,20 @@ export default function Home() {
                 <p className="label-text text-warning">* Required</p>
               </div>
               <div className="form-control mt-6">
-                <button className="btn btn-primary">Submit</button>
+                <button className="btn btn-primary" disabled={status.loading}>
+                  {status.loading ? "Submitting..." : "Submit"}
+                </button>
               </div>
+              {status.error && (
+                <div className="mt-4 text-red-500">
+                  <p>Error: {status.error}</p>
+                </div>
+              )}
+              {status.success && (
+                <div className="mt-4 text-green-500">
+                  <p>Request submitted successfully!</p>
+                </div>
+              )}
             </form>
           </div>
         </div>
