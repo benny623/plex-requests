@@ -33,10 +33,13 @@ export default function CompletedRequests() {
     try {
       const result = await fetchCompletedRequests();
       setRequests(result);
-    } catch (err: unknown) {
+    } 
+    catch (err: unknown) {
       setStatus({ loading: false, error: (err as Error).message });
+      return status.error;
     } finally {
       setStatus((prev) => ({ ...prev, loading: false }));
+      return status.error;
     }
   };
 

@@ -139,7 +139,7 @@ export default function RequestTable({ requests }: RequestTableProps) {
         <tfoot>
           <tr>
             <td colSpan={5} style={{ textAlign: "center" }}>
-              Don't see your request? Check here:{" "}
+              Don&apos;t see your request? Check here:{" "}
               <Link
                 href={"/completed-requests"}
                 className="text-info font-bold"
