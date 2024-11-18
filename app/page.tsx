@@ -233,7 +233,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <RequestTable requests={requests} />
+      <RequestTable currentRequests={requests} />
     </div>
   );
 }

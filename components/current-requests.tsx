@@ -15,16 +15,16 @@ interface Request {
 
 // Set props to Array
 type RequestTableProps = {
-  requests: Request[];
+  currentRequests: Request[];
 };
 
-export default function RequestTable({ requests }: RequestTableProps) {
-  const [updatedRequests, setUpdatedRequests] = useState<Request[]>(requests);
+export default function RequestTable({ currentRequests }: RequestTableProps) {
+  const [requests, setRequests] = useState<Request[]>(currentRequests);
 
   // Put data into temporary State
   useEffect(() => {
-    setUpdatedRequests(requests);
-  }, [requests]);
+    setRequests(currentRequests);
+  }, [currentRequests]);
 
   const handleStatusChange = async (
     e: React.ChangeEvent<HTMLSelectElement>,
@@ -33,12 +33,12 @@ export default function RequestTable({ requests }: RequestTableProps) {
     const newStatus = e.target.value;
 
     // Update status locally for immediate feedback
-    const updatedRequestList = updatedRequests.map((request: Request) =>
+    const updatedRequestList = requests.map((request: Request) =>
       request.request_id === requestId
         ? { ...request, request_status: newStatus }
         : request
     );
-    setUpdatedRequests(updatedRequestList);
+    setRequests(updatedRequestList);
 
     // Send update to server
     try {
@@ -60,12 +60,12 @@ export default function RequestTable({ requests }: RequestTableProps) {
       console.error("Error updating status:", error);
 
       // Revert the status if the update failed
-      const revertedRequestList = updatedRequests.map((request: Request) =>
+      const revertedRequestList = requests.map((request: Request) =>
         request.request_id === requestId
           ? { ...request, request_status: request.request_status }
           : request
       );
-      setUpdatedRequests(revertedRequestList);
+      setRequests(revertedRequestList);
     }
   };
 
@@ -98,8 +98,8 @@ export default function RequestTable({ requests }: RequestTableProps) {
           </tr>
         </thead>
         <tbody>
-          {updatedRequests.length > 0 ? (
-            updatedRequests.map((request: Request) => (
+          {requests.length > 0 ? (
+            requests.map((request: Request) => (
               <tr key={request.request_id}>
                 <td>{request.request_title}</td>
                 <td>{request.request_year}</td>
