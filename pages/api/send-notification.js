@@ -10,31 +10,33 @@ export default async function handler(req, res) {
   });
 
   transporter.verify((err, success) => {
-    err
-      ? console.error(err)
-      : console.log(`Server is ready to take messages: ${success}`);
-  });
-
-  const mailOptions = {
-    from: "Plex Request Notification <bm.contact623@gmail.com>",
-    to: "bmilner88@gmail.com",
-    subject: "Test Notification",
-    text: "this is a test plex request notification",
-  };
-
-  transporter.sendMail(mailOptions, (err, data) => {
     if (err) {
       console.error(err);
-      res.status(500).json({
-        status: "fail",
-        message: err,
+    } else {
+      console.log(`Server is ready to take messages: ${success}`);
+    }
+  });
+
+  transporter.sendMail(
+    {
+      from: "PlexRequest Notification <bm.contact623@gmail.com>",
+      to: "bmilner88@gmail.com",
+      subject: "Test Notification",
+      text: "this is a test plex request notification",
+    },
+    (err, data) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({
+          status: "fail",
+          message: err,
+        });
+      }
+
+      res.status(250).json({
+        status: "success",
+        data: data,
       });
     }
-
-    console.log("Notification sent");
-    res.status(250).json({
-      status: "success",
-      data: data,
-    });
-  });
+  );
 }
