@@ -10,13 +10,13 @@ export default function Home() {
   const [formState, setFormState] = useState({
     title: "",
     year: "",
-    requestor: "",
+    email: "",
     status: "New",
     type: "Movie",
   });
   const [formErrors, setFormErrors] = useState({
     title: "",
-    requestor: "",
+    email: "",
     year: "",
   });
   const [status, setStatus] = useState({
@@ -29,7 +29,7 @@ export default function Home() {
     let valid = true;
     const errors = {
       title: "",
-      requestor: "",
+      email: "",
       year: "",
     };
 
@@ -39,9 +39,12 @@ export default function Home() {
       valid = false;
     }
 
-    // Requestor Validation
-    if (!formState.requestor) {
-      errors.requestor = "Requestor is required";
+    // Email Validation
+    if (!formState.email) {
+      errors.email = "Email is required";
+      valid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formState.email)) {
+      errors.email = "Please enter a valid email address";
       valid = false;
     }
 
@@ -99,7 +102,7 @@ export default function Home() {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                user: formState.requestor, // TODO: change this to the user's name
+                email: formState.email, // TODO: after user auth is built out, autofill the email
                 title: formState.title,
               }),
             });
@@ -117,7 +120,7 @@ export default function Home() {
           setFormState({
             title: "",
             year: "",
-            requestor: "",
+            email: "",
             status: "New",
             type: "Movie",
           });
@@ -218,19 +221,19 @@ export default function Home() {
               </div>
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Requestor *</span>
+                  <span className="label-text">Requestor Email *</span>
                 </label>
                 <input
-                  id="requestor"
-                  name="requestor"
+                  id="email"
+                  name="email"
                   type="text"
-                  placeholder="Your name"
-                  value={formState.requestor}
+                  placeholder="Your email"
+                  value={formState.email}
                   onChange={handleChange}
                   className="grow input input-bordered flex items-center"
                 />
-                {formErrors.requestor && (
-                  <p className="text-sm text-red-500">{formErrors.requestor}</p>
+                {formErrors.email && (
+                  <p className="text-sm text-red-500">{formErrors.email}</p>
                 )}
               </div>
               <div className="form-control">

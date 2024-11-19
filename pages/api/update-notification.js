@@ -19,12 +19,12 @@ export default async function handler(req, res) {
       from: "PlexRequest Notification <bm.contact623@gmail.com>",
       to: email,
       subject: `${title} Status Change`,
-      text: `
-      The status for ${title} has changed!
-      
-      New Status: ${status}
-      `,
+      html: `
+      <h1>The Status for ${title} has changed!</h1>
+      <h2>New Status: ${status}</h2>
+      `, // TODO: add CSS to make this look nicer
     };
+
     // Send notification
     const send = await transporter.sendMail(mailOptions);
 
