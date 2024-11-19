@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   console.log(`Update recieved ${JSON.stringify(req.body)}`);
 
   const { id } = req.query; // Get request ID
-  const { status } = req.body; // Get updated data
+  const { status, email } = req.body; // Get updated data
 
   try {
     const queryText = `

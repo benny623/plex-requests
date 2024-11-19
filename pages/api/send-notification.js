@@ -1,6 +1,8 @@
 import NodeMailer from "nodemailer";
 
 export default async function handler(req, res) {
+  const { status, title, email } = req.body;
+
   const transporter = NodeMailer.createTransport({
     service: "gmail",
     auth: {
@@ -15,9 +17,13 @@ export default async function handler(req, res) {
 
     const mailOptions = {
       from: "PlexRequest Notification <bm.contact623@gmail.com>",
-      to: "bmilner88@gmail.com",
-      subject: "Test Notification",
-      text: "this is a test plex request notification",
+      to: email,
+      subject: `${title} Status Change`,
+      text: `
+      The status for ${title} has changed!
+      
+      New Status: ${status}
+      `,
     };
     // Send notification
     const send = await transporter.sendMail(mailOptions);
