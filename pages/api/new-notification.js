@@ -1,8 +1,8 @@
 import NodeMailer from "nodemailer";
 
 export default async function handler(req, res) {
-  const { title, email } = req.body; // TODO: email doesn't need to be here, find a better way of grabbing admin emails within this call
-
+  const { title } = req.body; // TODO: Removed email from here, but it may be nice to have user's email/name in the request email that gets sent to admins
+  
   const transporter = NodeMailer.createTransport({
     service: "gmail",
     auth: {
@@ -20,8 +20,7 @@ export default async function handler(req, res) {
       to: process.env.TEMP_EMAIL, // TODO: after userauth and admin side set up, change this to only be for the admin emails
       subject: `New Request: ${title}`,
       html: `
-      <h1>New Request from ${email}</h1>
-      <h2>${title}</h2>
+      <h1>New Request - ${title}</h1> 
       `, // TODO: add CSS to make this look nicer
     };
 
