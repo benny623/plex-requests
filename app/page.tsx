@@ -67,49 +67,83 @@ export default function Home() {
     });
   };
 
-  const handleSubmit = useCallback(async (e: any) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e: any) => {
+      e.preventDefault();
 
-    // Validate the form before submission
-    if (!validateForm()) {
-      return;
-    }
+      // Validate the form before submission
+      if (!validateForm()) {
+        return;
+      }
 
-    setStatus({ loading: true, error: "", success: false });
+      setStatus({ loading: true, error: "", success: false });
 
-    try {
-      const res = await fetch("/api/send-request", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formState),
-      });
-
-      const result = await res.json();
-
-      if (res.ok) {
-        console.log("POST Success");
-        setFormState({
-          title: "",
-          year: "",
-          requestor: "",
-          status: "New",
-          type: "Movie",
+      try {
+        const res = await fetch("/api/send-request", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formState),
         });
 
-        // Refetch requests data for table
-        fetchData();
-        setStatus({ loading: false, error: "", success: true });
-      } else {
-        console.log(`POST Failure: ${result.error || "An error occurred"}`);
-        setStatus({ loading: false, error: result.error || "An error occurred", success: false });
+        const result = await res.json();
+
+        if (res.ok) {
+          console.log("POST Success");
+          // Send notification for updated status
+          try {
+            const response = await fetch("/api/new-notification", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                user: formState.requestor, // TODO: change this to the user's name
+                title: formState.title,
+              }),
+            });
+
+            if (!response.ok) {
+              throw new Error("Failed to send notification");
+            }
+
+            const notification = await response.json();
+
+            console.log("Notification sent", notification);
+          } catch (err) {
+            console.error("Error sending notification", err);
+          }
+          setFormState({
+            title: "",
+            year: "",
+            requestor: "",
+            status: "New",
+            type: "Movie",
+          });
+
+          // Refetch requests data for table
+          fetchData();
+          setStatus({ loading: false, error: "", success: true });
+        } else {
+          console.log(`POST Failure: ${result.error || "An error occurred"}`);
+          setStatus({
+            loading: false,
+            error: result.error || "An error occurred",
+            success: false,
+          });
+        }
+      } catch (err) {
+        console.error("Error:", err);
+        setStatus({
+          loading: false,
+          error: "An unexpected error occurred",
+          success: false,
+        });
       }
-    } catch (err) {
-      console.error("Error:", err);
-      setStatus({ loading: false, error: "An unexpected error occurred", success: false });
-    }
-  }, [formState]);
+    },
+    [formState]
+  );
 
   const fetchData = async () => {
     setStatus({ loading: true, error: "", success: false });
@@ -117,7 +151,11 @@ export default function Home() {
       const result = await fetchCurrentRequests();
       setRequests(result);
     } catch (err: unknown) {
-      setStatus({ loading: false, error: (err as Error).message, success: false });
+      setStatus({
+        loading: false,
+        error: (err as Error).message,
+        success: false,
+      });
     } finally {
       setStatus((prev) => ({ ...prev, loading: false }));
     }

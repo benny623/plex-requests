@@ -61,7 +61,7 @@ export default function RequestTable({ currentRequests }: RequestTableProps) {
 
       // Send notification for updated status
       try {
-        const response = await fetch("/api/send-notification", {
+        const response = await fetch("/api/update-notification", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
