@@ -33,8 +33,7 @@ export default function CompletedRequests() {
     try {
       const result = await fetchCompletedRequests();
       setRequests(result);
-    } 
-    catch (err: unknown) {
+    } catch (err: unknown) {
       setStatus({ loading: false, error: (err as Error).message });
       return status.error;
     } finally {
@@ -61,12 +60,15 @@ export default function CompletedRequests() {
 
     // Send update to server
     try {
+      // Send update to server
       const response = await fetch(`/api/update-request/${requestId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({
+          status: newStatus,
+        }),
       });
 
       if (!response.ok) {
@@ -75,16 +77,44 @@ export default function CompletedRequests() {
 
       const updatedRequest = await response.json();
       console.log("Status updated", updatedRequest);
-      await fetchData();
-    } catch (error) {
-      console.error("Error updating status:", error);
 
-      const revertedRequestList = updatedRequests.map((request) =>
+      // Send notification for updated status
+      try {
+        const response = await fetch("/api/update-notification", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: newStatus,
+            id: requestId,
+            title: requests.find((r) => r.request_id === requestId)
+              ?.request_title,
+            // email: requests.find((r) => r.request_id === requestId)
+            //   ?.request_requestor, // TODO: need to change this line to request_email after user auth is set up
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to send notification");
+        }
+
+        const notification = await response.json();
+
+        console.log("Notification sent", notification);
+      } catch (err) {
+        console.error("Error sending notification", err);
+      }
+    } catch (err) {
+      console.error("Error updating status:", err);
+
+      // Revert the status if the update failed
+      const revertedRequestList = requests.map((request: Request) =>
         request.request_id === requestId
           ? { ...request, request_status: request.request_status }
           : request
       );
-      setUpdatedRequests(revertedRequestList);
+      setRequests(revertedRequestList);
     }
   };
 

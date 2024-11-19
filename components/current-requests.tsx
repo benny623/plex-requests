@@ -68,10 +68,11 @@ export default function RequestTable({ currentRequests }: RequestTableProps) {
           },
           body: JSON.stringify({
             status: newStatus,
+            id: requestId,
             title: requests.find((r) => r.request_id === requestId)
               ?.request_title,
-            email: requests.find((r) => r.request_id === requestId)
-              ?.request_requestor, // TODO: need to change this line to request_email after user auth is set up
+            // email: requests.find((r) => r.request_id === requestId)
+            //   ?.request_requestor, // TODO: need to change this line to request_email after user auth is set up
           }),
         });
 

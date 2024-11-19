@@ -1,7 +1,8 @@
 import NodeMailer from "nodemailer";
+import { fetchSingleRequest } from "@/lib/fetchRequests";
 
 export default async function handler(req, res) {
-  const { status, title, email } = req.body;
+  const { status, id, title } = req.body;
 
   const transporter = NodeMailer.createTransport({
     service: "gmail",
@@ -12,12 +13,19 @@ export default async function handler(req, res) {
   });
 
   try {
+    // Grab the email from the backend so email is not exposed in json body
+    const emailData = await fetchSingleRequest(id);
+
+    if (!emailData || !emailData[0].request_requestor) {
+      throw new Error("Email not found");
+    }
+
     // Verify transporter connection before sending notification
     await transporter.verify();
 
     const mailOptions = {
       from: "PlexRequest Notification <bm.contact623@gmail.com>",
-      to: email,
+      to: emailData[0].request_requestor,
       subject: `${title} Status Change`,
       html: `
       <h1>The Status for ${title} has changed!</h1>
@@ -26,17 +34,17 @@ export default async function handler(req, res) {
     };
 
     // Send notification
-    const send = await transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions);
 
     // Send success response after email is sent
     return res.status(200).json({
-      status: "success",
-      data: send,
+      status: "send success",
+      //data: send,
     });
   } catch (err) {
     console.error("Error:", err);
     return res.status(500).json({
-      status: "fail",
+      status: "send fail",
       message: err.message,
     });
   }

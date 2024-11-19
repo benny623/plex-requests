@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
     res
       .status(200)
-      .json({ message: "Request update successful", request: rows[0] });
+      .json({ message: "Request update successful" });
   } catch (err) {
     console.error("Error updating request:", err);
     res.status(500).json({ error: "Error updating request" });
