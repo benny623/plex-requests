@@ -121,7 +121,6 @@ export default function RequestTable({ currentRequests }: RequestTableProps) {
           <tr>
             <th>Title</th>
             <th>Release Year</th>
-            <th>Requestor</th>
             <th>Type</th>
             <th>Status</th>
           </tr>
@@ -132,7 +131,6 @@ export default function RequestTable({ currentRequests }: RequestTableProps) {
               <tr key={request.request_id}>
                 <td>{request.request_title}</td>
                 <td>{request.request_year}</td>
-                <td>{request.request_requestor}</td>
                 <td>{request.request_type}</td>
                 <td>
                   <select
