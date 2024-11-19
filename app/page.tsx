@@ -1,168 +1,21 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import { fetchCurrentRequests } from "@/lib/fetchRequests";
-import RequestTable from "@/components/current-requests";
+import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
+import CurrentRequests from "@/components/current-requests";
 import Link from "next/link";
 
 export default function Home() {
-  const [requests, setRequests] = useState([]);
-  const [formState, setFormState] = useState({
-    title: "",
-    year: "",
-    email: "",
-    status: "New",
-    type: "Movie",
-  });
-  const [formErrors, setFormErrors] = useState({
-    title: "",
-    email: "",
-    year: "",
-  });
-  const [status, setStatus] = useState({
-    loading: false,
-    error: "",
-    success: false,
-  });
-
-  const validateForm = () => {
-    let valid = true;
-    const errors = {
-      title: "",
-      email: "",
-      year: "",
-    };
-
-    // Title Validation
-    if (!formState.title) {
-      errors.title = "Title is required";
-      valid = false;
-    }
-
-    // Email Validation
-    if (!formState.email) {
-      errors.email = "Email is required";
-      valid = false;
-    } else if (!/\S+@\S+\.\S+/.test(formState.email)) {
-      errors.email = "Please enter a valid email address";
-      valid = false;
-    }
-
-    // Year Validation
-    if (formState.year && !/^\d{4}$/.test(formState.year)) {
-      errors.year = "Year must be a 4-digit number";
-      valid = false;
-    }
-
-    setFormErrors(errors);
-    return valid;
-  };
-
-  const handleChange = (e: any) => {
-    setFormState({
-      ...formState,
-      [e.target.name]: e.target.value,
-    });
-    // Clear any existing errors for the field
-    setFormErrors({
-      ...formErrors,
-      [e.target.name]: "",
-    });
-  };
-
-  const handleSubmit = useCallback(
-    async (e: any) => {
-      e.preventDefault();
-
-      // Validate the form before submission
-      if (!validateForm()) {
-        return;
-      }
-
-      setStatus({ loading: true, error: "", success: false });
-
-      try {
-        const res = await fetch("/api/send-request", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formState),
-        });
-
-        const result = await res.json();
-
-        if (res.ok) {
-          console.log("POST Success");
-          // Send notification for updated status
-          try {
-            const response = await fetch("/api/new-notification", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                email: formState.email, // TODO: after user auth is built out, autofill the email
-                title: formState.title,
-              }),
-            });
-
-            if (!response.ok) {
-              throw new Error("Failed to send notification");
-            }
-
-            const notification = await response.json();
-
-            console.log("Notification sent", notification);
-          } catch (err) {
-            console.error("Error sending notification", err);
-          }
-          setFormState({
-            title: "",
-            year: "",
-            email: "",
-            status: "New",
-            type: "Movie",
-          });
-
-          // Refetch requests data for table
-          fetchData();
-          setStatus({ loading: false, error: "", success: true });
-        } else {
-          console.log(`POST Failure: ${result.error || "An error occurred"}`);
-          setStatus({
-            loading: false,
-            error: result.error || "An error occurred",
-            success: false,
-          });
-        }
-      } catch (err) {
-        console.error("Error:", err);
-        setStatus({
-          loading: false,
-          error: "An unexpected error occurred",
-          success: false,
-        });
-      }
-    },
-    [formState]
-  );
-
-  const fetchData = async () => {
-    setStatus({ loading: true, error: "", success: false });
-    try {
-      const result = await fetchCurrentRequests();
-      setRequests(result);
-    } catch (err: unknown) {
-      setStatus({
-        loading: false,
-        error: (err as Error).message,
-        success: false,
-      });
-    } finally {
-      setStatus((prev) => ({ ...prev, loading: false }));
-    }
-  };
+  const {
+    formState,
+    formErrors,
+    status,
+    requests,
+    handleChange,
+    handleSubmit,
+    fetchData,
+  } = useFormHandlers(fetchCurrentRequests);
 
   // Initial GET request
   useEffect(() => {
@@ -174,7 +27,9 @@ export default function Home() {
       <div className="hero bg-base-200 min-h-screen">
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="text-center lg:pl-20 lg:text-left">
-            <h1 className="text-5xl font-bold">Submit a request! 🎬</h1>
+            <h1 className="text-5xl font-bold">
+              Submit a request!<span className="m-2">🎬</span>
+            </h1>
             <p className="py-6">
               Submit a media request by filling out the form!
             </p>
@@ -274,7 +129,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <RequestTable currentRequests={requests} />
+      <CurrentRequests currentRequests={requests} />
     </div>
   );
 }

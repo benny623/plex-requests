@@ -1,24 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Request, currentProps } from '@/lib/types';
 import Link from "next/link";
 
-// Define the Request type
-interface Request {
-  request_id: number;
-  request_title: string;
-  request_year: number;
-  request_requestor: string;
-  request_type: string;
-  request_status: string;
-}
-
-// Set props to Array
-type RequestTableProps = {
-  currentRequests: Request[];
-};
-
-export default function RequestTable({ currentRequests }: RequestTableProps) {
+export default function CurrentRequests({ currentRequests }: currentProps) {
   const [requests, setRequests] = useState<Request[]>(currentRequests);
 
   // Put data into temporary State
