@@ -4,17 +4,18 @@ export default async function handler(req, res) {
   console.log(`Update recieved ${JSON.stringify(req.body)}`);
 
   const { id } = req.query; // Get request ID
-  const { status, email } = req.body; // Get updated data
+  const { status } = req.body; // Get updated data
 
   try {
-    const queryText = `
+    const { rows } = await query(
+      `
       UPDATE requests
       SET request_status = $1
       WHERE request_id = $2
       RETURNING *
-    `;
-
-    const { rows } = await query(queryText, [status, id]);
+    `,
+      [status, id]
+    );
 
     if (rows.length === 0) {
       return res.status(404).json({ message: "Request not found" });
