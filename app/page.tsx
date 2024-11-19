@@ -10,13 +10,13 @@ export default function Home() {
   const [formState, setFormState] = useState({
     title: "",
     year: "",
-    requestor: "",
+    email: "",
     status: "New",
     type: "Movie",
   });
   const [formErrors, setFormErrors] = useState({
     title: "",
-    requestor: "",
+    email: "",
     year: "",
   });
   const [status, setStatus] = useState({
@@ -29,7 +29,7 @@ export default function Home() {
     let valid = true;
     const errors = {
       title: "",
-      requestor: "",
+      email: "",
       year: "",
     };
 
@@ -39,9 +39,12 @@ export default function Home() {
       valid = false;
     }
 
-    // Requestor Validation
-    if (!formState.requestor) {
-      errors.requestor = "Requestor is required";
+    // Email Validation
+    if (!formState.email) {
+      errors.email = "Email is required";
+      valid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formState.email)) {
+      errors.email = "Please enter a valid email address";
       valid = false;
     }
 
@@ -67,49 +70,83 @@ export default function Home() {
     });
   };
 
-  const handleSubmit = useCallback(async (e: any) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e: any) => {
+      e.preventDefault();
 
-    // Validate the form before submission
-    if (!validateForm()) {
-      return;
-    }
+      // Validate the form before submission
+      if (!validateForm()) {
+        return;
+      }
 
-    setStatus({ loading: true, error: "", success: false });
+      setStatus({ loading: true, error: "", success: false });
 
-    try {
-      const res = await fetch("/api/send-request", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formState),
-      });
-
-      const result = await res.json();
-
-      if (res.ok) {
-        console.log("POST Success");
-        setFormState({
-          title: "",
-          year: "",
-          requestor: "",
-          status: "New",
-          type: "Movie",
+      try {
+        const res = await fetch("/api/send-request", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formState),
         });
 
-        // Refetch requests data for table
-        fetchData();
-        setStatus({ loading: false, error: "", success: true });
-      } else {
-        console.log(`POST Failure: ${result.error || "An error occurred"}`);
-        setStatus({ loading: false, error: result.error || "An error occurred", success: false });
+        const result = await res.json();
+
+        if (res.ok) {
+          console.log("POST Success");
+          // Send notification for updated status
+          try {
+            const response = await fetch("/api/new-notification", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: formState.email, // TODO: after user auth is built out, autofill the email
+                title: formState.title,
+              }),
+            });
+
+            if (!response.ok) {
+              throw new Error("Failed to send notification");
+            }
+
+            const notification = await response.json();
+
+            console.log("Notification sent", notification);
+          } catch (err) {
+            console.error("Error sending notification", err);
+          }
+          setFormState({
+            title: "",
+            year: "",
+            email: "",
+            status: "New",
+            type: "Movie",
+          });
+
+          // Refetch requests data for table
+          fetchData();
+          setStatus({ loading: false, error: "", success: true });
+        } else {
+          console.log(`POST Failure: ${result.error || "An error occurred"}`);
+          setStatus({
+            loading: false,
+            error: result.error || "An error occurred",
+            success: false,
+          });
+        }
+      } catch (err) {
+        console.error("Error:", err);
+        setStatus({
+          loading: false,
+          error: "An unexpected error occurred",
+          success: false,
+        });
       }
-    } catch (err) {
-      console.error("Error:", err);
-      setStatus({ loading: false, error: "An unexpected error occurred", success: false });
-    }
-  }, [formState]);
+    },
+    [formState]
+  );
 
   const fetchData = async () => {
     setStatus({ loading: true, error: "", success: false });
@@ -117,7 +154,11 @@ export default function Home() {
       const result = await fetchCurrentRequests();
       setRequests(result);
     } catch (err: unknown) {
-      setStatus({ loading: false, error: (err as Error).message, success: false });
+      setStatus({
+        loading: false,
+        error: (err as Error).message,
+        success: false,
+      });
     } finally {
       setStatus((prev) => ({ ...prev, loading: false }));
     }
@@ -180,19 +221,19 @@ export default function Home() {
               </div>
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Requestor *</span>
+                  <span className="label-text">Requestor Email *</span>
                 </label>
                 <input
-                  id="requestor"
-                  name="requestor"
+                  id="email"
+                  name="email"
                   type="text"
-                  placeholder="Your name"
-                  value={formState.requestor}
+                  placeholder="Your email"
+                  value={formState.email}
                   onChange={handleChange}
                   className="grow input input-bordered flex items-center"
                 />
-                {formErrors.requestor && (
-                  <p className="text-sm text-red-500">{formErrors.requestor}</p>
+                {formErrors.email && (
+                  <p className="text-sm text-red-500">{formErrors.email}</p>
                 )}
               </div>
               <div className="form-control">
@@ -233,7 +274,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <RequestTable requests={requests} />
+      <RequestTable currentRequests={requests} />
     </div>
   );
 }

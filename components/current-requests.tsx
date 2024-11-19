@@ -15,16 +15,16 @@ interface Request {
 
 // Set props to Array
 type RequestTableProps = {
-  requests: Request[];
+  currentRequests: Request[];
 };
 
-export default function RequestTable({ requests }: RequestTableProps) {
-  const [updatedRequests, setUpdatedRequests] = useState<Request[]>(requests);
+export default function RequestTable({ currentRequests }: RequestTableProps) {
+  const [requests, setRequests] = useState<Request[]>(currentRequests);
 
   // Put data into temporary State
   useEffect(() => {
-    setUpdatedRequests(requests);
-  }, [requests]);
+    setRequests(currentRequests);
+  }, [currentRequests]);
 
   const handleStatusChange = async (
     e: React.ChangeEvent<HTMLSelectElement>,
@@ -33,21 +33,23 @@ export default function RequestTable({ requests }: RequestTableProps) {
     const newStatus = e.target.value;
 
     // Update status locally for immediate feedback
-    const updatedRequestList = updatedRequests.map((request: Request) =>
+    const updatedRequestList = requests.map((request: Request) =>
       request.request_id === requestId
         ? { ...request, request_status: newStatus }
         : request
     );
-    setUpdatedRequests(updatedRequestList);
+    setRequests(updatedRequestList);
 
-    // Send update to server
     try {
+      // Send update to server
       const response = await fetch(`/api/update-request/${requestId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({
+          status: newStatus,
+        }),
       });
 
       if (!response.ok) {
@@ -56,16 +58,43 @@ export default function RequestTable({ requests }: RequestTableProps) {
 
       const updatedRequest = await response.json();
       console.log("Status updated", updatedRequest);
-    } catch (error) {
-      console.error("Error updating status:", error);
+
+      // Send notification for updated status
+      try {
+        const response = await fetch("/api/update-notification", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: newStatus,
+            title: requests.find((r) => r.request_id === requestId)
+              ?.request_title,
+            email: requests.find((r) => r.request_id === requestId)
+              ?.request_requestor, // TODO: need to change this line to request_email after user auth is set up
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to send notification");
+        }
+
+        const notification = await response.json();
+
+        console.log("Notification sent", notification);
+      } catch (err) {
+        console.error("Error sending notification", err);
+      }
+    } catch (err) {
+      console.error("Error updating status:", err);
 
       // Revert the status if the update failed
-      const revertedRequestList = updatedRequests.map((request: Request) =>
+      const revertedRequestList = requests.map((request: Request) =>
         request.request_id === requestId
           ? { ...request, request_status: request.request_status }
           : request
       );
-      setUpdatedRequests(revertedRequestList);
+      setRequests(revertedRequestList);
     }
   };
 
@@ -92,18 +121,16 @@ export default function RequestTable({ requests }: RequestTableProps) {
           <tr>
             <th>Title</th>
             <th>Release Year</th>
-            <th>Requestor</th>
             <th>Type</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody>
-          {updatedRequests.length > 0 ? (
-            updatedRequests.map((request: Request) => (
+          {requests.length > 0 ? (
+            requests.map((request: Request) => (
               <tr key={request.request_id}>
                 <td>{request.request_title}</td>
                 <td>{request.request_year}</td>
-                <td>{request.request_requestor}</td>
                 <td>{request.request_type}</td>
                 <td>
                   <select
