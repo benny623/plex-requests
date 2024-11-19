@@ -27,3 +27,14 @@ export const fetchCompletedRequests = async () => {
 
   return await response.json();
 };
+
+export const fetchSingleRequest = async (id: string) => {
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : process.env.BASE_URL
+  const response = await fetch(`${baseUrl}/api/single-request/${id}`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch requests");
+  }
+
+  return await response.json();
+};
