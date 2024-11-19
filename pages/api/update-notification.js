@@ -14,26 +14,18 @@ export default async function handler(req, res) {
 
   try {
     // Grab the email from the backend so email is not exposed in json body
-    const baseUrl = typeof window !== "undefined" ? window.location.origin : process.env.BASE_URL;
-    const emailResponse = await fetch(`${baseUrl}/api/single-request/${id}`);
+    const emailData = await fetchSingleRequest(id);
 
-    if (!emailResponse.ok) {
-      throw new Error("Failed to fetch email");
-    }
-
-    const emailData = await emailResponse.json();
-    if(!emailData || !emailData[0].request_requestor) {
+    if (!emailData || !emailData[0].request_requestor) {
       throw new Error("Email not found");
     }
-
-    const email = emailData[0].request_requestor;
 
     // Verify transporter connection before sending notification
     await transporter.verify();
 
     const mailOptions = {
       from: "PlexRequest Notification <bm.contact623@gmail.com>",
-      to: email,
+      to: emailData[0].request_requestor,
       subject: `${title} Status Change`,
       html: `
       <h1>The Status for ${title} has changed!</h1>
