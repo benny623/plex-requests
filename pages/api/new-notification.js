@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
     const mailOptions = {
       from: "PlexRequest Notification <bm.contact623@gmail.com>",
-      to: process.env.TEMP_EMAIL,
+      to: process.env.TEMP_EMAIL, // TODO: after userauth and admin side set up, change this to only be for the admin emails
       subject: `New Request: ${title}`,
       html: `
       <h1>New Request from ${email}</h1>
