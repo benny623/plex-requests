@@ -9,10 +9,14 @@ export default async function handler(req, res) {
   try {
     const { rows } = await query(
       `
-      UPDATE requests
-      SET request_status = $1
-      WHERE request_id = $2
-      RETURNING *
+      UPDATE
+        requests
+      SET
+        request_status = $1
+      WHERE
+        request_id = $2
+      RETURNING
+        *
     `,
       [status, id]
     );
@@ -21,9 +25,7 @@ export default async function handler(req, res) {
       return res.status(404).json({ message: "Request not found" });
     }
 
-    res
-      .status(200)
-      .json({ message: "Request update successful" });
+    res.status(200).json({ message: "Request update successful" });
   } catch (err) {
     console.error("Error updating request:", err);
     res.status(500).json({ error: "Error updating request" });

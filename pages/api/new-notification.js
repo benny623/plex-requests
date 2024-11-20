@@ -2,7 +2,7 @@ import NodeMailer from "nodemailer";
 
 export default async function handler(req, res) {
   const { title } = req.body; // TODO: Removed email from here, but it may be nice to have user's email/name in the request email that gets sent to admins
-  
+
   const transporter = NodeMailer.createTransport({
     service: "gmail",
     auth: {
