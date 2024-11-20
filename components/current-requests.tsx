@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Request, currentProps } from '@/lib/types';
+import { Request, currentProps } from "@/lib/types";
+
 import Link from "next/link";
 
 export default function CurrentRequests({ currentRequests }: currentProps) {

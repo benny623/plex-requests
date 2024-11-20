@@ -1,5 +1,3 @@
-// lib/hooks/useFormHandlers.ts
-
 import { useState, useCallback } from "react";
 
 export const useFormHandlers = (fetchCurrentRequests: () => Promise<any>) => {
