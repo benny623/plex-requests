@@ -108,6 +108,8 @@ export const useFormHandlers = (fetchCurrentRequests: () => Promise<any>) => {
               body: JSON.stringify({
                 //email: formState.email, // TODO: autofill email after user auth is done
                 title: formState.title,
+                year: formState.year,
+                type: formState.type,
               }),
             });
 

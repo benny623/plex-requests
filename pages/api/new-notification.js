@@ -1,7 +1,7 @@
 import NodeMailer from "nodemailer";
 
 export default async function handler(req, res) {
-  const { title } = req.body; // TODO: Removed email from here, but it may be nice to have user's email/name in the request email that gets sent to admins
+  const { title, year, type } = req.body; // TODO: Removed email from here, but it may be nice to have user's email/name in the request email that gets sent to admins
 
   const transporter = NodeMailer.createTransport({
     service: "gmail",
@@ -17,10 +17,12 @@ export default async function handler(req, res) {
 
     const mailOptions = {
       from: "PlexRequest Notification <bm.contact623@gmail.com>",
-      to: process.env.TEMP_EMAIL, // TODO: after userauth and admin side set up, change this to only be for the admin emails
+      to: [process.env.TEMP_EMAIL, process.env.TEMP_EMAIL2], // TODO: after userauth and admin side set up, change this to only be for the admin emails
       subject: `New Request: ${title}`,
       html: `
-      <h1>New Request - ${title}</h1> 
+      <h1>Title: ${title}</h1>
+      <h2>Year: ${year}</h2>
+      <h2>Type: ${type}</h2>
       `, // TODO: add CSS to make this look nicer
     };
 
