@@ -3,10 +3,17 @@ import { query } from "@/lib/db";
 export default async function handler(req, res) {
   try {
     const result = await query(`
-          SELECT *
+          SELECT 
+            request_id, 
+            request_title, 
+            request_year, 
+            request_type, 
+            request_status
           FROM requests
-          WHERE request_status = 'Complete'
-          ORDER BY request_timestamp DESC;
+          WHERE
+            request_status = 'Complete'
+          ORDER BY
+            request_timestamp DESC;
         `);
 
     if (result && result.rows && result.rows.length === 0) {

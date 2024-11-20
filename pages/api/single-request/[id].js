@@ -7,8 +7,10 @@ export default async function handler(req, res) {
     const result = await query(
       `
         SELECT *
-        FROM requests
-        WHERE request_id = $1
+        FROM
+          requests
+        WHERE
+          request_id = $1
     `,
       [id]
     );
