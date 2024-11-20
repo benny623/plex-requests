@@ -18,7 +18,7 @@ export const fetchCurrentRequests = async () => {
   return await response.json();
 };
 
-export const fetchCompletedRequests = async () => {
+export const fetchCompleteRequests = async () => {
   const response = await fetch("/api/completed-requests");
 
   if (!response.ok) {
