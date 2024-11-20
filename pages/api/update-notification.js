@@ -4,20 +4,6 @@ import { fetchSingleRequest } from "@/lib/fetchRequests";
 export default async function handler(req, res) {
   const { status, id, title } = req.body;
 
-  // Get color for email
-  function statusColor(status) {
-    switch (status) {
-      case "New":
-        return "#ff52d9";
-      case "In Progress":
-        return "#7480ff";
-      case "Complete":
-        return "#00a96e";
-      default:
-        return "";
-    } // The colors here are subject to change depending on if the theme changes
-  }
-
   const transporter = NodeMailer.createTransport({
     service: "gmail",
     auth: {
@@ -43,7 +29,18 @@ export default async function handler(req, res) {
       subject: `${title} Status Change`,
       html: `
       <h1>Status for ${title} has changed!</h1>
-      <h2>New Status: <span style="padding: 2px; border: 2px solid ${statusColor(status)}; border-radius: 5px;">${status}</span></h2>
+      <h2>New Status: <span style="padding: 2px; border: 2px solid ${() => {
+        switch (status) {
+          case "New":
+            return "#ff52d9";
+          case "In Progress":
+            return "#7480ff";
+          case "Complete":
+            return "#00a96e";
+          default:
+            return "";
+        } // The colors here are subject to change depending on if the theme changes
+      }}; border-radius: 5px;">${status}</span></h2>
       `, // TODO: add CSS to make this look nicer
     };
 
