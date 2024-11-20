@@ -29,12 +29,14 @@ export default async function handler(req, res) {
       subject: `${title} Status Change`,
       html: `
       <h1>Status for ${title} has changed!</h1>
-      <h2>New Status: <span style="padding: 2px; border: 2px solid ${() => {
+      <h2>New Status: <span style="border: 3px solid ${() => {
         switch (status) {
           case "New":
             return "#ff52d9";
           case "In Progress":
             return "#7480ff";
+          case "Pending":
+            return "#ffbe00";
           case "Complete":
             return "#00a96e";
           default:

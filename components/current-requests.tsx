@@ -92,6 +92,8 @@ export default function CurrentRequests({ currentRequests }: currentProps) {
         return "select-secondary";
       case "In Progress":
         return "select-primary";
+      case "Pending":
+        return "select-warning";
       case "Complete":
         return "select-success";
       default:
@@ -135,6 +137,9 @@ export default function CurrentRequests({ currentRequests }: currentProps) {
                     </option>
                     <option className="bg-primary" value="In Progress">
                       In Progress
+                    </option>
+                    <option className="bg-warning" value="Pending">
+                      Pending
                     </option>
                     <option className="bg-success" value="Complete">
                       Complete
