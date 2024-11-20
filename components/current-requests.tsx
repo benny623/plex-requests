@@ -113,6 +113,7 @@ export default function CurrentRequests({ currentRequests }: currentProps) {
             <th>Release Year</th>
             <th>Type</th>
             <th>Status</th>
+            <th>Note</th>
           </tr>
         </thead>
         <tbody>
@@ -146,6 +147,7 @@ export default function CurrentRequests({ currentRequests }: currentProps) {
                     </option>
                   </select>
                 </td>
+                <td>{request.request_note}</td>
               </tr>
             ))
           ) : (

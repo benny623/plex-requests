@@ -109,6 +109,7 @@ export default function RequestTable({ completedRequests }: completedProps) {
             <th>Release Year</th>
             <th>Type</th>
             <th>Status</th>
+            <th>Note</th>
           </tr>
         </thead>
         <tbody>
@@ -142,6 +143,7 @@ export default function RequestTable({ completedRequests }: completedProps) {
                     </option>
                   </select>
                 </td>
+                <td>{request.request_note}</td>
               </tr>
             ))
           ) : (
