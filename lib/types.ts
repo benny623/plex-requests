@@ -6,6 +6,7 @@ export interface Request {
   request_requestor: string;
   request_type: string;
   request_status: string;
+  request_note: string;
 }
 
 // Request Props
