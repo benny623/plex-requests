@@ -1,5 +1,5 @@
 export const fetchAllRequests = async () => {
-  const response = await fetch("/api/requests");
+  const response = await fetch("/api/all-requests");
 
   if (!response.ok) {
     throw new Error("Failed to fetch all requests");

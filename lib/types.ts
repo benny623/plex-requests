@@ -17,3 +17,7 @@ export type currentProps = {
 export type completedProps = {
   completedRequests: Request[];
 };
+
+export type adminProps = {
+  allRequests: Request[];
+};
