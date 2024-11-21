@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Request, completedProps } from '@/lib/types';
+import { Request, completedProps } from "@/lib/types";
 import Link from "next/link";
 
 export default function RequestTable({ completedRequests }: completedProps) {
@@ -91,6 +91,8 @@ export default function RequestTable({ completedRequests }: completedProps) {
         return "select-secondary";
       case "In Progress":
         return "select-primary";
+      case "Pending":
+        return "select-warning";
       case "Complete":
         return "select-success";
       default:
@@ -99,9 +101,7 @@ export default function RequestTable({ completedRequests }: completedProps) {
   }
 
   return (
-    <div
-      className="min-h-screen flex justify-center items-center py-10 bg-base-100"
-    >
+    <div className="min-h-screen flex justify-center items-center py-10 bg-base-100">
       <table className="table w-full max-w-4xl border-collapse table-pin-rows">
         <thead>
           <tr>
@@ -109,6 +109,7 @@ export default function RequestTable({ completedRequests }: completedProps) {
             <th>Release Year</th>
             <th>Type</th>
             <th>Status</th>
+            <th>Note</th>
           </tr>
         </thead>
         <tbody>
@@ -134,11 +135,15 @@ export default function RequestTable({ completedRequests }: completedProps) {
                     <option className="bg-primary" value="In Progress">
                       In Progress
                     </option>
+                    <option className="bg-warning" value="Pending">
+                      Pending
+                    </option>
                     <option className="bg-success" value="Complete">
                       Complete
                     </option>
                   </select>
                 </td>
+                <td>{request.request_note}</td>
               </tr>
             ))
           ) : (
@@ -152,10 +157,7 @@ export default function RequestTable({ completedRequests }: completedProps) {
         <tfoot>
           <tr>
             <td colSpan={5} style={{ textAlign: "center" }}>
-              <Link
-                href={"/#requests-table"}
-                className="text-info font-bold"
-              >
+              <Link href={"/#requests-table"} className="text-info font-bold">
                 Go Back
               </Link>
             </td>

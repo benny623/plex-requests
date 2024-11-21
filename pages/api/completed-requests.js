@@ -8,7 +8,8 @@ export default async function handler(req, res) {
             request_title, 
             request_year, 
             request_type, 
-            request_status
+            request_status,
+            request_note
           FROM requests
           WHERE
             request_status = 'Complete'

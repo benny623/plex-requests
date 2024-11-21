@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   console.log(`Update recieved ${JSON.stringify(req.body)}`);
 
   const { id } = req.query; // Get request ID
-  const { status } = req.body; // Get updated data
+  const { note } = req.body; // Get updated data
 
   try {
     const { rows } = await query(
@@ -12,13 +12,13 @@ export default async function handler(req, res) {
       UPDATE
         requests
       SET
-        request_status = $1
+        request_note = $1
       WHERE
         request_id = $2
       RETURNING
         *
     `,
-      [status, id]
+      [note, id]
     );
 
     if (rows.length === 0) {
