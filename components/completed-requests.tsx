@@ -12,79 +12,7 @@ export default function RequestTable({ completedRequests }: completedProps) {
     setRequests(completedRequests);
   }, [completedRequests]);
 
-  const handleStatusChange = async (
-    e: React.ChangeEvent<HTMLSelectElement>,
-    requestId: number
-  ) => {
-    const newStatus = e.target.value;
-
-    // Update status locally for immediate feedback
-    const updatedRequestList = requests.map((request: Request) =>
-      request.request_id === requestId
-        ? { ...request, request_status: newStatus }
-        : request
-    );
-    setRequests(updatedRequestList);
-
-    try {
-      // Send update to server
-      const response = await fetch(`/api/update-request/${requestId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          status: newStatus,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update status");
-      }
-
-      const updatedRequest = await response.json();
-      console.log("Status updated", updatedRequest);
-
-      // Send notification for updated status
-      try {
-        const response = await fetch("/api/update-notification", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            status: newStatus,
-            id: requestId,
-            title: requests.find((r) => r.request_id === requestId)
-              ?.request_title,
-            // email: requests.find((r) => r.request_id === requestId)
-            //   ?.request_requestor, // TODO: need to change this line to request_email after user auth is set up
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to send notification");
-        }
-
-        const notification = await response.json();
-
-        console.log("Notification sent", notification);
-      } catch (err) {
-        console.error("Error sending notification", err);
-      }
-    } catch (err) {
-      console.error("Error updating status:", err);
-
-      // Revert the status if the update failed
-      const revertedRequestList = requests.map((request: Request) =>
-        request.request_id === requestId
-          ? { ...request, request_status: request.request_status }
-          : request
-      );
-      setRequests(revertedRequestList);
-    }
-  };
-
+  // Get the status color
   function statusColor(status: string) {
     switch (status) {
       case "New":
@@ -120,30 +48,17 @@ export default function RequestTable({ completedRequests }: completedProps) {
                 <td>{request.request_year}</td>
                 <td>{request.request_type}</td>
                 <td>
-                  <select
-                    id="status"
-                    name="status"
-                    value={request.request_status}
-                    onChange={(e) => handleStatusChange(e, request.request_id)}
-                    className={`select w-full max-w-xs select-sm ${statusColor(
+                  <p
+                    className={`rounded-lg text-center border-4 p-2 ${statusColor(
                       request.request_status
                     )}`}
                   >
-                    <option className="bg-secondary" value="New">
-                      New
-                    </option>
-                    <option className="bg-primary" value="In Progress">
-                      In Progress
-                    </option>
-                    <option className="bg-warning" value="Pending">
-                      Pending
-                    </option>
-                    <option className="bg-success" value="Complete">
-                      Complete
-                    </option>
-                  </select>
+                    {request.request_status}
+                  </p>
                 </td>
-                <td>{request.request_note}</td>
+                <td>
+                  <p>{request.request_note}</p>
+                </td>
               </tr>
             ))
           ) : (
