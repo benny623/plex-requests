@@ -29,7 +29,7 @@ export default function CurrentRequests({ currentRequests }: currentProps) {
 
     try {
       // Send update to server
-      const response = await fetch(`/api/update-request/${requestId}`, {
+      const response = await fetch(`/api/update-status/${requestId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -54,12 +54,7 @@ export default function CurrentRequests({ currentRequests }: currentProps) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            status: newStatus,
             id: requestId,
-            title: requests.find((r) => r.request_id === requestId)
-              ?.request_title,
-            // email: requests.find((r) => r.request_id === requestId)
-            //   ?.request_requestor, // TODO: need to change this line to request_email after user auth is set up
           }),
         });
 
@@ -75,6 +70,58 @@ export default function CurrentRequests({ currentRequests }: currentProps) {
       }
     } catch (err) {
       console.error("Error updating status:", err);
+
+      // Revert the status if the update failed
+      const revertedRequestList = requests.map((request: Request) =>
+        request.request_id === requestId
+          ? { ...request, request_status: request.request_status }
+          : request
+      );
+      setRequests(revertedRequestList);
+    }
+  };
+
+  const handleNoteChange = async (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+    requestId: number
+  ) => {
+    const newNote = e.target.value;
+
+    // Update status locally for immediate feedback
+    const updatedRequestList = requests.map((request: Request) =>
+      request.request_id === requestId
+        ? { ...request, request_note: newNote }
+        : request
+    );
+    setRequests(updatedRequestList);
+  };
+
+  const handleNoteBlur = async (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+    requestId: number
+  ) => {
+    const newNote = e.target.value;
+    
+    try {
+      // Send update to server
+      const response = await fetch(`/api/update-note/${requestId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          note: newNote || null,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update note");
+      }
+
+      const updatedRequest = await response.json();
+      console.log("Note updated", updatedRequest);
+    } catch (err) {
+      console.error("Error updating note:", err);
 
       // Revert the status if the update failed
       const revertedRequestList = requests.map((request: Request) =>
@@ -147,7 +194,16 @@ export default function CurrentRequests({ currentRequests }: currentProps) {
                     </option>
                   </select>
                 </td>
-                <td>{request.request_note}</td>
+                <td>
+                  <textarea
+                    id="note"
+                    name="note"
+                    value={request.request_note}
+                    onBlur={(e) => handleNoteBlur(e, request.request_id)}
+                    onChange={(e) => handleNoteChange(e, request.request_id)}
+                    className="textarea textarea-bordered w-full"
+                  />
+                </td>
               </tr>
             ))
           ) : (
