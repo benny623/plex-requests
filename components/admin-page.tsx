@@ -213,7 +213,9 @@ export default function AdminPage({ allRequests }: adminProps) {
                         name="note"
                         value={request.request_note}
                         onBlur={(e) => handleNoteBlur(e, request.request_id)}
-                        onChange={(e) => handleNoteChange(e, request.request_id)}
+                        onChange={(e) =>
+                          handleNoteChange(e, request.request_id)
+                        }
                         className="textarea textarea-bordered w-full"
                       />
                     </td>
