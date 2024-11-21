@@ -9,15 +9,25 @@ export interface Request {
   request_note: string;
 }
 
+// Loading Status Type
+export interface Status {
+  loading: boolean;
+  error: string;
+  success: boolean;
+}
+
 // Request Props
 export type currentProps = {
   currentRequests: Request[];
+  loading: Status;
 };
 
 export type completedProps = {
   completedRequests: Request[];
+  loading: Status;
 };
 
 export type adminProps = {
   allRequests: Request[];
+  loading: Status;
 };

@@ -9,7 +9,7 @@ import RequestForm from "@/components/request-form";
 import Link from "next/link";
 
 export default function Home() {
-  const { requests, fetchData } = useFormHandlers(fetchCurrentRequests);
+  const { requests, fetchData, status } = useFormHandlers(fetchCurrentRequests);
 
   // Initial GET request
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function Home() {
           <RequestForm />
         </div>
       </div>
-      <CurrentRequests currentRequests={requests} />
+      <CurrentRequests currentRequests={requests} loading={status} />
     </div>
   );
 }

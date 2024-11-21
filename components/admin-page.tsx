@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Request, adminProps } from "@/lib/types";
 
-export default function AdminPage({ allRequests }: adminProps) {
+export default function AdminPage({ allRequests, loading }: adminProps) {
   const [admin, setAdmin] = useState(false);
   const [requests, setRequests] = useState<Request[]>(allRequests);
 
@@ -175,56 +175,64 @@ export default function AdminPage({ allRequests }: adminProps) {
               </tr>
             </thead>
             <tbody>
-              {requests.length > 0 ? (
-                requests.map((request: Request) => (
-                  <tr key={request.request_id}>
-                    <td>{request.request_title}</td>
-                    <td>{request.request_year}</td>
-                    <td>{request.request_type}</td>
-                    <td>
-                      <select
-                        id="status"
-                        name="status"
-                        value={request.request_status}
-                        onChange={(e) =>
-                          handleStatusChange(e, request.request_id)
-                        }
-                        className={`select w-full max-w-xs select-sm ${statusColor(
-                          request.request_status
-                        )}`}
-                      >
-                        <option className="bg-secondary" value="New">
-                          New
-                        </option>
-                        <option className="bg-primary" value="In Progress">
-                          In Progress
-                        </option>
-                        <option className="bg-warning" value="Pending">
-                          Pending
-                        </option>
-                        <option className="bg-success" value="Complete">
-                          Complete
-                        </option>
-                      </select>
-                    </td>
-                    <td>
-                      <textarea
-                        id="note"
-                        name="note"
-                        value={request.request_note}
-                        onBlur={(e) => handleNoteBlur(e, request.request_id)}
-                        onChange={(e) =>
-                          handleNoteChange(e, request.request_id)
-                        }
-                        className="textarea textarea-bordered w-full"
-                      />
+              {!loading.loading && loading.success ? (
+                requests.length > 0 ? (
+                  requests.map((request: Request) => (
+                    <tr key={request.request_id}>
+                      <td>{request.request_title}</td>
+                      <td>{request.request_year}</td>
+                      <td>{request.request_type}</td>
+                      <td>
+                        <select
+                          id="status"
+                          name="status"
+                          value={request.request_status}
+                          onChange={(e) =>
+                            handleStatusChange(e, request.request_id)
+                          }
+                          className={`select w-full max-w-xs select-sm ${statusColor(
+                            request.request_status
+                          )}`}
+                        >
+                          <option className="bg-secondary" value="New">
+                            New
+                          </option>
+                          <option className="bg-primary" value="In Progress">
+                            In Progress
+                          </option>
+                          <option className="bg-warning" value="Pending">
+                            Pending
+                          </option>
+                          <option className="bg-success" value="Complete">
+                            Complete
+                          </option>
+                        </select>
+                      </td>
+                      <td>
+                        <textarea
+                          id="note"
+                          name="note"
+                          value={request.request_note}
+                          onBlur={(e) => handleNoteBlur(e, request.request_id)}
+                          onChange={(e) =>
+                            handleNoteChange(e, request.request_id)
+                          }
+                          className="textarea textarea-bordered w-full"
+                        />
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={5} style={{ textAlign: "center" }}>
+                      No current requests
                     </td>
                   </tr>
-                ))
+                )
               ) : (
                 <tr>
                   <td colSpan={5} style={{ textAlign: "center" }}>
-                    No current requests
+                    <span className="loading loading-dots loading-md"></span>
                   </td>
                 </tr>
               )}

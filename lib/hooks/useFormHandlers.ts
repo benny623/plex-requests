@@ -168,7 +168,7 @@ export const useFormHandlers = (fetchCurrentRequests: () => Promise<any>) => {
         success: false,
       });
     } finally {
-      setStatus((prev) => ({ ...prev, loading: false }));
+      setStatus((prev) => ({ ...prev, loading: false, success: true }));
     }
   };
 
