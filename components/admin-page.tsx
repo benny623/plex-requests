@@ -9,8 +9,11 @@ export default function AdminPage({ allRequests }: adminProps) {
 
   // Put data into temporary State
   useEffect(() => {
-    const isAdmin = window.localStorage.getItem("isAdmin") || "";
-    if(!isAdmin) {
+    // Check if admin key is correct
+    if (
+      window.localStorage.getItem("isAdmin") !==
+      process.env.NEXT_PUBLIC_ADMIN_KEY
+    ) {
       return;
     }
     setRequests(allRequests);
@@ -114,7 +117,7 @@ export default function AdminPage({ allRequests }: adminProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          note: newNote || null,
+          note: newNote || "",
         }),
       });
 
@@ -123,6 +126,7 @@ export default function AdminPage({ allRequests }: adminProps) {
       }
 
       const updatedRequest = await response.json();
+
       console.log("Note updated", updatedRequest);
     } catch (err) {
       console.error("Error updating note:", err);
@@ -155,7 +159,9 @@ export default function AdminPage({ allRequests }: adminProps) {
   return (
     <>
       {admin === false ? (
-        <div>Not an admin</div>
+        <div className="min-h-screen flex justify-center items-center py-10 bg-base-100">
+          <h1 className="font-bold">Not an admin</h1>
+        </div>
       ) : (
         <div className="min-h-screen flex justify-center items-center py-10 bg-base-100">
           <table className="table w-full max-w-4xl border-collapse table-pin-rows">
@@ -207,9 +213,7 @@ export default function AdminPage({ allRequests }: adminProps) {
                         name="note"
                         value={request.request_note}
                         onBlur={(e) => handleNoteBlur(e, request.request_id)}
-                        onChange={(e) =>
-                          handleNoteChange(e, request.request_id)
-                        }
+                        onChange={(e) => handleNoteChange(e, request.request_id)}
                         className="textarea textarea-bordered w-full"
                       />
                     </td>
