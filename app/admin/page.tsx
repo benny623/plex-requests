@@ -7,7 +7,7 @@ import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
 import AdminPage from "@/components/admin-page";
 
 export default function CompletedRequestsTable() {
-  const { requests, fetchData } = useFormHandlers(fetchAllRequests);
+  const { requests, fetchData, status } = useFormHandlers(fetchAllRequests);
 
   // Initial GET request
   useEffect(() => {
@@ -16,7 +16,7 @@ export default function CompletedRequestsTable() {
 
   return (
     <div className="h-screen">
-      <AdminPage allRequests={requests} />
+      <AdminPage allRequests={requests} loading={status} />
     </div>
   );
 }

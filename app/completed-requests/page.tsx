@@ -7,7 +7,9 @@ import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
 import CompletedRequests from "@/components/completed-requests";
 
 export default function CompletedRequestsTable() {
-  const { requests, fetchData } = useFormHandlers(fetchCompleteRequests);
+  const { requests, fetchData, status } = useFormHandlers(
+    fetchCompleteRequests
+  );
 
   // Initial GET request
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function CompletedRequestsTable() {
 
   return (
     <div className="h-screen">
-      <CompletedRequests completedRequests={requests} />
+      <CompletedRequests completedRequests={requests} loading={status} />
     </div>
   );
 }
