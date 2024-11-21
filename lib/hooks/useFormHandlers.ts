@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 
 export const useFormHandlers = (fetchCurrentRequests: () => Promise<any>) => {
+  const [requests, setRequests] = useState<any[]>([]);
   const [formState, setFormState] = useState({
     title: "",
     year: "",
@@ -8,20 +9,16 @@ export const useFormHandlers = (fetchCurrentRequests: () => Promise<any>) => {
     status: "New",
     type: "Movie",
   });
-
   const [formErrors, setFormErrors] = useState({
     title: "",
     year: "",
     email: "",
   });
-
   const [status, setStatus] = useState({
     loading: false,
     error: "",
     success: false,
   });
-
-  const [requests, setRequests] = useState<any[]>([]);
 
   // Validate form before submission
   const validateForm = () => {
@@ -57,7 +54,7 @@ export const useFormHandlers = (fetchCurrentRequests: () => Promise<any>) => {
     return valid;
   };
 
-  // Handle input changes
+  // Handle form input changes
   const handleChange = (e: any) => {
     const { name, value } = e.target;
 
