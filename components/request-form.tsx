@@ -88,13 +88,17 @@ export default function RequestForm({
           </button>
         </div>
         {status.error && (
-          <div className="mt-4 text-red-500">
-            <p>Error: {status.error}</p>
+          <div className="form-control mt-4 flex items-center">
+            <div className="mt-4 text-red-500">
+              <p>Error: {status.error}</p>
+            </div>
           </div>
         )}
         {status.success && (
-          <div className="mt-4 text-green-500">
-            <p>Request submitted successfully!</p>
+          <div className="form-control mt-4 flex items-center">
+            <div className="mt-4 text-green-500">
+              <p>Request submitted successfully!</p>
+            </div>
           </div>
         )}
       </form>

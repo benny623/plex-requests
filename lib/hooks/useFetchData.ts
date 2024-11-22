@@ -14,6 +14,7 @@ export const useFetchData = (fetchRequests: () => Promise<any>) => {
       const result = await fetchRequests();
       setRequests(result);
     } catch (err) {
+      console.error("Error:", err);
       setStatus({
         loading: false,
         error: (err as Error).message,

@@ -122,30 +122,29 @@ export const useFormHandlers = (refetchRequests: () => void) => {
           refetchRequests();
           
           // Send notification for updated status
-          // try {
-          //   const response = await fetch("/api/new-notification", {
-          //     method: "POST",
-          //     headers: {
-          //       "Content-Type": "application/json",
-          //     },
-          //     body: JSON.stringify({
-          //       //email: formState.email, // TODO: autofill email after user auth is done
-          //       title: formState.title,
-          //       year: formState.year,
-          //       type: formState.type,
-          //     }),
-          //   });
+          try {
+            const response = await fetch("/api/new-notification", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                title: formState.title,
+                year: formState.year,
+                type: formState.type,
+              }),
+            });
 
-          //   if (!response.ok) {
-          //     throw new Error("Failed to send notification");
-          //   }
+            if (!response.ok) {
+              throw new Error("Failed to send notification");
+            }
 
-          //   const notification = await response.json();
+            const notification = await response.json();
 
-          //   console.log("Notification sent", notification);
-          // } catch (err) {
-          //   console.error("Error sending notification", err);
-          // }
+            console.log("Notification sent", notification);
+          } catch (err) {
+            console.error("Error sending notification", err);
+          }
 
           setFormState({
             title: "",
