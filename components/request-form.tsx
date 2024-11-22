@@ -1,9 +1,12 @@
 import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
-import { fetchCurrentRequests } from "@/lib/fetchRequests";
 
-export default function RequestForm() {
+export default function RequestForm({
+  refetchRequests,
+}: {
+  refetchRequests: () => void;
+}) {
   const { formState, formErrors, status, handleChange, handleSubmit } =
-    useFormHandlers(fetchCurrentRequests);
+    useFormHandlers(refetchRequests);
 
   return (
     <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
@@ -85,13 +88,17 @@ export default function RequestForm() {
           </button>
         </div>
         {status.error && (
-          <div className="mt-4 text-red-500">
-            <p>Error: {status.error}</p>
+          <div className="form-control mt-4 flex items-center">
+            <div className="mt-4 text-red-500">
+              <p>Error: {status.error}</p>
+            </div>
           </div>
         )}
         {status.success && (
-          <div className="mt-4 text-green-500">
-            <p>Request submitted successfully!</p>
+          <div className="form-control mt-4 flex items-center">
+            <div className="mt-4 text-green-500">
+              <p>Request submitted successfully!</p>
+            </div>
           </div>
         )}
       </form>

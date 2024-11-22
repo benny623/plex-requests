@@ -1,21 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
 import { fetchCurrentRequests } from "@/lib/fetchRequests";
-import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
+import { useFetchData } from "@/lib/hooks/useFetchData";
 
 import CurrentRequests from "@/components/current-requests";
 import RequestForm from "@/components/request-form";
 import Link from "next/link";
 
 export default function Home() {
-  const { requests, fetchData, status } = useFormHandlers(fetchCurrentRequests);
-
-  // Initial GET request
-  useEffect(() => {
-    fetchData();
-  }, []);
-
+  const { requests, status, fetchData } = useFetchData(fetchCurrentRequests);
   return (
     <div className="h-screen">
       <div className="hero bg-base-200 min-h-screen">
@@ -31,7 +24,7 @@ export default function Home() {
               See current requests
             </Link>
           </div>
-          <RequestForm />
+          <RequestForm refetchRequests={fetchData} />
         </div>
       </div>
       <CurrentRequests currentRequests={requests} loading={status} />

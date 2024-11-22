@@ -39,7 +39,7 @@ export default function CurrentRequests({
       <div className="card w-full sm:w-3/4 md:w-2/3 lg:w-1/2 bg-base-100 shadow-xl">
         <div className="card-body">
           <div className="overflow-x-auto">
-            <table className="table w-full max-w-4xl border-collapse table-pin-rows table-pin-cols">
+            <table className="table w-full max-w-4xl border-collapse table-pin-cols">
               <thead>
                 <tr>
                   <th>Title</th>

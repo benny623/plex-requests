@@ -1,21 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
 import { fetchCompleteRequests } from "@/lib/fetchRequests";
-import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
+import { useFetchData } from "@/lib/hooks/useFetchData";
 
 import CompletedRequests from "@/components/completed-requests";
 
 export default function CompletedRequestsTable() {
-  const { requests, fetchData, status } = useFormHandlers(
+  const { requests, status } = useFetchData(
     fetchCompleteRequests
   );
-
-  // Initial GET request
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   return (
     <div className="h-screen">
       <CompletedRequests completedRequests={requests} loading={status} />
