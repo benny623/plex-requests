@@ -211,7 +211,7 @@ export default function AdminPage({ allRequests, loading }: adminProps) {
                     <tr key={request.request_id}>
                       <td>
                         <button
-                          className="transition ease-in-out hover:scale-110 duration-200"
+                          className="transition ease-in-out hover:scale-110 hover:text-red-500 duration-200"
                           onClick={(e) => handleDeletion(e, request.request_id)}
                         >
                           <svg
