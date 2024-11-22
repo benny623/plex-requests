@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { fetchCurrentRequests } from "@/lib/fetchRequests";
 import { useFetchData } from "@/lib/hooks/useFetchData";
 
