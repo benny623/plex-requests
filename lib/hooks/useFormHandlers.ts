@@ -1,7 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState,  useCallback } from "react";
 
-export const useFormHandlers = (fetchCurrentRequests: () => Promise<any>) => {
-  const [requests, setRequests] = useState<any[]>([]);
+export const useFormHandlers = (refetchRequests: () => void) => {
+  // const [requests, setRequests] = useState<any[]>([]);
   const [formState, setFormState] = useState({
     title: "",
     year: "",
@@ -70,6 +70,28 @@ export const useFormHandlers = (fetchCurrentRequests: () => Promise<any>) => {
     }));
   };
 
+  // Fetch requests data
+  // const fetchData = async () => {
+  //   setStatus({ loading: true, error: "", success: false });
+  //   try {
+  //     const result = await fetchCurrentRequests();
+  //     setRequests(result);
+  //     console.log(requests);
+  //   } catch (err: unknown) {
+  //     setStatus({
+  //       loading: false,
+  //       error: (err as Error).message,
+  //       success: false,
+  //     });
+  //   } finally {
+  //     setStatus((prev) => ({ ...prev, loading: false, success: true }));
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
   // Handle form submission
   const handleSubmit = useCallback(
     async (e: any) => {
@@ -95,31 +117,35 @@ export const useFormHandlers = (fetchCurrentRequests: () => Promise<any>) => {
 
         if (res.ok) {
           console.log("POST Success");
+
+          // Refetch requests data for table
+          refetchRequests();
+          
           // Send notification for updated status
-          try {
-            const response = await fetch("/api/new-notification", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                //email: formState.email, // TODO: autofill email after user auth is done
-                title: formState.title,
-                year: formState.year,
-                type: formState.type,
-              }),
-            });
+          // try {
+          //   const response = await fetch("/api/new-notification", {
+          //     method: "POST",
+          //     headers: {
+          //       "Content-Type": "application/json",
+          //     },
+          //     body: JSON.stringify({
+          //       //email: formState.email, // TODO: autofill email after user auth is done
+          //       title: formState.title,
+          //       year: formState.year,
+          //       type: formState.type,
+          //     }),
+          //   });
 
-            if (!response.ok) {
-              throw new Error("Failed to send notification");
-            }
+          //   if (!response.ok) {
+          //     throw new Error("Failed to send notification");
+          //   }
 
-            const notification = await response.json();
+          //   const notification = await response.json();
 
-            console.log("Notification sent", notification);
-          } catch (err) {
-            console.error("Error sending notification", err);
-          }
+          //   console.log("Notification sent", notification);
+          // } catch (err) {
+          //   console.error("Error sending notification", err);
+          // }
 
           setFormState({
             title: "",
@@ -128,9 +154,6 @@ export const useFormHandlers = (fetchCurrentRequests: () => Promise<any>) => {
             status: "New",
             type: "Movie",
           });
-
-          // Refetch requests data for table
-          fetchData();
 
           setStatus({ loading: false, error: "", success: true });
         } else {
@@ -152,33 +175,14 @@ export const useFormHandlers = (fetchCurrentRequests: () => Promise<any>) => {
         });
       }
     },
-    [formState]
+    [formState, refetchRequests]
   );
-
-  // Fetch requests data
-  const fetchData = async () => {
-    setStatus({ loading: true, error: "", success: false });
-    try {
-      const result = await fetchCurrentRequests();
-      setRequests(result);
-    } catch (err: unknown) {
-      setStatus({
-        loading: false,
-        error: (err as Error).message,
-        success: false,
-      });
-    } finally {
-      setStatus((prev) => ({ ...prev, loading: false, success: true }));
-    }
-  };
 
   return {
     formState,
     formErrors,
     status,
-    requests,
     handleChange,
     handleSubmit,
-    fetchData,
   };
 };

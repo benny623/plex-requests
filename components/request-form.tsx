@@ -1,9 +1,9 @@
 import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
-import { fetchCurrentRequests } from "@/lib/fetchRequests";
+import { useFetchData } from "@/lib/hooks/useFetchData";
 
-export default function RequestForm() {
+export default function RequestForm({ refetchRequests }: { refetchRequests: () => void }) {
   const { formState, formErrors, status, handleChange, handleSubmit } =
-    useFormHandlers(fetchCurrentRequests);
+    useFormHandlers(refetchRequests);
 
   return (
     <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">

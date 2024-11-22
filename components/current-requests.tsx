@@ -10,7 +10,7 @@ export default function CurrentRequests({
 }: currentProps) {
   const [requests, setRequests] = useState<Request[]>(currentRequests);
 
-  // Put data into temporary State
+  //Put data into temporary State
   useEffect(() => {
     setRequests(currentRequests);
   }, [currentRequests]);

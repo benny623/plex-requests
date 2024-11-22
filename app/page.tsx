@@ -2,19 +2,19 @@
 
 import { useEffect } from "react";
 import { fetchCurrentRequests } from "@/lib/fetchRequests";
-import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
-
+//import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
+import { useFetchData } from "@/lib/hooks/useFetchData";
 import CurrentRequests from "@/components/current-requests";
 import RequestForm from "@/components/request-form";
 import Link from "next/link";
 
 export default function Home() {
-  const { requests, fetchData, status } = useFormHandlers(fetchCurrentRequests);
+  const { requests, status, fetchData } = useFetchData(fetchCurrentRequests);
 
   // Initial GET request
   useEffect(() => {
-    fetchData();
-  }, []);
+    console.log(requests)
+  }, [requests]);
 
   return (
     <div className="h-screen">
@@ -31,7 +31,7 @@ export default function Home() {
               See current requests
             </Link>
           </div>
-          <RequestForm />
+          <RequestForm refetchRequests={fetchData} />
         </div>
       </div>
       <CurrentRequests currentRequests={requests} loading={status} />
