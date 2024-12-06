@@ -187,7 +187,7 @@ export default function AdminPage({ allRequests, loading }: adminProps) {
 
   return (
     <>
-      {admin === false ? (
+      {!admin ? (
         <div className="min-h-screen flex justify-center items-center py-10 bg-base-100">
           <h1 className="font-bold">Not an admin</h1>
         </div>

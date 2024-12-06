@@ -84,7 +84,7 @@ export default function RequestForm({
         </div>
         <div className="form-control mt-6">
           <button className="btn btn-primary" disabled={status.loading}>
-            {status.loading ? "Submitting..." : "Submit"}
+            {status.loading ? <span className="loading loading-dots loading-xs"></span> : "Submit"}
           </button>
         </div>
         {status.error && (
