@@ -1,14 +1,19 @@
 "use client";
 
+import { useState } from "react";
+
 import { fetchCurrentRequests } from "@/lib/fetchRequests";
 import { useFetchData } from "@/lib/hooks/useFetchData";
 
 import CurrentRequests from "@/components/current-requests";
+import SearchForm from "@/components/search-form";
 import RequestForm from "@/components/request-form";
 import Link from "next/link";
 
 export default function Home() {
   const { requests, status, fetchData } = useFetchData(fetchCurrentRequests);
+  const [searchState, setSearchState] = useState(true);
+
   return (
     <div className="h-screen">
       <div className="hero bg-base-200 min-h-screen">
@@ -24,7 +29,11 @@ export default function Home() {
               See current requests
             </Link>
           </div>
-          <RequestForm refetchRequests={fetchData} />
+          {searchState ? (
+            <SearchForm />
+          ) : (
+            <RequestForm refetchRequests={fetchData} />
+          )}
         </div>
       </div>
       <CurrentRequests currentRequests={requests} loading={status} />
