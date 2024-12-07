@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-//import { search } from "@/pages/api/search";
 
 export default function SearchForm() {
   const [searchQuery, setSearchQuery] = useState({
@@ -26,18 +25,15 @@ export default function SearchForm() {
 
     try {
       const response = await fetch(`/api/search/${searchQuery.search}`);
+      const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error("Failed to delete note");
-      }
-
-    //   setSearchQuery((prevState) => ({
-    //     ...prevState,
-    //     results: response,
-    //     error: "",
-    //     loading: false,
-    //   }));
-      console.log(response)
+      setSearchQuery((prevState) => ({
+        ...prevState,
+        results: data.results.results,
+        error: "",
+        loading: false,
+      }));
+      console.log(searchQuery.results);
     } catch (err) {
       console.error(err);
       setSearchQuery((prevState) => ({
@@ -67,7 +63,7 @@ export default function SearchForm() {
             id="search"
             name="search"
             type="text"
-            placeholder="Search"
+            placeholder="Movies, TV Shows, Anime"
             value={searchQuery.search}
             onChange={handleChange}
             className="input input-bordered flex items-center"
@@ -78,7 +74,7 @@ export default function SearchForm() {
             {searchQuery.loading ? (
               <span className="loading loading-dots loading-xs"></span>
             ) : (
-              "Submit"
+              "Search"
             )}
           </button>
         </div>
