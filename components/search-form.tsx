@@ -1,9 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
 import Image from "next/image";
 
-export default function SearchForm() {
+export default function SearchForm({
+  refetchRequests,
+}: {
+  refetchRequests: () => void;
+}) {
+  const { formState, formErrors, status, handleSubmit } =
+    useFormHandlers(refetchRequests);
+
   const [searchQuery, setSearchQuery] = useState({
     search: "",
     loading: false,
@@ -58,36 +66,128 @@ export default function SearchForm() {
   };
 
   const selectResult = (e: any) => {
-    const { name, value } = e.target;
     (document.getElementById("search_modal") as HTMLDialogElement).close();
   };
 
   return (
     <>
       <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+        <form className="card-body" onSubmit={handleSubmit}>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Search</span>
+            </label>
+            <div className="join flex">
+              <input
+                id="search"
+                name="search"
+                type="text"
+                placeholder="Movies, TV Shows, Anime"
+                value={searchQuery.search}
+                onChange={handleChange}
+                className="input input-bordered join-item flex-grow"
+              />
+              <button
+                className="btn btn-primary join-item"
+                onClick={handleSearch}
+              >
+                {searchQuery.loading ? (
+                  <span className="loading loading-dots loading-xs"></span>
+                ) : (
+                  "Search"
+                )}
+              </button>
+            </div>
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Year</span>
+            </label>
+            <input
+              id="year"
+              name="year"
+              type="text"
+              placeholder="Release year"
+              maxLength={4}
+              value={formState.year}
+              onChange={handleChange}
+              className="grow input input-bordered flex items-center gap-2"
+            />
+            {formErrors.year && (
+              <p className="text-sm text-red-500">{formErrors.year}</p>
+            )}
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Requestor Email *</span>
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="text"
+              placeholder="Your email"
+              value={formState.email}
+              onChange={handleChange}
+              className="grow input input-bordered flex items-center"
+            />
+            {formErrors.email && (
+              <p className="text-sm text-red-500">{formErrors.email}</p>
+            )}
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Type *</span>
+            </label>
+            <select
+              id="type"
+              name="type"
+              value={formState.type}
+              onChange={handleChange}
+              className="select select-bordered"
+            >
+              <option value="Anime">Anime</option>
+              <option value="Anime Movie">Anime Movie</option>
+              <option value="Movie">Movie</option>
+              <option value="Seasonal Movie">Seasonal Movie</option>
+              <option value="TV Show">TV Show</option>
+            </select>
+          </div>
+          <div className="form-control mt-4 flex items-center">
+            <p className="label-text text-warning">* Required</p>
+          </div>
+          <div className="form-control mt-6">
+            <button className="btn btn-primary" disabled={status.loading}>
+              {status.loading ? (
+                <span className="loading loading-dots loading-xs"></span>
+              ) : (
+                "Submit"
+              )}
+            </button>
+          </div>
+          {status.error && (
+            <div className="form-control mt-4 flex items-center">
+              <div className="mt-4 text-red-500">
+                <p>Error: {status.error}</p>
+              </div>
+            </div>
+          )}
+          {status.success && (
+            <div className="form-control mt-4 flex items-center">
+              <div className="mt-4 text-green-500">
+                <p>Request submitted successfully!</p>
+              </div>
+            </div>
+          )}
+        </form>
+      </div>
+
+      {/* <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
         <form className="card-body" onSubmit={handleSearch}>
           <div className="form-control">
             <label className="label">
               <span className="label-text">Search</span>
             </label>
-            <input
-              id="search"
-              name="search"
-              type="text"
-              placeholder="Movies, TV Shows, Anime"
-              value={searchQuery.search}
-              onChange={handleChange}
-              className="input input-bordered flex items-center"
-            />
-          </div>
-          <div className="form-control mt-6">
-            <button className="btn btn-primary" disabled={searchQuery.loading}>
-              {searchQuery.loading ? (
-                <span className="loading loading-dots loading-xs"></span>
-              ) : (
-                "Search"
-              )}
-            </button>
+            
           </div>
           {searchQuery.error && (
             <div className="form-control mt-4 flex items-center">
@@ -96,8 +196,87 @@ export default function SearchForm() {
               </div>
             </div>
           )}
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Year</span>
+            </label>
+            <input
+              id="year"
+              name="year"
+              type="text"
+              placeholder="Release year"
+              maxLength={4}
+              value={formState.year}
+              onChange={handleChange}
+              className="grow input input-bordered flex items-center gap-2"
+            />
+            {formErrors.year && (
+              <p className="text-sm text-red-500">{formErrors.year}</p>
+            )}
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Requestor Email *</span>
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="text"
+              placeholder="Your email"
+              value={formState.email}
+              onChange={handleChange}
+              className="grow input input-bordered flex items-center"
+            />
+            {formErrors.email && (
+              <p className="text-sm text-red-500">{formErrors.email}</p>
+            )}
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Type *</span>
+            </label>
+            <select
+              id="type"
+              name="type"
+              value={formState.type}
+              onChange={handleChange}
+              className="select select-bordered"
+            >
+              <option value="Anime">Anime</option>
+              <option value="Anime Movie">Anime Movie</option>
+              <option value="Movie">Movie</option>
+              <option value="Seasonal Movie">Seasonal Movie</option>
+              <option value="TV Show">TV Show</option>
+            </select>
+          </div>
+          <div className="form-control mt-4 flex items-center">
+            <p className="label-text text-warning">* Required</p>
+          </div>
+          <div className="form-control mt-6">
+            <button className="btn btn-primary" disabled={status.loading}>
+              {status.loading ? (
+                <span className="loading loading-dots loading-xs"></span>
+              ) : (
+                "Submit"
+              )}
+            </button>
+          </div>
+          {status.error && (
+            <div className="form-control mt-4 flex items-center">
+              <div className="mt-4 text-red-500">
+                <p>Error: {status.error}</p>
+              </div>
+            </div>
+          )}
+          {status.success && (
+            <div className="form-control mt-4 flex items-center">
+              <div className="mt-4 text-green-500">
+                <p>Request submitted successfully!</p>
+              </div>
+            </div>
+          )}
         </form>
-      </div>
+      </div> */}
       <dialog id="search_modal" className="modal">
         <div className="modal-box w-11/12 max-w-5xl relative">
           {/* Modal Header */}

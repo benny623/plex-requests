@@ -53,7 +53,7 @@ export default function Home() {
             </Link>
           </div>
           {searchState ? (
-            <SearchForm />
+            <SearchForm refetchRequests={fetchData} />
           ) : (
             <RequestForm refetchRequests={fetchData} />
           )}

@@ -74,9 +74,11 @@ export default function RequestForm({
             onChange={handleChange}
             className="select select-bordered"
           >
-            <option value="Movie">Movie</option>
-            <option value="TV Show">TV Show</option>
             <option value="Anime">Anime</option>
+            <option value="Anime Movie">Anime Movie</option>
+            <option value="Movie">Movie</option>
+            <option value="Seasonal Movie">Seasonal Movie</option>
+            <option value="TV Show">TV Show</option>
           </select>
         </div>
         <div className="form-control mt-4 flex items-center">

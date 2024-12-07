@@ -1,7 +1,6 @@
 import { useState,  useCallback } from "react";
 
 export const useFormHandlers = (refetchRequests: () => void) => {
-  // const [requests, setRequests] = useState<any[]>([]);
   const [formState, setFormState] = useState({
     title: "",
     year: "",
