@@ -18,6 +18,7 @@ export default function SearchForm() {
 
   const handleSearch = async (e: any) => {
     e.preventDefault();
+
     if (!searchQuery.search.trim()) return;
     if (searchQuery.loading) return;
 
@@ -33,7 +34,8 @@ export default function SearchForm() {
         error: "",
         loading: false,
       }));
-      console.log(searchQuery.results);
+
+      //console.log(searchQuery.results);
     } catch (err) {
       console.error(err);
       setSearchQuery((prevState) => ({
@@ -42,6 +44,9 @@ export default function SearchForm() {
       }));
     } finally {
       setSearchQuery((prevState) => ({ ...prevState, loading: false }));
+      (
+        document.getElementById("search_modal") as HTMLDialogElement
+      ).showModal();
     }
 
     setSearchQuery((prevState) => ({
@@ -53,39 +58,50 @@ export default function SearchForm() {
   };
 
   return (
-    <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-      <form className="card-body" onSubmit={handleSearch}>
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text">Search</span>
-          </label>
-          <input
-            id="search"
-            name="search"
-            type="text"
-            placeholder="Movies, TV Shows, Anime"
-            value={searchQuery.search}
-            onChange={handleChange}
-            className="input input-bordered flex items-center"
-          />
-        </div>
-        <div className="form-control mt-6">
-          <button className="btn btn-primary" disabled={searchQuery.loading}>
-            {searchQuery.loading ? (
-              <span className="loading loading-dots loading-xs"></span>
-            ) : (
-              "Search"
-            )}
-          </button>
-        </div>
-        {searchQuery.error && (
-          <div className="form-control mt-4 flex items-center">
-            <div className="mt-4 text-red-500">
-              <p>Error: {searchQuery.error}</p>
-            </div>
+    <>
+      <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+        <form className="card-body" onSubmit={handleSearch}>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Search</span>
+            </label>
+            <input
+              id="search"
+              name="search"
+              type="text"
+              placeholder="Movies, TV Shows, Anime"
+              value={searchQuery.search}
+              onChange={handleChange}
+              className="input input-bordered flex items-center"
+            />
           </div>
-        )}
-      </form>
-    </div>
+          <div className="form-control mt-6">
+            <button className="btn btn-primary" disabled={searchQuery.loading}>
+              {searchQuery.loading ? (
+                <span className="loading loading-dots loading-xs"></span>
+              ) : (
+                "Search"
+              )}
+            </button>
+          </div>
+          {searchQuery.error && (
+            <div className="form-control mt-4 flex items-center">
+              <div className="mt-4 text-red-500">
+                <p>Error: {searchQuery.error}</p>
+              </div>
+            </div>
+          )}
+        </form>
+      </div>
+      <dialog id="search_modal" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Hello!</h3>
+          <p className="py-4">Press ESC key or click outside to close</p>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
+    </>
   );
 }

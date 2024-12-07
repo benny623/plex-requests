@@ -22,9 +22,31 @@ export default function Home() {
             <h1 className="text-5xl font-bold">
               Submit a request!<span className="m-2">🎬</span>
             </h1>
-            <p className="py-6">
-              Submit a media request by filling out the form!
+            <p className="pt-6">
+              Submit a media request by searching or manually filling out the
+              form!
             </p>
+            <ul className="menu menu-horizontal bg-base-200 rounded-box">
+              <li>
+                <button
+                  onClick={() => {
+                    setSearchState(true);
+                  }}
+                >
+                  Search
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    setSearchState(false);
+                  }}
+                >
+                  Form
+                </button>
+              </li>
+            </ul>
+            <br />
             <Link href="/#requests-table" className="text-info font-bold">
               See current requests
             </Link>
