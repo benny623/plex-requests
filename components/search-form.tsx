@@ -58,6 +58,7 @@ export default function SearchForm() {
   };
 
   const selectResult = (e: any) => {
+    const { name, value } = e.target;
     (document.getElementById("search_modal") as HTMLDialogElement).close();
   };
 
