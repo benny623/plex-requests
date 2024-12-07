@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 export default function SearchForm() {
   const [searchQuery, setSearchQuery] = useState({
     search: "",
-    results: [],
     loading: false,
     error: "",
   });
+
+  const [searchResults, setSearchResults] = useState([]);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -28,14 +30,15 @@ export default function SearchForm() {
       const response = await fetch(`/api/search/${searchQuery.search}`);
       const data = await response.json();
 
+      console.log(data.results);
+
       setSearchQuery((prevState) => ({
         ...prevState,
-        results: data.results.results,
         error: "",
         loading: false,
       }));
 
-      //console.log(searchQuery.results);
+      setSearchResults(data.results);
     } catch (err) {
       console.error(err);
       setSearchQuery((prevState) => ({
@@ -43,18 +46,19 @@ export default function SearchForm() {
         error: "Failed to search movies",
       }));
     } finally {
-      setSearchQuery((prevState) => ({ ...prevState, loading: false }));
+      setSearchQuery((prevState) => ({
+        ...prevState,
+        loading: false,
+        error: "",
+      }));
       (
         document.getElementById("search_modal") as HTMLDialogElement
       ).showModal();
     }
+  };
 
-    setSearchQuery((prevState) => ({
-      ...prevState,
-      search: "",
-      loading: false,
-      error: "",
-    }));
+  const selectResult = (e: any) => {
+    (document.getElementById("search_modal") as HTMLDialogElement).close();
   };
 
   return (
@@ -94,10 +98,64 @@ export default function SearchForm() {
         </form>
       </div>
       <dialog id="search_modal" className="modal">
-        <div className="modal-box">
-          <h3 className="font-bold text-lg">Hello!</h3>
-          <p className="py-4">Press ESC key or click outside to close</p>
+        <div className="modal-box w-11/12 max-w-5xl relative">
+          {/* Modal Header */}
+          <div className="sticky top-0 bg-base-100 z-50 flex items-center justify-between px-4 py-2 shadow rounded-lg">
+            <h3 className="text-lg font-bold">Search Results</h3>
+            <form method="dialog">
+              <button className="btn btn-sm btn-circle btn-ghost">✕</button>
+            </form>
+          </div>
+
+          {/* Scrollable Content */}
+          <div className="h-4/6 overflow-y-auto space-y-4 pt-5">
+            {!searchResults.length ? (
+              <div className="text-center">No results found</div>
+            ) : (
+              searchResults.map((result: any) => (
+                <div
+                  key={result.id}
+                  className="card card-side bg-base-300 shadow-xl h-96"
+                >
+                  <figure className="w-1/3">
+                    {result.poster_path ? (
+                      <Image
+                        src={`https://image.tmdb.org/t/p/w500${result.poster_path}`}
+                        width={500}
+                        height={750}
+                        alt={result.title || result.name}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-400 flex items-center justify-center">
+                        <span>No Image</span>
+                      </div>
+                    )}
+                  </figure>
+                  <div className="card-body overflow-hidden w-2/3">
+                    <h2 className="card-title line-clamp-1">
+                      {result.title || result.name}
+                    </h2>
+                    <p className="text-sm font-normal italic">
+                      {result.release_date || result.first_air_date}
+                    </p>
+                    <p className="line-clamp-4">{result.overview}</p>
+                    <div className="card-actions justify-end">
+                      <button
+                        className="btn btn-primary"
+                        onClick={selectResult}
+                      >
+                        Select
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
+
+        {/* Modal Backdrop */}
         <form method="dialog" className="modal-backdrop">
           <button>close</button>
         </form>

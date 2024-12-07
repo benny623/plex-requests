@@ -26,6 +26,7 @@ export default function Home() {
               Submit a media request by searching or manually filling out the
               form!
             </p>
+            {/* TODO: Style this next section a bit better */}
             <ul className="menu menu-horizontal bg-base-200 rounded-box">
               <li>
                 <button

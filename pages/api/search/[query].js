@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     const response = await fetch(
       `${
         process.env.TMDB_BASE_URL
-      }/search/multi?include_adult=false&language=en-US&page=1&api_key=${
+      }/search/multi?include_adult=false&page=1&api_key=${
         process.env.TMDB_API_KEY
       }&query=${encodeURIComponent(query)}`
     );
