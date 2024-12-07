@@ -71,9 +71,8 @@ export default function SearchForm({
 
   return (
     <>
-      <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-        <form className="card-body" onSubmit={handleSubmit}>
-          <div className="form-control">
+      <form className="card-body" onSubmit={handleSubmit}>
+        <div className="form-control">
             <label className="label">
               <span className="label-text">Search</span>
             </label>
@@ -82,7 +81,7 @@ export default function SearchForm({
                 id="search"
                 name="search"
                 type="text"
-                placeholder="Movies, TV Shows, Anime"
+                placeholder=""
                 value={searchQuery.search}
                 onChange={handleChange}
                 className="input input-bordered join-item flex-grow"
@@ -99,87 +98,86 @@ export default function SearchForm({
               </button>
             </div>
           </div>
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Year</span>
-            </label>
-            <input
-              id="year"
-              name="year"
-              type="text"
-              placeholder="Release year"
-              maxLength={4}
-              value={formState.year}
-              onChange={handleChange}
-              className="grow input input-bordered flex items-center gap-2"
-            />
-            {formErrors.year && (
-              <p className="text-sm text-red-500">{formErrors.year}</p>
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Year</span>
+          </label>
+          <input
+            id="year"
+            name="year"
+            type="text"
+            placeholder="Release year"
+            maxLength={4}
+            value={formState.year}
+            onChange={handleChange}
+            className="grow input input-bordered flex items-center gap-2"
+          />
+          {formErrors.year && (
+            <p className="text-sm text-red-500">{formErrors.year}</p>
+          )}
+        </div>
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Requestor Email *</span>
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="text"
+            placeholder="Your email"
+            value={formState.email}
+            onChange={handleChange}
+            className="grow input input-bordered flex items-center"
+          />
+          {formErrors.email && (
+            <p className="text-sm text-red-500">{formErrors.email}</p>
+          )}
+        </div>
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Type *</span>
+          </label>
+          <select
+            id="type"
+            name="type"
+            value={formState.type}
+            onChange={handleChange}
+            className="select select-bordered"
+          >
+            <option value="Anime">Anime</option>
+            <option value="Anime Movie">Anime Movie</option>
+            <option value="Movie">Movie</option>
+            <option value="Seasonal Movie">Seasonal Movie</option>
+            <option value="TV Show">TV Show</option>
+          </select>
+        </div>
+        <div className="form-control mt-4 flex items-center">
+          <p className="label-text text-warning">* Required</p>
+        </div>
+        <div className="form-control mt-6">
+          <button className="btn btn-primary" disabled={status.loading}>
+            {status.loading ? (
+              <span className="loading loading-dots loading-xs"></span>
+            ) : (
+              "Submit"
             )}
-          </div>
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Requestor Email *</span>
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="text"
-              placeholder="Your email"
-              value={formState.email}
-              onChange={handleChange}
-              className="grow input input-bordered flex items-center"
-            />
-            {formErrors.email && (
-              <p className="text-sm text-red-500">{formErrors.email}</p>
-            )}
-          </div>
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Type *</span>
-            </label>
-            <select
-              id="type"
-              name="type"
-              value={formState.type}
-              onChange={handleChange}
-              className="select select-bordered"
-            >
-              <option value="Anime">Anime</option>
-              <option value="Anime Movie">Anime Movie</option>
-              <option value="Movie">Movie</option>
-              <option value="Seasonal Movie">Seasonal Movie</option>
-              <option value="TV Show">TV Show</option>
-            </select>
-          </div>
+          </button>
+        </div>
+        {status.error && (
           <div className="form-control mt-4 flex items-center">
-            <p className="label-text text-warning">* Required</p>
-          </div>
-          <div className="form-control mt-6">
-            <button className="btn btn-primary" disabled={status.loading}>
-              {status.loading ? (
-                <span className="loading loading-dots loading-xs"></span>
-              ) : (
-                "Submit"
-              )}
-            </button>
-          </div>
-          {status.error && (
-            <div className="form-control mt-4 flex items-center">
-              <div className="mt-4 text-red-500">
-                <p>Error: {status.error}</p>
-              </div>
+            <div className="mt-4 text-red-500">
+              <p>Error: {status.error}</p>
             </div>
-          )}
-          {status.success && (
-            <div className="form-control mt-4 flex items-center">
-              <div className="mt-4 text-green-500">
-                <p>Request submitted successfully!</p>
-              </div>
+          </div>
+        )}
+        {status.success && (
+          <div className="form-control mt-4 flex items-center">
+            <div className="mt-4 text-green-500">
+              <p>Request submitted successfully!</p>
             </div>
-          )}
-        </form>
-      </div>
+          </div>
+        )}
+      </form>
 
       {/* <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
         <form className="card-body" onSubmit={handleSearch}>

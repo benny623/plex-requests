@@ -20,14 +20,19 @@ export default function Home() {
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="text-center lg:pl-20 lg:text-left">
             <h1 className="text-5xl font-bold">
-              Submit a request!<span className="m-2">🎬</span>
+              Submit a request! <span>🎬</span>
             </h1>
             <p className="pt-6">
               Submit a media request by searching or manually filling out the
               form!
             </p>
-            {/* TODO: Style this next section a bit better */}
-            <ul className="menu menu-horizontal bg-base-200 rounded-box">
+            <Link href="/#requests-table" className="text-info font-bold">
+              See current requests
+            </Link>
+          </div>
+          {/* Card Picker */}
+          <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+            <ul className="menu menu-horizontal bg-base-100 rounded-box flex justify-center space-x-10">
               <li>
                 <button
                   onClick={() => {
@@ -43,20 +48,16 @@ export default function Home() {
                     setSearchState(false);
                   }}
                 >
-                  Form
+                  Manual
                 </button>
               </li>
             </ul>
-            <br />
-            <Link href="/#requests-table" className="text-info font-bold">
-              See current requests
-            </Link>
+            {searchState ? (
+              <SearchForm refetchRequests={fetchData} />
+            ) : (
+              <RequestForm refetchRequests={fetchData} />
+            )}
           </div>
-          {searchState ? (
-            <SearchForm refetchRequests={fetchData} />
-          ) : (
-            <RequestForm refetchRequests={fetchData} />
-          )}
         </div>
       </div>
       <CurrentRequests currentRequests={requests} loading={status} />
