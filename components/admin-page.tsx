@@ -275,7 +275,7 @@ export default function AdminPage({ allRequests, loading }: adminProps) {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={6} style={{ textAlign: "center" }}>
+                    <td colSpan={6} className="text-center">
                       No current requests
                     </td>
                   </tr>
