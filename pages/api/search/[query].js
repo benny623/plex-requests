@@ -40,15 +40,15 @@ export default async function handler(req, res) {
                 ? i.media_type === "movie"
                   ? "Anime " + capitalizeFirst(i.media_type)
                   : "Anime"
-                : capitalizeFirst(i.media_type),
+                : i.media_type === "movie"
+                ? capitalizeFirst(i.media_type)
+                : "TV Show",
             rating: Math.round(i.vote_average * 10) / 10,
           };
         }
         return null; // Filters out "person" items explicitly
       })
       .filter(Boolean); // Removes null values
-
-    console.log(data);
 
     res.status(200).json(data);
   } catch (err) {

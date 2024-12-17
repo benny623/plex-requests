@@ -19,9 +19,7 @@ export default function Home() {
       <div className="hero bg-base-200 min-h-screen">
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="text-center lg:pl-20 lg:text-left">
-            <h1 className="text-5xl font-bold">
-              Submit a request! 🎬
-            </h1>
+            <h1 className="text-5xl font-bold">Submit a request! 🎬</h1>
             <p className="pt-6">
               Submit a media request by searching or manually filling out the
               form!
@@ -30,8 +28,11 @@ export default function Home() {
               See current requests
             </Link>
           </div>
-          {/* Card Picker */}
           <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+            <SearchForm refetchRequests={fetchData} />
+          </div>
+          {/* Card Picker  -- probably won't end up using this*/}
+          {/* <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
             <ul className="menu menu-horizontal bg-base-100 rounded-box flex justify-center space-x-10">
               <li>
                 <button
@@ -57,7 +58,7 @@ export default function Home() {
             ) : (
               <RequestForm refetchRequests={fetchData} />
             )}
-          </div>
+          </div> */}
         </div>
       </div>
       <CurrentRequests currentRequests={requests} loading={status} />

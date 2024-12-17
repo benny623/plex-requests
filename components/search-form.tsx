@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
+import { SearchResult } from "@/lib/types";
 import Image from "next/image";
 
 export default function SearchForm({
@@ -9,33 +10,32 @@ export default function SearchForm({
 }: {
   refetchRequests: () => void;
 }) {
-  const { formState, formErrors, status, handleSubmit } =
-    useFormHandlers(refetchRequests);
+  const {
+    formState,
+    setFormState,
+    formErrors,
+    status,
+    handleChange,
+    handleSubmit,
+  } = useFormHandlers(refetchRequests);
 
   const [searchQuery, setSearchQuery] = useState({
-    search: "",
     loading: false,
     error: "",
   });
 
-  const [searchResults, setSearchResults] = useState([]);
-
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-
-    setSearchQuery((prevState) => ({ ...prevState, [name]: value }));
-  };
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
 
   const handleSearch = async (e: any) => {
     e.preventDefault();
 
-    if (!searchQuery.search.trim()) return;
+    if (!formState.title.trim()) return;
     if (searchQuery.loading) return;
 
     setSearchQuery((prevState) => ({ ...prevState, loading: true }));
 
     try {
-      const response = await fetch(`/api/search/${searchQuery.search}`);
+      const response = await fetch(`/api/search/${formState.title}`);
       const data = await response.json();
 
       setSearchQuery((prevState) => ({
@@ -63,7 +63,20 @@ export default function SearchForm({
     }
   };
 
-  const selectResult = (e: any) => {
+  const selectResult = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
+    e.preventDefault();
+
+    const selected = searchResults.find((result: any) => result.id === id);
+
+    if (selected) {
+      setFormState((prevState) => ({
+        ...prevState,
+        title: selected.title,
+        year: selected.year,
+        type: selected.media_type,
+      }));
+    }
+
     (document.getElementById("search_modal") as HTMLDialogElement).close();
   };
 
@@ -83,15 +96,15 @@ export default function SearchForm({
       <form className="card-body" onSubmit={handleSubmit}>
         <div className="form-control">
           <label className="label">
-            <span className="label-text">Search</span>
+            <span className="label-text">Title</span>
           </label>
           <div className="join flex">
             <input
-              id="search"
-              name="search"
+              id="title"
+              name="title"
               type="text"
-              placeholder=""
-              value={searchQuery.search}
+              placeholder="Media title"
+              value={formState.title}
               onChange={handleChange}
               className="input input-bordered join-item flex-grow"
             />
@@ -106,6 +119,9 @@ export default function SearchForm({
               )}
             </button>
           </div>
+          {formErrors.title && (
+            <p className="text-sm text-red-500">{formErrors.title}</p>
+          )}
         </div>
         <div className="form-control">
           <label className="label">
@@ -323,29 +339,35 @@ export default function SearchForm({
                   </figure>
                   <div className="card-body overflow-hidden w-2/3">
                     <h2 className="card-title line-clamp-1">{result.title}</h2>
-                    <p className="text-sm font-normal italic">{result.year}</p>
-                    <p className="text-sm font-normal italic">
-                      {result.media_type}
-                    </p>
-                    <div
-                      className={`radial-progress ${ratingColor(
-                        result.rating
-                      )}`}
-                      style={
-                        {
-                          "--value": result.rating * 10,
-                          "--size": "3rem",
-                        } as React.CSSProperties
-                      }
-                      role="progressbar"
-                    >
-                      {result.rating}
+                    <div className="flex items-center gap-8 sm:w-1/2 h-24">
+                      <div
+                        className={`radial-progress ${ratingColor(
+                          result.rating
+                        )}`}
+                        style={
+                          {
+                            "--value": result.rating * 10,
+                            "--size": "2.6rem",
+                          } as React.CSSProperties
+                        }
+                        role="progressbar"
+                      >
+                        {result.rating}
+                      </div>
+                      <div className="flex flex-col justify-center">
+                        <p className="text-sm font-normal italic">
+                          {result.year}
+                        </p>
+                        <p className="text-sm font-normal italic">
+                          {result.media_type}
+                        </p>
+                      </div>
                     </div>
                     <p className="line-clamp-4">{result.overview}</p>
                     <div className="card-actions justify-end">
                       <button
                         className="btn btn-primary"
-                        onClick={selectResult}
+                        onClick={(e) => selectResult(e, result.id)}
                       >
                         Select
                       </button>
