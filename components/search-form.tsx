@@ -38,15 +38,13 @@ export default function SearchForm({
       const response = await fetch(`/api/search/${searchQuery.search}`);
       const data = await response.json();
 
-      console.log(data.results);
-
       setSearchQuery((prevState) => ({
         ...prevState,
         error: "",
         loading: false,
       }));
 
-      setSearchResults(data.results);
+      setSearchResults(data);
     } catch (err) {
       console.error(err);
       setSearchQuery((prevState) => ({
@@ -69,35 +67,46 @@ export default function SearchForm({
     (document.getElementById("search_modal") as HTMLDialogElement).close();
   };
 
+  const ratingColor = (rating: number) => {
+    switch (true) {
+      case rating >= 7:
+        return "text-success";
+      case rating >= 4 && rating != 7:
+        return "text-warning";
+      default:
+        return "text-error";
+    }
+  };
+
   return (
     <>
       <form className="card-body" onSubmit={handleSubmit}>
         <div className="form-control">
-            <label className="label">
-              <span className="label-text">Search</span>
-            </label>
-            <div className="join flex">
-              <input
-                id="search"
-                name="search"
-                type="text"
-                placeholder=""
-                value={searchQuery.search}
-                onChange={handleChange}
-                className="input input-bordered join-item flex-grow"
-              />
-              <button
-                className="btn btn-primary join-item"
-                onClick={handleSearch}
-              >
-                {searchQuery.loading ? (
-                  <span className="loading loading-dots loading-xs"></span>
-                ) : (
-                  "Search"
-                )}
-              </button>
-            </div>
+          <label className="label">
+            <span className="label-text">Search</span>
+          </label>
+          <div className="join flex">
+            <input
+              id="search"
+              name="search"
+              type="text"
+              placeholder=""
+              value={searchQuery.search}
+              onChange={handleChange}
+              className="input input-bordered join-item flex-grow"
+            />
+            <button
+              className="btn btn-primary join-item w-[83px]"
+              onClick={handleSearch}
+            >
+              {searchQuery.loading ? (
+                <span className="loading loading-dots loading-xs"></span>
+              ) : (
+                "Search"
+              )}
+            </button>
           </div>
+        </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Year</span>
@@ -179,6 +188,7 @@ export default function SearchForm({
         )}
       </form>
 
+      {/* -- OLD FORM -- */}
       {/* <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
         <form className="card-body" onSubmit={handleSearch}>
           <div className="form-control">
@@ -275,6 +285,7 @@ export default function SearchForm({
           )}
         </form>
       </div> */}
+
       <dialog id="search_modal" className="modal">
         <div className="modal-box w-11/12 max-w-5xl relative">
           {/* Modal Header */}
@@ -296,12 +307,12 @@ export default function SearchForm({
                   className="card card-side bg-base-300 shadow-xl h-96"
                 >
                   <figure className="w-1/3">
-                    {result.poster_path ? (
+                    {result.poster ? (
                       <Image
-                        src={`https://image.tmdb.org/t/p/w500${result.poster_path}`}
+                        src={`https://image.tmdb.org/t/p/w500${result.poster}`}
                         width={500}
                         height={750}
-                        alt={result.title || result.name}
+                        alt={result.title}
                         className="h-full w-full object-cover"
                       />
                     ) : (
@@ -311,12 +322,25 @@ export default function SearchForm({
                     )}
                   </figure>
                   <div className="card-body overflow-hidden w-2/3">
-                    <h2 className="card-title line-clamp-1">
-                      {result.title || result.name}
-                    </h2>
+                    <h2 className="card-title line-clamp-1">{result.title}</h2>
+                    <p className="text-sm font-normal italic">{result.year}</p>
                     <p className="text-sm font-normal italic">
-                      {result.release_date || result.first_air_date}
+                      {result.media_type}
                     </p>
+                    <div
+                      className={`radial-progress ${ratingColor(
+                        result.rating
+                      )}`}
+                      style={
+                        {
+                          "--value": result.rating * 10,
+                          "--size": "3rem",
+                        } as React.CSSProperties
+                      }
+                      role="progressbar"
+                    >
+                      {result.rating}
+                    </div>
                     <p className="line-clamp-4">{result.overview}</p>
                     <div className="card-actions justify-end">
                       <button

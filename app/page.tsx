@@ -20,7 +20,7 @@ export default function Home() {
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="text-center lg:pl-20 lg:text-left">
             <h1 className="text-5xl font-bold">
-              Submit a request! <span>🎬</span>
+              Submit a request! 🎬
             </h1>
             <p className="pt-6">
               Submit a media request by searching or manually filling out the
