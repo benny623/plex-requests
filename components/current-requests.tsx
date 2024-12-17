@@ -88,7 +88,7 @@ export default function CurrentRequests({
               </tbody>
             </table>
           </div>
-          <div className="text-center text-xs font-bold text-base-content">
+          <div className="text-center text-xs font-bold text-base-content pt-4">
             Don&apos;t see your request? Check here:{" "}
             <Link href={"/completed-requests"} className="text-info font-bold">
               Completed Requests
