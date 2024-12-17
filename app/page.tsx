@@ -7,12 +7,12 @@ import { useFetchData } from "@/lib/hooks/useFetchData";
 
 import CurrentRequests from "@/components/current-requests";
 import SearchForm from "@/components/search-form";
-import RequestForm from "@/components/request-form";
+//import RequestForm from "@/components/request-form";
 import Link from "next/link";
 
 export default function Home() {
   const { requests, status, fetchData } = useFetchData(fetchCurrentRequests);
-  const [searchState, setSearchState] = useState(true);
+  //const [searchState, setSearchState] = useState(true);
 
   return (
     <div className="h-screen">
