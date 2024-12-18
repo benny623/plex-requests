@@ -1,18 +1,14 @@
 "use client";
 
-//import { useState } from "react";
-
 import { fetchCurrentRequests } from "@/lib/fetchRequests";
 import { useFetchData } from "@/lib/hooks/useFetchData";
 
 import CurrentRequests from "@/components/current-requests";
 import SearchForm from "@/components/search-form";
-//import RequestForm from "@/components/request-form";
 import Link from "next/link";
 
 export default function Home() {
   const { requests, status, fetchData } = useFetchData(fetchCurrentRequests);
-  //const [searchState, setSearchState] = useState(true);
 
   return (
     <div className="h-screen">
@@ -24,41 +20,20 @@ export default function Home() {
               Submit a media request by searching or manually filling out the
               form!
             </p>
-            <Link href="/#requests-table" className="text-info font-bold">
+            <button
+              onClick={() => {
+                document
+                  .querySelector(".requests-table")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="text-info font-bold"
+            >
               See current requests
-            </Link>
+            </button>
           </div>
           <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
             <SearchForm refetchRequests={fetchData} />
           </div>
-          {/* Card Picker  -- probably won't end up using this*/}
-          {/* <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-            <ul className="menu menu-horizontal bg-base-100 rounded-box flex justify-center space-x-10">
-              <li>
-                <button
-                  onClick={() => {
-                    setSearchState(true);
-                  }}
-                >
-                  Search
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => {
-                    setSearchState(false);
-                  }}
-                >
-                  Manual
-                </button>
-              </li>
-            </ul>
-            {searchState ? (
-              <SearchForm refetchRequests={fetchData} />
-            ) : (
-              <RequestForm refetchRequests={fetchData} />
-            )}
-          </div> */}
         </div>
       </div>
       <CurrentRequests currentRequests={requests} loading={status} />

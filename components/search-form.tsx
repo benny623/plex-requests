@@ -283,6 +283,17 @@ export default function SearchForm({
                     )}
 
                     <div className="card-actions justify-end">
+                      {result.seasons && (
+                        <select className="select select-bordered line-clamp-1">
+                          <option selected key={0}>
+                            All Seasons
+                          </option>
+                          {result.seasons?.map((season: any) => (
+                            <option key={season.id}>{season.name}</option>
+                          ))}
+                        </select>
+                      )}
+
                       <button
                         className="btn btn-primary"
                         onClick={(e) => selectResult(e, result.id)}
