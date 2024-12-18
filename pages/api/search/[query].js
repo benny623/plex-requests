@@ -1,7 +1,3 @@
-const capitalizeFirst = (val) => {
-  return String(val).charAt(0).toUpperCase() + String(val).slice(1);
-};
-
 export default async function handler(req, res) {
   const getKeywords = async (type, id) => {
     try {
@@ -18,9 +14,28 @@ export default async function handler(req, res) {
       // Send keyword data
       return data.results || data.keywords;
     } catch (err) {
-      res
-        .status(500)
-        .json({ error: "Internal Server Error", details: err.message });
+      console.error(err);
+      return [];
+    }
+  };
+
+  const getSeasons = async (id) => {
+    try {
+      const response = await fetch(
+        `${process.env.TMDB_BASE_URL}/tv/${id}?api_key=${process.env.TMDB_API_KEY}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      // Send season data
+      return data.seasons || [];
+    } catch (err) {
+      console.error(err);
+      return [];
     }
   };
 
@@ -50,9 +65,10 @@ export default async function handler(req, res) {
 
     const data = await Promise.all(
       rawData.results?.map(async (i) => {
-        if (i.media_type !== "person") {
-          // Await keyword data
-          const keywords = await getKeywords(i.media_type, i.id);
+        // Filter out People and items that have a vote count less than 10
+        if (i.media_type !== "person" && i.vote_count >= 10) {
+          const keywords = await getKeywords(i.media_type, i.id); // Keyword data
+          const seasons = i.media_type === "tv" ? await getSeasons(i.id) : null; // Season count data
 
           // Check if it's an Anime
           const isAnime = keywords?.some((keyword) => keyword.id === 210024);
@@ -61,22 +77,19 @@ export default async function handler(req, res) {
           const isSeasonal = keywords?.some((keyword) => keyword.id === 65);
 
           const getMediaType = (type) => {
-            if (!isAnime && !isSeasonal) {
-              if (type === "tv") {
-                return "TV Show";
-              }
-              return capitalizeFirst(type);
-            } else if (!isAnime && isSeasonal) {
-              if (type === "tv") {
-                return "TV Show";
-              }
-              return `Seasonal ${capitalizeFirst(type)}`;
-            } else if (isAnime && !isSeasonal) {
-              if (type === "tv") {
-                return "Anime";
-              }
-              return `Anime ${capitalizeFirst(type)}`;
+            if (type === "tv") {
+              return isAnime ? "Anime" : "TV Show";
             }
+
+            // Capitalize type
+            const baseType =
+              String(type).charAt(0).toUpperCase() + String(type).slice(1);
+
+            if (isAnime) {
+              return `Anime ${baseType}`;
+            }
+
+            return isSeasonal ? `Seasonal ${baseType}` : baseType;
           };
 
           return {
@@ -88,6 +101,7 @@ export default async function handler(req, res) {
             poster: i.poster_path,
             media_type: getMediaType(i.media_type),
             rating: Math.round(i.vote_average * 10) / 10,
+            ...(seasons && { seasons: seasons }),
           };
         }
         return null; // Filters out "person" items explicitly

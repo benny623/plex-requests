@@ -96,7 +96,7 @@ export default function SearchForm({
       <form className="card-body" onSubmit={handleSubmit}>
         <div className="form-control">
           <label className="label">
-            <span className="label-text">Title</span>
+            <span className="label-text">Title *</span>
           </label>
           <div className="join flex">
             <input
@@ -120,7 +120,9 @@ export default function SearchForm({
             </button>
           </div>
           {formErrors.title && (
-            <p className="text-sm text-red-500">{formErrors.title}</p>
+            <p className="text-sm text-red-500 text-center pt-2">
+              {formErrors.title}
+            </p>
           )}
         </div>
         <div className="form-control">
@@ -138,7 +140,9 @@ export default function SearchForm({
             className="grow input input-bordered flex items-center gap-2"
           />
           {formErrors.year && (
-            <p className="text-sm text-red-500">{formErrors.year}</p>
+            <p className="text-sm text-red-500 text-center pt-2">
+              {formErrors.year}
+            </p>
           )}
         </div>
         <div className="form-control">
@@ -155,7 +159,9 @@ export default function SearchForm({
             className="grow input input-bordered flex items-center"
           />
           {formErrors.email && (
-            <p className="text-sm text-red-500">{formErrors.email}</p>
+            <p className="text-sm text-red-500 text-center pt-2">
+              {formErrors.email}
+            </p>
           )}
         </div>
         <div className="form-control">
