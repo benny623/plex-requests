@@ -265,6 +265,17 @@ export default function SearchForm({
                       </div>
                     </div>
                     <p className="line-clamp-4">{result.overview}</p>
+                    {result.keywords && (
+                      <div className="card-actions justify-start line-clamp-1 space-x-2">
+                        {result.keywords.slice(0, 5).map((tag: any) => (
+                          <div className="badge badge-outline">
+                            {String(tag.name).charAt(0).toUpperCase() +
+                              String(tag.name).slice(1)}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
                     <div className="card-actions justify-end">
                       <button
                         className="btn btn-primary"

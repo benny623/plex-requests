@@ -81,7 +81,7 @@ export default async function handler(req, res) {
 
           return {
             id: i.id,
-            keywords: keywords?.results || keywords?.keywords || [],
+            keywords: keywords || [],
             title: i.title || i.name,
             year: `${i.release_date || i.first_air_date}`.split("-")[0],
             overview: i.overview,
