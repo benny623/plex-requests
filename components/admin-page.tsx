@@ -193,7 +193,7 @@ export default function AdminPage({ allRequests, loading }: adminProps) {
         </div>
       ) : (
         <div className="min-h-screen flex justify-center items-center py-10 bg-base-100">
-          <table className="table w-full max-w-4xl border-collapse table-pin-rows">
+          <table className="table w-full max-w-5xl border-collapse table-pin-rows">
             <thead>
               <tr>
                 <th></th>
@@ -275,7 +275,7 @@ export default function AdminPage({ allRequests, loading }: adminProps) {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={6} style={{ textAlign: "center" }}>
+                    <td colSpan={6} className="text-center">
                       No current requests
                     </td>
                   </tr>

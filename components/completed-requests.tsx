@@ -33,10 +33,10 @@ export default function RequestTable({
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-base-200">
-      <div className="card w-full sm:w-3/4 md:w-2/3 lg:w-1/2 bg-base-100 shadow-xl">
+      <div className="card w-full sm:w-3/4 xl:w-2/3 bg-base-100 shadow-xl">
         <div className="card-body">
           <div className="overflow-x-auto">
-            <table className="table w-full max-w-4xl border-collapse table-pin-rows">
+            <table className="table w-full max-w-5xl border-collapse table-pin-rows">
               <thead>
                 <tr>
                   <th>Title</th>
@@ -70,32 +70,25 @@ export default function RequestTable({
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={5} style={{ textAlign: "center" }}>
+                      <td colSpan={5} className="text-center">
                         No current requests
                       </td>
                     </tr>
                   )
                 ) : (
                   <tr>
-                    <td colSpan={5} style={{ textAlign: "center" }}>
+                    <td colSpan={5} className="text-center">
                       <span className="loading loading-dots loading-md"></span>
                     </td>
                   </tr>
                 )}
               </tbody>
-              <tfoot>
-                <tr>
-                  <td colSpan={5} style={{ textAlign: "center" }}>
-                    <Link
-                      href={"/#requests-table"}
-                      className="text-info font-bold"
-                    >
-                      Go Back
-                    </Link>
-                  </td>
-                </tr>
-              </tfoot>
             </table>
+          </div>
+          <div className="text-center text-xs pt-4">
+            <Link href={"/#requests-table"} className="text-info font-bold">
+              Go Back
+            </Link>
           </div>
         </div>
       </div>

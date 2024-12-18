@@ -16,6 +16,14 @@ export interface Status {
   success: boolean;
 }
 
+// Search Result Type
+export interface SearchResult {
+  id: number;
+  title: string;
+  year: string;
+  media_type: string;
+};
+
 // Request Props
 export type currentProps = {
   currentRequests: Request[];
