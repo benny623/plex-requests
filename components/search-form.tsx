@@ -204,7 +204,7 @@ export default function SearchForm({
         {status.success && (
           <div className="form-control mt-4 flex items-center">
             <div className="mt-4 text-green-500">
-              <p>Request submitted successfully!</p>
+              Request submitted successfully!
             </div>
           </div>
         )}
