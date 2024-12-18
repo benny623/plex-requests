@@ -254,7 +254,7 @@ export default function SearchForm({
                         style={
                           {
                             "--value": result.rating * 10,
-                            "--size": "2.6rem",
+                            "--size": "2.7rem",
                           } as React.CSSProperties
                         }
                         role="progressbar"
@@ -262,16 +262,17 @@ export default function SearchForm({
                         {result.rating}
                       </div>
                       <div className="flex flex-col justify-center">
-                        <p className="text-sm font-normal italic">
+                        <p className="text-lg font-normal">
                           {result.year}
                         </p>
-                        <p className="text-sm font-normal italic">
+                        <p className="badge badge-outline badge-accent">
                           {result.media_type}
                         </p>
                       </div>
                     </div>
                     <p className="line-clamp-4">{result.overview}</p>
-                    {result.keywords && (
+                    {/* TODO: Keyword lists tend to be large, and only grabbing 5 doesn't provide the most relevant info. Need to find a better solution if tags want to be included*/}
+                    {/* {result.keywords && (
                       <div className="card-actions justify-start line-clamp-1 space-x-2">
                         {result.keywords.slice(0, 5).map((tag: any) => (
                           <div key={tag.id} className="badge badge-outline">
@@ -280,11 +281,10 @@ export default function SearchForm({
                           </div>
                         ))}
                       </div>
-                    )}
-
+                    )} */}
                     <div className="card-actions justify-end">
                       {result.seasons && (
-                        <select className="select select-bordered line-clamp-1">
+                        <select className="select select-bordered">
                           <option selected key={0}>
                             All Seasons
                           </option>

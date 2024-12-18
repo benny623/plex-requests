@@ -74,7 +74,8 @@ export default async function handler(req, res) {
           const isAnime = keywords?.some((keyword) => keyword.id === 210024);
 
           // Check if it's a Seasonal Movie
-          const isSeasonal = keywords?.some((keyword) => keyword.id === 65);
+          const seasonalKeywordIds = [65, 207317, 336879, 323756, 3335, 4543]; // May need to add more to this or break out into own .json file
+          const isSeasonal = keywords?.some((keyword) => seasonalKeywordIds.includes(keyword.id));
 
           const getMediaType = (type) => {
             if (type === "tv") {
