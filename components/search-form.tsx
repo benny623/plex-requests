@@ -300,7 +300,9 @@ export default function SearchForm({
                             All Seasons
                           </option>
                           {result.seasons?.map((season: any) => (
-                            <option value={season.name}>{season.name}</option>
+                            <option key={season.id} value={season.name}>
+                              {season.name}
+                            </option>
                           ))}
                         </select>
                       )}

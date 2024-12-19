@@ -5,7 +5,6 @@ import { useFetchData } from "@/lib/hooks/useFetchData";
 
 import CurrentRequests from "@/components/current-requests";
 import SearchForm from "@/components/search-form";
-import Link from "next/link";
 
 export default function Home() {
   const { requests, status, fetchData } = useFetchData(fetchCurrentRequests);
