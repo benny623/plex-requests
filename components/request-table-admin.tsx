@@ -1,26 +1,7 @@
 import React from "react";
-import { Request } from "@/lib/types";
 import AdminRow from "@/components/admin-row";
 
-type RequestTableProps = {
-  requests: Request[];
-    onStatusChange: (
-      e: React.ChangeEvent<HTMLSelectElement>,
-      requestId: number
-    ) => Promise<void>;
-    onNoteChange: (
-      e: React.ChangeEvent<HTMLTextAreaElement>,
-      requestId: number
-    ) => Promise<void>;
-    onNoteBlur: (
-      e: React.ChangeEvent<HTMLTextAreaElement>,
-      requestId: number
-    ) => Promise<void>;
-    onDelete: (
-      e: React.MouseEvent<HTMLButtonElement>,
-      requestId: number
-    ) => Promise<void>;
-};
+import { RequestTableProps } from "@/lib/types";
 
 const RequestTable: React.FC<RequestTableProps> = ({
   requests,
