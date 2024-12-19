@@ -22,7 +22,7 @@ export interface SearchResult {
   title: string;
   year: string;
   media_type: string;
-};
+}
 
 // Request Props
 export type currentProps = {
