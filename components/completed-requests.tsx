@@ -86,7 +86,7 @@ export default function RequestTable({
             </table>
           </div>
           <div className="text-center text-xs pt-4">
-            <Link href={"/#requests-table"} className="text-info font-bold">
+            <Link href={"/"} className="text-info font-bold">
               Go Back
             </Link>
           </div>

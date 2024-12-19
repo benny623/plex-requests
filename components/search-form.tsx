@@ -66,12 +66,19 @@ export default function SearchForm({
   const selectResult = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
     e.preventDefault();
 
+    const seasonElement = document.getElementById(
+      `season-${id}`
+    ) as HTMLSelectElement;
+    const selectedSeason = seasonElement?.value || "All Seasons";
+
     const selected = searchResults.find((result: any) => result.id === id);
 
     if (selected) {
       setFormState((prevState) => ({
         ...prevState,
-        title: selected.title,
+        title: `${selected.title} ${
+          selectedSeason !== "All Seasons" ? ` (${selectedSeason})` : ""
+        }`,
         year: selected.year,
         type: selected.media_type,
       }));
@@ -96,7 +103,7 @@ export default function SearchForm({
       <form className="card-body" onSubmit={handleSubmit}>
         <div className="form-control">
           <label className="label">
-            <span className="label-text">Title</span>
+            <span className="label-text">Title *</span>
           </label>
           <div className="join flex">
             <input
@@ -120,7 +127,9 @@ export default function SearchForm({
             </button>
           </div>
           {formErrors.title && (
-            <p className="text-sm text-red-500">{formErrors.title}</p>
+            <p className="text-sm text-red-500 text-center pt-2">
+              {formErrors.title}
+            </p>
           )}
         </div>
         <div className="form-control">
@@ -138,7 +147,9 @@ export default function SearchForm({
             className="grow input input-bordered flex items-center gap-2"
           />
           {formErrors.year && (
-            <p className="text-sm text-red-500">{formErrors.year}</p>
+            <p className="text-sm text-red-500 text-center pt-2">
+              {formErrors.year}
+            </p>
           )}
         </div>
         <div className="form-control">
@@ -155,7 +166,9 @@ export default function SearchForm({
             className="grow input input-bordered flex items-center"
           />
           {formErrors.email && (
-            <p className="text-sm text-red-500">{formErrors.email}</p>
+            <p className="text-sm text-red-500 text-center pt-2">
+              {formErrors.email}
+            </p>
           )}
         </div>
         <div className="form-control">
@@ -198,7 +211,7 @@ export default function SearchForm({
         {status.success && (
           <div className="form-control mt-4 flex items-center">
             <div className="mt-4 text-green-500">
-              <p>Request submitted successfully!</p>
+              Request submitted successfully!
             </div>
           </div>
         )}
@@ -240,7 +253,7 @@ export default function SearchForm({
                   </figure>
                   <div className="card-body overflow-hidden w-2/3">
                     <h2 className="card-title line-clamp-1">{result.title}</h2>
-                    <div className="flex items-center gap-8 sm:w-1/2 h-24">
+                    <div className="flex items-center gap-4 sm:gap-8 sm:w-1/2 h-24">
                       <div
                         className={`radial-progress ${ratingColor(
                           result.rating
@@ -248,7 +261,7 @@ export default function SearchForm({
                         style={
                           {
                             "--value": result.rating * 10,
-                            "--size": "2.6rem",
+                            "--size": "2.7rem",
                           } as React.CSSProperties
                         }
                         role="progressbar"
@@ -256,16 +269,15 @@ export default function SearchForm({
                         {result.rating}
                       </div>
                       <div className="flex flex-col justify-center">
-                        <p className="text-sm font-normal italic">
-                          {result.year}
-                        </p>
-                        <p className="text-sm font-normal italic">
+                        <p className="text-lg font-normal">{result.year}</p>
+                        <p className="text-sm italic font-normal text-accent">
                           {result.media_type}
                         </p>
                       </div>
                     </div>
-                    <p className="line-clamp-4">{result.overview}</p>
-                    {result.keywords && (
+                    <p className="max-h-20 overflow-auto">{result.overview}</p>
+                    {/* TODO: Keyword lists tend to be large, and only grabbing 5 doesn't provide the most relevant info. Need to find a better solution if tags want to be included*/}
+                    {/* {result.keywords && (
                       <div className="card-actions justify-start line-clamp-1 space-x-2">
                         {result.keywords.slice(0, 5).map((tag: any) => (
                           <div key={tag.id} className="badge badge-outline">
@@ -274,11 +286,29 @@ export default function SearchForm({
                           </div>
                         ))}
                       </div>
-                    )}
+                    )} */}
+                    <div className="card-actions mt-auto  flex flex-wrap justify-end gap-2">
+                      {result.seasons && (
+                        <select
+                          id={`season-${result.id}`}
+                          name="season"
+                          //value={formState.type}
+                          //onChange={handleChange}
+                          className="select select-bordered w-full sm:w-auto"
+                        >
+                          <option selected value={"All Seasons"}>
+                            All Seasons
+                          </option>
+                          {result.seasons?.map((season: any) => (
+                            <option key={season.id} value={season.name}>
+                              {season.name}
+                            </option>
+                          ))}
+                        </select>
+                      )}
 
-                    <div className="card-actions justify-end">
                       <button
-                        className="btn btn-primary"
+                        className="btn btn-primary w-full sm:w-auto"
                         onClick={(e) => selectResult(e, result.id)}
                       >
                         Select

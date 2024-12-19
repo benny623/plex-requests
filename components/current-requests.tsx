@@ -33,8 +33,8 @@ export default function CurrentRequests({
 
   return (
     <div
-      id="requests-table"
-      className="min-h-screen flex justify-center items-center bg-base-200"
+      id=""
+      className="requests-table min-h-screen flex justify-center items-center bg-base-200"
     >
       <div className="card w-full sm:w-3/4 xl:w-2/3 bg-base-100 shadow-xl">
         <div className="card-body">
