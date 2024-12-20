@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { Status } from "@/lib/types";
 
 export const useFormHandlers = (refetchRequests: () => void) => {
   const [formState, setFormState] = useState({
@@ -13,11 +14,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     year: "",
     email: "",
   });
-  const [status, setStatus] = useState({
-    loading: false,
-    error: "",
-    success: false,
-  });
+  const [status, setStatus] = useState<Status | undefined>();
 
   // Validate form before submission
   const validateForm = () => {
