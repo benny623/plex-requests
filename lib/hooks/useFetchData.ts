@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
+import { Request } from "@/lib/types";
 
 export const useFetchData = (fetchRequests: () => Promise<any>) => {
-  const [requests, setRequests] = useState<any[]>([]);
+  const [requests, setRequests] = useState<Request[]>([]);
   const [status, setStatus] = useState({
     loading: false,
     error: "",
     success: false,
   });
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setStatus({ loading: true, error: "", success: false });
     try {
       const result = await fetchRequests();
@@ -23,11 +24,7 @@ export const useFetchData = (fetchRequests: () => Promise<any>) => {
     } finally {
       setStatus((prev) => ({ ...prev, loading: false, success: true }));
     }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  }, [fetchRequests]);
 
   return { requests, status, fetchData };
 };

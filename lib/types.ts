@@ -22,20 +22,33 @@ export interface SearchResult {
   title: string;
   year: string;
   media_type: string;
+}
+
+// Request Table Props
+export type RequestTableProps = {
+  requests: Request[];
+  loading: Status;
+  table: boolean;
+  setTable: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-// Request Props
-export type currentProps = {
-  currentRequests: Request[];
-  loading: Status;
-};
-
-export type completedProps = {
-  completedRequests: Request[];
-  loading: Status;
-};
-
-export type adminProps = {
-  allRequests: Request[];
-  loading: Status;
+// Request Row Props
+export type RequestRowProps = {
+  request: Request;
+  onStatusChange: (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    requestId: number
+  ) => Promise<void>;
+  onNoteChange: (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+    requestId: number
+  ) => Promise<void>;
+  onNoteBlur: (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+    requestId: number
+  ) => Promise<void>;
+  onDelete: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    requestId: number
+  ) => Promise<void>;
 };

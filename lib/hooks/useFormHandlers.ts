@@ -1,4 +1,5 @@
-import { useState,  useCallback } from "react";
+import { useState, useCallback } from "react";
+import { Status } from "@/lib/types";
 
 export const useFormHandlers = (refetchRequests: () => void) => {
   const [formState, setFormState] = useState({
@@ -13,7 +14,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     year: "",
     email: "",
   });
-  const [status, setStatus] = useState({
+  const [status, setStatus] = useState<Status>({
     loading: false,
     error: "",
     success: false,
@@ -69,28 +70,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     }));
   };
 
-  // Fetch requests data
-  // const fetchData = async () => {
-  //   setStatus({ loading: true, error: "", success: false });
-  //   try {
-  //     const result = await fetchCurrentRequests();
-  //     setRequests(result);
-  //     console.log(requests);
-  //   } catch (err: unknown) {
-  //     setStatus({
-  //       loading: false,
-  //       error: (err as Error).message,
-  //       success: false,
-  //     });
-  //   } finally {
-  //     setStatus((prev) => ({ ...prev, loading: false, success: true }));
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
   // Handle form submission
   const handleSubmit = useCallback(
     async (e: any) => {
@@ -119,7 +98,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
 
           // Refetch requests data for table
           refetchRequests();
-          
+
           // Send notification for updated status
           try {
             const response = await fetch("/api/new-notification", {

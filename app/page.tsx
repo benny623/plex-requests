@@ -1,13 +1,34 @@
 "use client";
 
-import { fetchCurrentRequests } from "@/lib/fetchRequests";
+import { useEffect, useState } from "react";
 import { useFetchData } from "@/lib/hooks/useFetchData";
+import {
+  fetchCurrentRequests,
+  fetchCompleteRequests,
+} from "@/lib/fetchRequests";
 
-import CurrentRequests from "@/components/current-requests";
+import RequestTable from "@/components/request-table";
 import SearchForm from "@/components/search-form";
 
 export default function Home() {
-  const { requests, status, fetchData } = useFetchData(fetchCurrentRequests);
+  const {
+    requests: currentRequests,
+    status: currentStatus,
+    fetchData: fetchCurrentData,
+  } = useFetchData(fetchCurrentRequests);
+  const {
+    requests: completedRequests,
+    status: completedStatus,
+    fetchData: fetchCompletedData,
+  } = useFetchData(fetchCompleteRequests);
+
+  const [table, setTable] = useState(false);
+
+  // Fetch inital data
+  useEffect(() => {
+    fetchCurrentData();
+    fetchCompletedData();
+  }, []);
 
   return (
     <div className="h-screen">
@@ -31,11 +52,25 @@ export default function Home() {
             </button>
           </div>
           <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-            <SearchForm refetchRequests={fetchData} />
+            <SearchForm refetchRequests={fetchCurrentData} />
           </div>
         </div>
       </div>
-      <CurrentRequests currentRequests={requests} loading={status} />
+      {!table ? (
+        <RequestTable
+          requests={currentRequests}
+          loading={currentStatus}
+          table={table}
+          setTable={setTable}
+        />
+      ) : (
+        <RequestTable
+          requests={completedRequests}
+          loading={completedStatus}
+          table={table}
+          setTable={setTable}
+        />
+      )}
     </div>
   );
 }
