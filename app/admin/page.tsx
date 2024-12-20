@@ -29,21 +29,7 @@ const AdminPage = () => {
       ) : status.loading ? (
         <span className="loading loading-dots loading-md"></span>
       ) : requests.length > 0 ? (
-        <>
-          <AdminTable requests={requests} />
-          {/* <DeletionModal
-            isOpen={modalData.isOpen}
-            title={modalData.requestTitle || ""}
-            onClose={() =>
-              setModalData({
-                isOpen: false,
-                requestId: null,
-                requestTitle: null,
-              })
-            }
-            onConfirm={confirmDelete}
-          /> */}
-        </>
+        <AdminTable requests={requests} />
       ) : (
         <h1 className="font-bold">No current requests</h1>
       )}

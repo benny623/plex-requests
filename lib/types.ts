@@ -47,7 +47,11 @@ export type RequestRowProps = {
     e: React.ChangeEvent<HTMLTextAreaElement>,
     requestId: number
   ) => Promise<void>;
-  onDelete: (
+  // onDelete: (
+  //   e: React.MouseEvent<HTMLButtonElement>,
+  //   requestId: number
+  // ) => Promise<void>;
+  onRequestDelete: (
     e: React.MouseEvent<HTMLButtonElement>,
     requestId: number
   ) => Promise<void>;
