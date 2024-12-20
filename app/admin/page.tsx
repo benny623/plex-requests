@@ -12,14 +12,36 @@ const AdminPage = () => {
 
   // Set isAdmin on page load
   useEffect(() => {
-    if (
-      window.localStorage.getItem("isAdmin") ===
-      process.env.NEXT_PUBLIC_ADMIN_KEY
-    ) {
-      setIsAdmin(true);
-      // This allows data to ONLY be fetched if isAdmin is true
-      fetchData();
-    }
+    // if (
+    //   window.localStorage.getItem("isAdmin") ===
+    //   process.env.NEXT_PUBLIC_ADMIN_KEY
+    // ) {
+    //   setIsAdmin(true);
+    //   // This allows data to ONLY be fetched if isAdmin is true
+    //   fetchData();
+    // }
+    const checkAdmin = async () => {
+      try {
+        const res = await fetch("/api/check-admin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token: window.localStorage.getItem("isAdmin"),
+          }),
+        });
+        const data = await res.json();
+
+        if (data.isAdmin) {
+          setIsAdmin(true);
+          fetchData();
+        }
+      } catch (err) {
+        console.error("Error validating admin:", err);
+      }
+    };
+    checkAdmin();
   }, []);
 
   return (
