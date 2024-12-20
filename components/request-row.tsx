@@ -1,5 +1,5 @@
 import React from "react";
-import { Request, Status } from "@/lib/types";
+import { Request } from "@/lib/types";
 
 type RequestRowProps = {
   request: Request;
