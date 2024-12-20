@@ -3,17 +3,9 @@ import { Request, Status } from "@/lib/types";
 
 type RequestRowProps = {
   request: Request;
-  loading: Status;
-  table: Boolean;
-  setTable: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const RequestRow: React.FC<RequestRowProps> = ({
-  request,
-  loading,
-  table,
-  setTable,
-}) => {
+const RequestRow: React.FC<RequestRowProps> = ({ request }) => {
   const statusColor = (status: string) => {
     switch (status) {
       case "New":
