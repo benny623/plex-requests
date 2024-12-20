@@ -28,11 +28,15 @@ export interface SearchResult {
 export type currentProps = {
   currentRequests: Request[];
   loading: Status;
+  table: Boolean;
+  setTable: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type completedProps = {
   completedRequests: Request[];
   loading: Status;
+  table: Boolean;
+  setTable: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type adminProps = {

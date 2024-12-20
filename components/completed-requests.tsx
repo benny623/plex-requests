@@ -1,20 +1,12 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import { Request, completedProps } from "@/lib/types";
 import Link from "next/link";
 
 export default function RequestTable({
   completedRequests,
   loading,
+  table,
+  setTable,
 }: completedProps) {
-  const [requests, setRequests] = useState<Request[]>(completedRequests);
-
-  // Put data into temporary State
-  useEffect(() => {
-    setRequests(completedRequests);
-  }, [completedRequests]);
-
   // Get the status color
   function statusColor(status: string) {
     switch (status) {
@@ -48,8 +40,8 @@ export default function RequestTable({
               </thead>
               <tbody>
                 {!loading.loading && loading.success ? (
-                  requests.length > 0 ? (
-                    requests.map((request: Request) => (
+                  completedRequests.length > 0 ? (
+                    completedRequests.map((request: Request) => (
                       <tr key={request.request_id}>
                         <td>{request.request_title}</td>
                         <td>{request.request_year}</td>
@@ -86,9 +78,14 @@ export default function RequestTable({
             </table>
           </div>
           <div className="text-center text-xs pt-4">
-            <Link href={"/"} className="text-info font-bold">
+            <button
+              onClick={() => {
+                setTable(!table);
+              }}
+              className="text-info font-bold"
+            >
               Go Back
-            </Link>
+            </button>
           </div>
         </div>
       </div>
