@@ -44,7 +44,7 @@ const AdminPage = () => {
           Home
         </Link>
       </div>
-      <div className=" flex justify-center items-center py-10 ">
+      <div className="flex justify-center items-center py-10">
         {!isAdmin ? (
           <h1 className="font-bold">Not an admin</h1>
         ) : status.loading ? (
