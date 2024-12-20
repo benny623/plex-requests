@@ -292,13 +292,10 @@ export default function SearchForm({
                         <select
                           id={`season-${result.id}`}
                           name="season"
-                          //value={formState.type}
-                          //onChange={handleChange}
+                          defaultValue={"All Seasons"}
                           className="select select-bordered w-full sm:w-auto"
                         >
-                          <option selected value={"All Seasons"}>
-                            All Seasons
-                          </option>
+                          <option value={"All Seasons"}>All Seasons</option>
                           {result.seasons?.map((season: any) => (
                             <option key={season.id} value={season.name}>
                               {season.name}
@@ -306,7 +303,6 @@ export default function SearchForm({
                           ))}
                         </select>
                       )}
-
                       <button
                         className="btn btn-primary w-full sm:w-auto"
                         onClick={(e) => selectResult(e, result.id)}

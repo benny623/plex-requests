@@ -52,7 +52,7 @@ export default function Home() {
             </button>
           </div>
           <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-            <SearchForm refetchRequests={fetchCurrentRequests} />
+            <SearchForm refetchRequests={fetchCurrentData} />
           </div>
         </div>
       </div>
