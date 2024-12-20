@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { RequestRowProps } from "@/lib/types";
 
 const AdminRow: React.FC<RequestRowProps> = ({
@@ -6,11 +6,8 @@ const AdminRow: React.FC<RequestRowProps> = ({
   onStatusChange,
   onNoteChange,
   onNoteBlur,
-  //onDelete,
   onRequestDelete,
 }) => {
-  //const [isModalOpen, setIsModalOpen] = useState(false);
-
   const statusColor = (status: string) => {
     switch (status) {
       case "New":
@@ -25,20 +22,6 @@ const AdminRow: React.FC<RequestRowProps> = ({
         return "";
     }
   };
-
-  // const handleDeleteClick = (request: <Request>) => {
-  //   //e.preventDefault();
-  //   onRequestDeleteConfirm(request);
-  // };
-
-  // const handleCancel = () => {
-  //   setIsModalOpen(false);
-  // };
-
-  // const handleConfirm = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   onDelete(e, request.request_id);
-  //   setIsModalOpen(false);
-  // };
 
   return (
     <>
