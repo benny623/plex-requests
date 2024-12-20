@@ -12,14 +12,6 @@ const AdminPage = () => {
 
   // Set isAdmin on page load
   useEffect(() => {
-    // if (
-    //   window.localStorage.getItem("isAdmin") ===
-    //   process.env.NEXT_PUBLIC_ADMIN_KEY
-    // ) {
-    //   setIsAdmin(true);
-    //   // This allows data to ONLY be fetched if isAdmin is true
-    //   fetchData();
-    // }
     const checkAdmin = async () => {
       try {
         const res = await fetch("/api/check-admin", {
