@@ -1,13 +1,6 @@
 import React from "react";
-import { Request, Status } from "@/lib/types";
+import { Request, RequestTableProps } from "@/lib/types";
 import RequestRow from "@/components/request-row";
-
-type RequestTableProps = {
-  requests: Request[];
-  loading: Status;
-  table: Boolean;
-  setTable: React.Dispatch<React.SetStateAction<boolean>>;
-};
 
 const RequestTable: React.FC<RequestTableProps> = ({
   requests,

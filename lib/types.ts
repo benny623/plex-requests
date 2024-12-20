@@ -24,26 +24,15 @@ export interface SearchResult {
   media_type: string;
 }
 
-// Request Props
-export type currentProps = {
-  currentRequests: Request[];
+// Request Table Props
+export type RequestTableProps = {
+  requests: Request[];
   loading: Status;
-  table: Boolean;
+  table: boolean;
   setTable: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export type completedProps = {
-  completedRequests: Request[];
-  loading: Status;
-  table: Boolean;
-  setTable: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-export type adminProps = {
-  allRequests: Request[];
-  loading: Status;
-};
-
+// Request Row Props
 export type RequestRowProps = {
   request: Request;
   onStatusChange: (
