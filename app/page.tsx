@@ -13,26 +13,7 @@ import CompletedRequests from "@/components/completed-requests";
 import SearchForm from "@/components/search-form";
 
 export default function Home() {
-  const {
-    requests: currentRequests,
-    status: currentStatus,
-    fetchData: fetchCurrentData,
-  } = useFetchData(fetchCurrentRequests);
-  const {
-    requests: completedRequests,
-    status: completedStatus,
-    fetchData: fetchCompletedData,
-  } = useFetchData(fetchCompleteRequests);
-
-  const [table, setTable] = useState(false);
-
-  // Fetch inital data
-  useEffect(() => {
-    fetchCurrentData();
-    fetchCompletedData();
-  }, []);
-
-  return (
+return (
     <div className="h-screen">
       <div className="hero bg-base-200 min-h-screen">
         <div className="hero-content flex-col lg:flex-row-reverse">
@@ -58,21 +39,29 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {!table ? (
-        <CurrentRequests
-          currentRequests={currentRequests}
-          loading={currentStatus}
-          table={table}
-          setTable={setTable}
-        />
-      ) : (
-        <CompletedRequests
-          completedRequests={completedRequests}
-          loading={completedStatus}
-          table={table}
-          setTable={setTable}
-        />
-      )}
+      <div className="requests-table min-h-screen flex justify-center items-center bg-base-200">
+        <div className="card w-full sm:w-3/4 xl:w-2/3 bg-base-100 shadow-xl">
+          <div className="card-body">
+            <div className="overflow-x-auto">
+              {!table ? (
+                <CurrentRequests
+                  currentRequests={currentRequests}
+                  loading={currentStatus}
+                  table={table}
+                  setTable={setTable}
+                />
+              ) : (
+                <CompletedRequests
+                  completedRequests={completedRequests}
+                  loading={completedStatus}
+                  table={table}
+                  setTable={setTable}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

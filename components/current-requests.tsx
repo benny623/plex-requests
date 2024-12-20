@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Request, currentProps } from "@/lib/types";
-import Link from "next/link";
+import RequestRow from "./request-row";
 
 export default function CurrentRequests({
   currentRequests,
@@ -52,23 +52,7 @@ export default function CurrentRequests({
                 {!loading.loading && loading.success ? (
                   requests.length > 0 ? (
                     requests.map((request: Request) => (
-                      <tr key={request.request_id}>
-                        <td>{request.request_title}</td>
-                        <td>{request.request_year}</td>
-                        <td>{request.request_type}</td>
-                        <td>
-                          <p
-                            className={`rounded-lg text-center border-2 p-2 ${statusColor(
-                              request.request_status
-                            )}`}
-                          >
-                            {request.request_status}
-                          </p>
-                        </td>
-                        <td>
-                          <p>{request.request_note}</p>
-                        </td>
-                      </tr>
+                      <RequestRow key={request.request_id} request={request} />
                     ))
                   ) : (
                     <tr>

@@ -1,21 +1,44 @@
-import React from "react";
-import { Request } from "@/lib/types";
+import React, { useState, useEffect } from "react";
 import AdminRow from "@/components/admin-row";
+
+import {
+  fetchCurrentRequests,
+  fetchCompleteRequests,
+} from "@/lib/fetchRequests";
+import { Request } from "@/lib/types";
+import { useFetchData } from "@/lib/hooks/useFetchData";
 
 type RequestTableProps = {
   requests: Request[];
-  onStatusChange: (id: number, status: string) => void;
-  onNoteChange: (id: number, note: string) => void;
-  onDelete: (id: number, title: string) => void;
 };
 
 const RequestTable: React.FC<RequestTableProps> = ({
   requests,
-  onStatusChange,
-  onNoteChange,
-  onDelete,
 }) => {
+  const {
+    requests: currentRequests,
+    status: currentStatus,
+    fetchData: fetchCurrentData,
+  } = useFetchData(fetchCurrentRequests);
+  const {
+    requests: completedRequests,
+    status: completedStatus,
+    fetchData: fetchCompletedData,
+  } = useFetchData(fetchCompleteRequests);
+
+  const [table, setTable] = useState(false);
+
+  // Fetch inital data
+  useEffect(() => {
+    fetchCurrentData();
+    fetchCompletedData();
+  }, []);
+
   return (
+    <div className="requests-table min-h-screen flex justify-center items-center bg-base-200">
+        <div className="card w-full sm:w-3/4 xl:w-2/3 bg-base-100 shadow-xl">
+          <div className="card-body">
+            <div className="overflow-x-auto">
     <table className="table w-full max-w-5xl border-collapse table-pin-rows">
       <thead>
         <tr>
@@ -29,16 +52,15 @@ const RequestTable: React.FC<RequestTableProps> = ({
       </thead>
       <tbody>
         {requests.map((request) => (
-          <AdminRow
+          <RequestRow
             key={request.request_id}
             request={request}
-            onStatusChange={onStatusChange}
-            onNoteChange={onNoteChange}
-            onDelete={onDelete}
+            table={table}
+            setTable={setTable}
           />
         ))}
       </tbody>
-    </table>
+    </table></div></div></div></div>
   );
 };
 

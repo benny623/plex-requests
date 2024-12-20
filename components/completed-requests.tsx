@@ -1,5 +1,4 @@
 import { Request, completedProps } from "@/lib/types";
-import Link from "next/link";
 
 export default function RequestTable({
   completedRequests,
