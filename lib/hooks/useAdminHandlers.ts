@@ -1,33 +1,23 @@
-import { useState, useEffect } from "react";
 import { Request } from "@/lib/types";
 
-export function useAdminHandlers(allRequests: Request[]) {
-  const [requests, setRequests] = useState<Request[]>(allRequests);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    if (
-      window.localStorage.getItem("isAdmin") ===
-      process.env.NEXT_PUBLIC_ADMIN_KEY
-    ) {
-      setIsAdmin(true);
-      setRequests(allRequests);
-    }
-  }, [allRequests]);
-
+export function useAdminHandlers(
+  requests: Request[],
+  setRequests: React.Dispatch<React.SetStateAction<Request[]>>
+) {
   const handleStatusChange = async (
     e: React.ChangeEvent<HTMLSelectElement>,
     requestId: number
   ) => {
     const newStatus = e.target.value;
 
-    // Update status locally for immediate feedback
-    const updatedRequestList = requests.map((request: Request) =>
-      request.request_id === requestId
-        ? { ...request, request_status: newStatus }
-        : request
+    // Update state locally for immediate feedback
+    setRequests((prev) =>
+      prev.map((request) =>
+        request.request_id === requestId
+          ? { ...request, request_status: newStatus }
+          : request
+      )
     );
-    setRequests(updatedRequestList);
 
     try {
       // Send update to server
@@ -48,38 +38,19 @@ export function useAdminHandlers(allRequests: Request[]) {
       const updatedRequest = await response.json();
       console.log("Status updated", updatedRequest);
 
-      // Send notification for updated status
-      try {
-        const response = await fetch("/api/update-notification", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id: requestId,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to send notification");
-        }
-
-        const notification = await response.json();
-
-        console.log("Notification sent", notification);
-      } catch (err) {
-        console.error("Error sending notification", err);
-      }
+      // Send notification
+      sendNotification(requestId);
     } catch (err) {
       console.error("Error updating status:", err);
 
       // Revert the status if the update failed
-      const revertedRequestList = requests.map((request: Request) =>
-        request.request_id === requestId
-          ? { ...request, request_status: request.request_status }
-          : request
+      setRequests((prev) =>
+        prev.map((request) =>
+          request.request_id === requestId
+            ? { ...request, request_status: request.request_status }
+            : request
+        )
       );
-      setRequests(revertedRequestList);
     }
   };
 
@@ -89,13 +60,14 @@ export function useAdminHandlers(allRequests: Request[]) {
   ) => {
     const newNote = e.target.value;
 
-    // Update status locally for immediate feedback
-    const updatedRequestList = requests.map((request: Request) =>
-      request.request_id === requestId
-        ? { ...request, request_note: newNote }
-        : request
+    // Update state locally for immediate feedback
+    setRequests((prev) =>
+      prev.map((request) =>
+        request.request_id === requestId
+          ? { ...request, request_note: newNote }
+          : request
+      )
     );
-    setRequests(updatedRequestList);
   };
 
   const handleNoteBlur = async (
@@ -125,13 +97,14 @@ export function useAdminHandlers(allRequests: Request[]) {
     } catch (err) {
       console.error("Error updating note:", err);
 
-      // Revert the status if the update failed
-      const revertedRequestList = requests.map((request: Request) =>
-        request.request_id === requestId
-          ? { ...request, request_status: request.request_status }
-          : request
+      // Revert the note if the update failed
+      setRequests((prev) =>
+        prev.map((request) =>
+          request.request_id === requestId
+            ? { ...request, request_noet: request.request_note }
+            : request
+        )
       );
-      setRequests(revertedRequestList);
     }
   };
 
@@ -165,9 +138,33 @@ export function useAdminHandlers(allRequests: Request[]) {
     }
   };
 
+  const sendNotification = async (requestId: number) => {
+    // Send notification for updated status
+    try {
+      const response = await fetch("/api/update-notification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: requestId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send notification");
+      }
+
+      const notification = await response.json();
+
+      console.log("Notification sent", notification);
+    } catch (err) {
+      console.error("Error sending notification", err);
+    }
+  };
+
   return {
     requests,
-    isAdmin,
     handleStatusChange,
     handleNoteChange,
     handleNoteBlur,

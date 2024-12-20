@@ -1,15 +1,27 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
+
 import AdminRow from "@/components/admin-row";
 
-import { RequestTableProps } from "@/lib/types";
+import { Request } from "@/lib/types";
+import { useAdminHandlers } from "@/lib/hooks/useAdminHandlers";
 
-const RequestTable: React.FC<RequestTableProps> = ({
-  requests,
-  onStatusChange,
-  onNoteChange,
-  onNoteBlur,
-  onDelete,
-}) => {
+const RequestTable = ({ requests }: { requests: Request[] }) => {
+  const [allRequests, setAllRequests] = useState<Request[]>(requests);
+  const {
+    handleStatusChange,
+    handleNoteChange,
+    handleNoteBlur,
+    handleDeletion,
+  } = useAdminHandlers(allRequests, setAllRequests);
+
+  // Put data into temporary State
+  useEffect(() => {
+    console.log("request table");
+    setAllRequests(requests);
+  }, [requests]);
+
   return (
     <table className="table w-full max-w-5xl border-collapse table-pin-rows">
       <thead>
@@ -23,14 +35,14 @@ const RequestTable: React.FC<RequestTableProps> = ({
         </tr>
       </thead>
       <tbody>
-        {requests.map((request) => (
+        {allRequests.map((request) => (
           <AdminRow
             key={request.request_id}
             request={request}
-            onStatusChange={onStatusChange}
-            onNoteChange={onNoteChange}
-            onNoteBlur={onNoteBlur}
-            onDelete={onDelete}
+            onStatusChange={handleStatusChange}
+            onNoteChange={handleNoteChange}
+            onNoteBlur={handleNoteBlur}
+            onDelete={handleDeletion}
           />
         ))}
       </tbody>

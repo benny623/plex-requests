@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+
+import { Request } from "@/lib/types";
 
 export const useFetchData = (fetchRequests: () => Promise<any>) => {
-  const [requests, setRequests] = useState<any[]>([]);
+  const [requests, setRequests] = useState<Request[]>([]);
   const [status, setStatus] = useState({
     loading: false,
     error: "",
@@ -24,10 +26,6 @@ export const useFetchData = (fetchRequests: () => Promise<any>) => {
       setStatus((prev) => ({ ...prev, loading: false, success: true }));
     }
   };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   return { requests, status, fetchData };
 };

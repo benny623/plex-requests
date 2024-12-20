@@ -7,19 +7,6 @@ export default function AdminPage({ allRequests, loading }: adminProps) {
   const [admin, setAdmin] = useState(false);
   const [requests, setRequests] = useState<Request[]>(allRequests);
 
-  // Put data into temporary State
-  useEffect(() => {
-    // Check if admin key is correct
-    if (
-      window.localStorage.getItem("isAdmin") !==
-      process.env.NEXT_PUBLIC_ADMIN_KEY
-    ) {
-      return;
-    }
-    setRequests(allRequests);
-    setAdmin(true);
-  }, [allRequests]);
-
   const handleStatusChange = async (
     e: React.ChangeEvent<HTMLSelectElement>,
     requestId: number

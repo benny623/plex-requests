@@ -40,26 +40,6 @@ export type adminProps = {
   loading: Status;
 };
 
-export type RequestTableProps = {
-  requests: Request[];
-  onStatusChange: (
-    e: React.ChangeEvent<HTMLSelectElement>,
-    requestId: number
-  ) => Promise<void>;
-  onNoteChange: (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-    requestId: number
-  ) => Promise<void>;
-  onNoteBlur: (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-    requestId: number
-  ) => Promise<void>;
-  onDelete: (
-    e: React.MouseEvent<HTMLButtonElement>,
-    requestId: number
-  ) => Promise<void>;
-};
-
 export type RequestRowProps = {
   request: Request;
   onStatusChange: (
