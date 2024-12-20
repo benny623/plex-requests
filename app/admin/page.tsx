@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import RequestTable from "@/components/request-table-admin";
+import AdminTable from "@/components/admin-table";
 
 import { fetchAllRequests } from "@/lib/fetchRequests";
 import { useFetchData } from "@/lib/hooks/useFetchData";
@@ -30,7 +30,7 @@ const AdminPage = () => {
         <span className="loading loading-dots loading-md"></span>
       ) : requests.length > 0 ? (
         <>
-          <RequestTable requests={requests} />
+          <AdminTable requests={requests} />
           {/* <DeletionModal
             isOpen={modalData.isOpen}
             title={modalData.requestTitle || ""}

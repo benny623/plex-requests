@@ -7,7 +7,7 @@ import AdminRow from "@/components/admin-row";
 import { Request } from "@/lib/types";
 import { useAdminHandlers } from "@/lib/hooks/useAdminHandlers";
 
-const RequestTable = ({ requests }: { requests: Request[] }) => {
+const AdminTable = ({ requests }: { requests: Request[] }) => {
   const [allRequests, setAllRequests] = useState<Request[]>(requests);
   const {
     handleStatusChange,
@@ -50,4 +50,4 @@ const RequestTable = ({ requests }: { requests: Request[] }) => {
   );
 };
 
-export default RequestTable;
+export default AdminTable;
