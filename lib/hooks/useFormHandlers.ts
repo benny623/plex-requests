@@ -14,7 +14,11 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     year: "",
     email: "",
   });
-  const [status, setStatus] = useState<Status>();
+  const [status, setStatus] = useState<Status>({
+    loading: false,
+    error: "",
+    success: false,
+  });
 
   // Validate form before submission
   const validateForm = () => {
