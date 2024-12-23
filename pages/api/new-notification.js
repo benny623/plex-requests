@@ -1,7 +1,7 @@
 import NodeMailer from "nodemailer";
 
 export default async function handler(req, res) {
-  const { title, year, type } = req.body; // TODO: Removed email from here, but it may be nice to have user's email/name in the request email that gets sent to admins
+  const { title, year, type, email } = req.body; // TODO: Removed email from here, but it may be nice to have user's email/name in the request email that gets sent to admins
 
   const transporter = NodeMailer.createTransport({
     service: "gmail",
@@ -23,6 +23,7 @@ export default async function handler(req, res) {
       <h1>Title: ${title}</h1>
       <h2>Year: ${year}</h2>
       <h2>Type: ${type}</h2>
+      <h2>Requested By: ${email}</h2>
       `, // TODO: add CSS to make this look nicer
     };
 

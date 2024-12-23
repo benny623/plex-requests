@@ -45,7 +45,7 @@ const AdminTable: React.FC<{ requests: Request[] }> = ({ requests }) => {
 
   return (
     <>
-      <table className="table w-full max-w-5xl border-collapse table-pin-rows">
+      <table className="table max-w-5xl border-collapse table-pin-rows pt-10">
         <thead>
           <tr>
             <th></th>
@@ -70,7 +70,7 @@ const AdminTable: React.FC<{ requests: Request[] }> = ({ requests }) => {
         </tbody>
       </table>
       {modalData && (
-        <dialog open className="modal">
+        <dialog open className="modal bg-base-300 bg-opacity-50">
           <div className="modal-box">
             <form method="dialog">
               <button

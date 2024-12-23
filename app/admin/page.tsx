@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import AdminTable from "@/components/admin-table";
 
@@ -37,16 +38,23 @@ const AdminPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex justify-center items-center py-10 bg-base-100">
-      {!isAdmin ? (
-        <h1 className="font-bold">Not an admin</h1>
-      ) : status.loading ? (
-        <span className="loading loading-dots loading-md"></span>
-      ) : requests.length > 0 ? (
-        <AdminTable requests={requests} />
-      ) : (
-        <h1 className="font-bold">No current requests</h1>
-      )}
+    <div className="min-h-screen bg-base-100">
+      <div className="flex justify-start pl-10 pt-10">
+        <Link href={"/"} className="btn btn-primary">
+          Home
+        </Link>
+      </div>
+      <div className="flex justify-center items-center py-10">
+        {!isAdmin ? (
+          <h1 className="font-bold">Not an admin</h1>
+        ) : status.loading ? (
+          <span className="loading loading-dots loading-md"></span>
+        ) : requests.length > 0 ? (
+          <AdminTable requests={requests} />
+        ) : (
+          <h1 className="font-bold">No current requests</h1>
+        )}
+      </div>
     </div>
   );
 };
