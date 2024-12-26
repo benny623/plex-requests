@@ -5,7 +5,6 @@ import React, { useState, useEffect } from "react";
 import AdminTable from "@/components/admin-table";
 
 import {
-  //fetchAllRequests,
   fetchCurrentRequests,
   fetchCompleteRequests,
 } from "@/lib/fetchRequests";
@@ -14,15 +13,16 @@ import { useFetchData } from "@/lib/hooks/useFetchData";
 const AdminPage = () => {
   const {
     requests: currentRequests,
+    setRequests: setCurrentRequests,
     status: currentStatus,
     fetchData: fetchCurrentData,
   } = useFetchData(fetchCurrentRequests);
   const {
     requests: completedRequests,
+    setRequests: setCompletedRequests,
     status: completedStatus,
     fetchData: fetchCompletedData,
   } = useFetchData(fetchCompleteRequests);
-  //const { requests, status, fetchData } = useFetchData(fetchAllRequests);
   const [isAdmin, setIsAdmin] = useState(false);
   const [table, setTable] = useState(false);
 
@@ -90,6 +90,7 @@ const AdminPage = () => {
         ) : !table ? (
           <AdminTable
             requests={currentRequests}
+            setRequests={setCurrentRequests}
             loading={currentStatus}
             table={table}
             setTable={setTable}
@@ -97,6 +98,7 @@ const AdminPage = () => {
         ) : (
           <AdminTable
             requests={completedRequests}
+            setRequests={setCompletedRequests}
             loading={completedStatus}
             table={table}
             setTable={setTable}

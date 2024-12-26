@@ -26,5 +26,5 @@ export const useFetchData = (fetchRequests: () => Promise<any>) => {
     }
   }, [fetchRequests]);
 
-  return { requests, status, fetchData };
+  return { requests, setRequests, status, fetchData };
 };
