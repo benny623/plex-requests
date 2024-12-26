@@ -23,11 +23,6 @@ export default async function handler(req, res) {
         body: JSON.stringify({ token }),
       });
       const data = await res.json();
-
-      console.log(`
-        isAdmin? ${data.isAdmin}
-        token: ${token}
-        `);
       return data.isAdmin || false;
     } catch (err) {
       console.error("Error validating admin:", err);

@@ -27,6 +27,7 @@ export interface SearchResult {
 // Request Table Props
 export type RequestTableProps = {
   requests: Request[];
+  setRequests?: React.Dispatch<React.SetStateAction<Request[]>> | undefined;
   loading: Status;
   table: boolean;
   setTable: React.Dispatch<React.SetStateAction<boolean>>;

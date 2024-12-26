@@ -1,33 +1,31 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import AdminRow from "@/components/admin-row";
 
 import { Request, RequestTableProps } from "@/lib/types";
 import { useAdminHandlers } from "@/lib/hooks/useAdminHandlers";
 
-const AdminTable: React.FC<RequestTableProps> = ({ requests, loading }) => {
-  const [allRequests, setAllRequests] = useState<Request[]>(requests);
+const AdminTable: React.FC<RequestTableProps> = ({
+  requests,
+  setRequests,
+  loading,
+}) => {
   const [modalData, setModalData] = useState<Request | null>(null);
   const {
     handleStatusChange,
     handleNoteChange,
     handleNoteBlur,
     handleDeletion,
-  } = useAdminHandlers(allRequests, setAllRequests);
-
-  // Put data into temporary State
-  useEffect(() => {
-    setAllRequests(requests);
-  }, [requests]);
+  } = useAdminHandlers(requests, setRequests || (() => {}));
 
   const handleRequestDelete = async (
     e: React.MouseEvent<HTMLButtonElement>,
     requestId: number
   ): Promise<void> => {
     e.preventDefault();
-    const request = allRequests.find((r) => r.request_id === requestId);
+    const request = requests.find((r) => r.request_id === requestId);
     setModalData(request || null);
   };
 
@@ -57,7 +55,7 @@ const AdminTable: React.FC<RequestTableProps> = ({ requests, loading }) => {
         </thead>
         <tbody>
           {!loading.loading && loading.success ? (
-            allRequests.length > 0 ? (
+            requests.length > 0 ? (
               requests.map((request: Request) => (
                 <AdminRow
                   key={request.request_id}
