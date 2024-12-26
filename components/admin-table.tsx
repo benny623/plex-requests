@@ -4,10 +4,10 @@ import React, { useState, useEffect } from "react";
 
 import AdminRow from "@/components/admin-row";
 
-import { Request } from "@/lib/types";
+import { Request, RequestTableProps } from "@/lib/types";
 import { useAdminHandlers } from "@/lib/hooks/useAdminHandlers";
 
-const AdminTable: React.FC<{ requests: Request[] }> = ({ requests }) => {
+const AdminTable: React.FC<RequestTableProps> = ({ requests, loading }) => {
   const [allRequests, setAllRequests] = useState<Request[]>(requests);
   const [modalData, setModalData] = useState<Request | null>(null);
   const {
@@ -19,7 +19,6 @@ const AdminTable: React.FC<{ requests: Request[] }> = ({ requests }) => {
 
   // Put data into temporary State
   useEffect(() => {
-    console.log("request table");
     setAllRequests(requests);
   }, [requests]);
 
@@ -57,16 +56,32 @@ const AdminTable: React.FC<{ requests: Request[] }> = ({ requests }) => {
           </tr>
         </thead>
         <tbody>
-          {allRequests.map((request) => (
-            <AdminRow
-              key={request.request_id}
-              request={request}
-              onStatusChange={handleStatusChange}
-              onNoteChange={handleNoteChange}
-              onNoteBlur={handleNoteBlur}
-              onRequestDelete={handleRequestDelete}
-            />
-          ))}
+          {!loading.loading && loading.success ? (
+            allRequests.length > 0 ? (
+              requests.map((request: Request) => (
+                <AdminRow
+                  key={request.request_id}
+                  request={request}
+                  onStatusChange={handleStatusChange}
+                  onNoteChange={handleNoteChange}
+                  onNoteBlur={handleNoteBlur}
+                  onRequestDelete={handleRequestDelete}
+                />
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} className="text-center">
+                  No current requests
+                </td>
+              </tr>
+            )
+          ) : (
+            <tr>
+              <td colSpan={6} className="text-center">
+                <span className="loading loading-dots loading-md"></span>
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
       {modalData && (

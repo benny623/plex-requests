@@ -2,7 +2,7 @@ import NodeMailer from "nodemailer";
 import { fetchSingleRequest } from "@/lib/fetchRequests";
 
 export default async function handler(req, res) {
-  const { id } = req.body; // TODO: refactor this to only need ID. This will involve changing the values below to grab title and status for the email
+  const { id, token } = req.body; // TODO: refactor this to only need ID. This will involve changing the values below to grab title and status for the email
 
   function statusColor(status) {
     switch (status) {
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
 
   try {
     // Grab the email from the backend so email is not exposed in json body
-    const emailData = await fetchSingleRequest(id);
+    const emailData = await fetchSingleRequest(id, token);
 
     // Verify transporter connection before sending notification
     await transporter.verify();

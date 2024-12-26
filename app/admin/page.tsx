@@ -4,12 +4,27 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import AdminTable from "@/components/admin-table";
 
-import { fetchAllRequests } from "@/lib/fetchRequests";
+import {
+  //fetchAllRequests,
+  fetchCurrentRequests,
+  fetchCompleteRequests,
+} from "@/lib/fetchRequests";
 import { useFetchData } from "@/lib/hooks/useFetchData";
 
 const AdminPage = () => {
-  const { requests, status, fetchData } = useFetchData(fetchAllRequests);
+  const {
+    requests: currentRequests,
+    status: currentStatus,
+    fetchData: fetchCurrentData,
+  } = useFetchData(fetchCurrentRequests);
+  const {
+    requests: completedRequests,
+    status: completedStatus,
+    fetchData: fetchCompletedData,
+  } = useFetchData(fetchCompleteRequests);
+  //const { requests, status, fetchData } = useFetchData(fetchAllRequests);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [table, setTable] = useState(false);
 
   // Set isAdmin on page load
   useEffect(() => {
@@ -28,7 +43,8 @@ const AdminPage = () => {
 
         if (data.isAdmin) {
           setIsAdmin(true);
-          fetchData();
+          fetchCurrentData();
+          fetchCompletedData();
         }
       } catch (err) {
         console.error("Error validating admin:", err);
@@ -44,15 +60,46 @@ const AdminPage = () => {
           Home
         </Link>
       </div>
+      {!table ? (
+        <div className="text-center text-xs font-bold text-base-content pt-4">
+          <button
+            onClick={() => {
+              setTable(!table);
+            }}
+            className="text-info font-bold"
+          >
+            Completed Requests
+          </button>
+        </div>
+      ) : (
+        <div className="text-center text-xs pt-4">
+          <button
+            onClick={() => {
+              setTable(!table);
+            }}
+            className="text-info font-bold"
+          >
+            Current Requests
+          </button>
+        </div>
+      )}
       <div className="flex justify-center items-center py-10">
         {!isAdmin ? (
           <h1 className="font-bold">Not an admin</h1>
-        ) : status.loading ? (
-          <span className="loading loading-dots loading-md"></span>
-        ) : requests.length > 0 ? (
-          <AdminTable requests={requests} />
+        ) : !table ? (
+          <AdminTable
+            requests={currentRequests}
+            loading={currentStatus}
+            table={table}
+            setTable={setTable}
+          />
         ) : (
-          <h1 className="font-bold">No current requests</h1>
+          <AdminTable
+            requests={completedRequests}
+            loading={completedStatus}
+            table={table}
+            setTable={setTable}
+          />
         )}
       </div>
     </div>

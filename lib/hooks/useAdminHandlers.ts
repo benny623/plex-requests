@@ -148,6 +148,7 @@ export function useAdminHandlers(
         },
         body: JSON.stringify({
           id: requestId,
+          token: window.localStorage.getItem("isAdmin"),
         }),
       });
 
