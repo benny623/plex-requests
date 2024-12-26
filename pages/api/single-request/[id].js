@@ -2,7 +2,7 @@ import { query } from "@/lib/db";
 
 export default async function handler(req, res) {
   const { id } = req.query; // Get request ID
-  const token = req.headers.authorization?.split(" ")[1]; // Get the token
+  const token = req.headers.authorization?.split(" ")[1]; // Get the token from auth headers
 
   const baseUrl =
     typeof window !== "undefined"

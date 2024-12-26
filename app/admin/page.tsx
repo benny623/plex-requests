@@ -60,29 +60,30 @@ const AdminPage = () => {
           Home
         </Link>
       </div>
-      {!table ? (
-        <div className="text-center text-xs font-bold text-base-content pt-4">
-          <button
-            onClick={() => {
-              setTable(!table);
-            }}
-            className="text-info font-bold"
-          >
-            Completed Requests
-          </button>
-        </div>
-      ) : (
-        <div className="text-center text-xs pt-4">
-          <button
-            onClick={() => {
-              setTable(!table);
-            }}
-            className="text-info font-bold"
-          >
-            Current Requests
-          </button>
-        </div>
-      )}
+      {isAdmin &&
+        (!table ? (
+          <div className="text-center text-xs font-bold text-base-content pt-4">
+            <button
+              onClick={() => {
+                setTable(!table);
+              }}
+              className="text-info font-bold"
+            >
+              Completed Requests
+            </button>
+          </div>
+        ) : (
+          <div className="text-center text-xs pt-4">
+            <button
+              onClick={() => {
+                setTable(!table);
+              }}
+              className="text-info font-bold"
+            >
+              Current Requests
+            </button>
+          </div>
+        ))}
       <div className="flex justify-center items-center py-10">
         {!isAdmin ? (
           <h1 className="font-bold">Not an admin</h1>
