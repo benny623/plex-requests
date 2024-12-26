@@ -80,80 +80,86 @@ export const useFormHandlers = (refetchRequests: () => void) => {
         return;
       }
 
+      // Send notification to site admins
+      sendNotification();
+
       setStatus({ loading: true, error: "", success: false });
-
-      try {
-        const res = await fetch("/api/send-request", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formState),
-        });
-
-        const result = await res.json();
-
-        if (res.ok) {
-          console.log("POST Success");
-
-          // Refetch requests data for table
-          refetchRequests();
-
-          // Send notification for updated status
-          try {
-            const response = await fetch("/api/new-notification", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                title: formState.title,
-                year: formState.year,
-                type: formState.type,
-              }),
-            });
-
-            if (!response.ok) {
-              throw new Error("Failed to send notification");
-            }
-
-            const notification = await response.json();
-
-            console.log("Notification sent", notification);
-          } catch (err) {
-            console.error("Error sending notification", err);
-          }
-
-          setFormState({
-            title: "",
-            year: "",
-            email: "",
-            status: "New",
-            type: "Movie",
-          });
-
-          setStatus({ loading: false, error: "", success: true });
-        } else {
-          console.log(`POST Failure: ${result.error || "An error occurred"}`);
-
-          setStatus({
-            loading: false,
-            error: result.error || "An error occurred",
-            success: false,
-          });
-        }
-      } catch (err) {
-        console.error("Error:", err);
-
-        setStatus({
-          loading: false,
-          error: "An unexpected error occurred",
-          success: false,
-        });
-      }
     },
     [formState, refetchRequests]
   );
+
+  const sendNotification = async () => {
+    try {
+      const res = await fetch("/api/send-request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formState),
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        console.log("POST Success");
+
+        // Refetch requests data for table
+        refetchRequests();
+
+        // Send notification for updated status
+        try {
+          const response = await fetch("/api/new-notification", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              title: formState.title,
+              year: formState.year,
+              type: formState.type,
+              email: formState.email,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to send notification");
+          }
+
+          const notification = await response.json();
+
+          console.log("Notification sent", notification);
+        } catch (err) {
+          console.error("Error sending notification", err);
+        }
+
+        setFormState({
+          title: "",
+          year: "",
+          email: "",
+          status: "New",
+          type: "Movie",
+        });
+
+        setStatus({ loading: false, error: "", success: true });
+      } else {
+        console.log(`POST Failure: ${result.error || "An error occurred"}`);
+
+        setStatus({
+          loading: false,
+          error: result.error || "An error occurred",
+          success: false,
+        });
+      }
+    } catch (err) {
+      console.error("Error:", err);
+
+      setStatus({
+        loading: false,
+        error: "An unexpected error occurred",
+        success: false,
+      });
+    }
+  };
 
   return {
     formState,
