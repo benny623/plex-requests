@@ -1,5 +1,20 @@
-export default function NewEmail(props) {
-  const { title, year, type, email, image } = props;
+export default function UpdateEmail(props) {
+  const { title, status, note, image } = props;
+
+  function statusColor(status) {
+    switch (status) {
+      case "New":
+        return "#ff52d9";
+      case "In Progress":
+        return "#7480ff";
+      case "Pending":
+        return "#ffbe00";
+      case "Complete":
+        return "#00a96e";
+      default:
+        return "";
+    } // The colors here are subject to change depending on if the theme changes
+  }
 
   // Inline styles
   const styles = {
@@ -55,11 +70,21 @@ export default function NewEmail(props) {
     button: {
       display: "inline-block",
       padding: "12px 24px",
-      backgroundColor: "#6366F1",
+      backgroundColor: "#00cdb7",
       color: "white",
       textDecoration: "none",
       borderRadius: "8px",
       fontWeight: "bold",
+    },
+    badge: {
+      display: "inline-block",
+      padding: "8px 15px",
+      backgroundColor: statusColor(status),
+      color: "white",
+      fontSize: "14px",
+      fontWeight: "bold",
+      borderRadius: "50px",
+      textAlign: "center",
     },
   };
 
@@ -75,52 +100,22 @@ export default function NewEmail(props) {
           <td style={styles.contentCell}>
             <h1 style={styles.title}>{title}</h1>
             <p style={styles.paragraph}>
-              <strong>Year:</strong> {year}
+              <strong>Status:</strong> <span style={styles.badge}>{status}</span>
             </p>
-            <p style={styles.paragraph}>
-              <strong>Type:</strong> {type}
-            </p>
-            <p style={styles.paragraph}>
-              <strong>Requested by:</strong> {email}
-            </p>
+            {note && (
+              <p style={styles.paragraph}>
+                <strong>Note:</strong> {note}
+              </p>
+            )}
             <a
               href="https://plex-requests-plum.vercel.app/admin"
               style={styles.button}
             >
-              Admin Page
+              Plex Requests Page
             </a>
           </td>
         </tr>
       </table>
-
-      {/* <div style={styles.card}>
-        <div style={styles.imageContainer}>
-          {image ? (
-            <img src={image} alt={`${title} poster`} style={styles.image} />
-          ) : (
-            <span>No Image</span>
-          )}
-        </div>
-
-        <div style={styles.content}>
-          <h1 style={styles.title}>{title}</h1>
-          <p style={styles.paragraph}>
-            <strong>Year:</strong> {year}
-          </p>
-          <p style={styles.paragraph}>
-            <strong>Type:</strong> {type}
-          </p>
-          <p style={styles.paragraph}>
-            <strong>Requested by:</strong> {email}
-          </p>
-          <a
-            href="https://plex-requests-plum.vercel.app/admin"
-            style={styles.button}
-          >
-            Admin Page
-          </a>
-        </div>
-      </div> */}
     </div>
   );
 }
