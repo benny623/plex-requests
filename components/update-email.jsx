@@ -108,7 +108,7 @@ export default function UpdateEmail(props) {
               </p>
             )}
             <a
-              href="https://plex-requests-plum.vercel.app/admin"
+              href="https://plex-requests-plum.vercel.app/"
               style={styles.button}
             >
               Plex Requests Page
