@@ -45,31 +45,31 @@ const RequestTable: React.FC<RequestTableProps> = ({
                 )}
               </tbody>
             </table>
-            {!table ? (
-              <div className="text-center text-xs font-bold text-base-content pt-4">
-                Don&apos;t see your request? Check here:{" "}
-                <button
-                  onClick={() => {
-                    setTable(!table);
-                  }}
-                  className="text-info font-bold"
-                >
-                  Completed Requests
-                </button>
-              </div>
-            ) : (
-              <div className="text-center text-xs pt-4">
-                <button
-                  onClick={() => {
-                    setTable(!table);
-                  }}
-                  className="text-info font-bold"
-                >
-                  Go Back
-                </button>
-              </div>
-            )}
           </div>
+          {!table ? (
+            <div className="text-center text-xs font-bold text-base-content pt-4">
+              Don&apos;t see your request? Check here:{" "}
+              <button
+                onClick={() => {
+                  setTable(!table);
+                }}
+                className="text-info font-bold"
+              >
+                Completed Requests
+              </button>
+            </div>
+          ) : (
+            <div className="text-center text-xs pt-4">
+              <button
+                onClick={() => {
+                  setTable(!table);
+                }}
+                className="text-info font-bold"
+              >
+                Go Back
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
