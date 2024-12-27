@@ -8,6 +8,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     email: "",
     status: "New",
     type: "Movie",
+    image: "",
   });
   const [formErrors, setFormErrors] = useState({
     title: "",
@@ -118,6 +119,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
               year: formState.year,
               type: formState.type,
               email: formState.email,
+              image: formState.image,
             }),
           });
 
@@ -138,6 +140,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
           email: "",
           status: "New",
           type: "Movie",
+          image: "",
         });
 
         setStatus({ loading: false, error: "", success: true });

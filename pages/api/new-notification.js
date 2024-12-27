@@ -1,7 +1,19 @@
+import ReactDOMServer from "react-dom/server";
 import NodeMailer from "nodemailer";
+import { NewEmail } from "@/components/new-email";
 
 export default async function handler(req, res) {
-  const { title, year, type, email } = req.body; // TODO: Removed email from here, but it may be nice to have user's email/name in the request email that gets sent to admins
+  const { title, year, type, email, image } = req.body;
+
+  const htmlContent = ReactDOMServer.renderToStaticMarkup(
+    <NewEmail
+      title={title}
+      year={year}
+      type={type}
+      email={email}
+      image={image}
+    />
+  );
 
   const transporter = NodeMailer.createTransport({
     service: "gmail",
@@ -19,12 +31,7 @@ export default async function handler(req, res) {
       from: "PlexRequest Notification <bm.contact623@gmail.com>",
       to: [process.env.TEMP_EMAIL, process.env.TEMP_EMAIL2], // TODO: after userauth and admin side set up, change this to only be for the admin emails
       subject: `New Request: ${title}`,
-      html: `
-      <h1>Title: ${title}</h1>
-      <h2>Year: ${year}</h2>
-      <h2>Type: ${type}</h2>
-      <h2>Requested By: ${email}</h2>
-      `, // TODO: add CSS to make this look nicer
+      html: htmlContent,
     };
 
     // Send notification

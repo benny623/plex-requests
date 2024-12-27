@@ -22,6 +22,7 @@ export interface SearchResult {
   title: string;
   year: string;
   media_type: string;
+  poster: string;
 }
 
 // Request Table Props
@@ -48,10 +49,6 @@ export type RequestRowProps = {
     e: React.ChangeEvent<HTMLTextAreaElement>,
     requestId: number
   ) => Promise<void>;
-  // onDelete: (
-  //   e: React.MouseEvent<HTMLButtonElement>,
-  //   requestId: number
-  // ) => Promise<void>;
   onRequestDelete: (
     e: React.MouseEvent<HTMLButtonElement>,
     requestId: number
