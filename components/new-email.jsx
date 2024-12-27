@@ -1,59 +1,60 @@
-export function NewEmail(props) {
+export default function NewEmail(props) {
   const { title, year, type, email, image } = props;
 
   // Inline styles
   const styles = {
     container: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "#f0f0f0",
+      width: "100%",
+      backgroundColor: "#191e24",
+      padding: "40px 0",
       margin: 0,
-      padding: 0,
+      fontFamily: "Arial, sans-serif",
+      color: "#ededed",
     },
-    card: {
+    table: {
+      width: "600px",
+      margin: "0 auto",
+      backgroundColor: "#1d232a",
       borderRadius: "8px",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-      display: "flex",
-      flexDirection: "row",
-      width: "100%",
-      height: "100%",
-      maxWidth: "600px",
-      margin: "0 auto",
-      padding: "20px",
-    },
-    imageContainer: {
-      width: "150px",
-      height: "200px",
       overflow: "hidden",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "#e0e0e0",
+      height: "auto",
+    },
+    imageCell: {
+      width: "200px",
+      height: "300px",
       borderRadius: "8px",
+      textAlign: "center",
+      color: "#333",
+      verticalAlign: "middle",
+      overflow: "hidden",
+      boxSizing: "border-box",
+      backgroundColor: image ? "transparent" : "#e0e0e0",
     },
     image: {
       width: "100%",
-      height: "auto",
+      height: "100%",
+      objectFit: "cover",
+      objectPosition: "center center",
       borderRadius: "8px",
     },
-    content: {
-      marginLeft: "20px",
-      flex: 1,
+    contentCell: {
+      padding: "30px",
+      textAlign: "left",
+      verticalAlign: "middle",
     },
     title: {
       fontSize: "24px",
       fontWeight: "bold",
-      marginBottom: "10px",
+      marginBottom: "15px",
     },
     paragraph: {
       fontSize: "16px",
-      color: "#333",
-      marginBottom: "10px",
+      marginBottom: "15px",
     },
     button: {
       display: "inline-block",
-      padding: "10px 20px",
+      padding: "12px 24px",
       backgroundColor: "#6366F1",
       color: "white",
       textDecoration: "none",
@@ -64,7 +65,37 @@ export function NewEmail(props) {
 
   return (
     <div style={styles.container}>
-      <div style={styles.card}>
+      <table style={styles.table}>
+        <tr>
+          <td style={styles.imageCell}>
+            {image ? (
+              <img src={image} alt={`${title} poster`} style={styles.image} />
+            ) : (
+              <span>No Image</span>
+            )}
+          </td>
+          <td style={styles.contentCell}>
+            <h1 style={styles.title}>{title}</h1>
+            <p style={styles.paragraph}>
+              <strong>Year:</strong> {year}
+            </p>
+            <p style={styles.paragraph}>
+              <strong>Type:</strong> {type}
+            </p>
+            <p style={styles.paragraph}>
+              <strong>Requested by:</strong> {email}
+            </p>
+            <a
+              href="https://plex-requests-plum.vercel.app/admin"
+              style={styles.button}
+            >
+              Admin Page
+            </a>
+          </td>
+        </tr>
+      </table>
+
+      {/* <div style={styles.card}>
         <div style={styles.imageContainer}>
           {image ? (
             <img src={image} alt={`${title} poster`} style={styles.image} />
@@ -91,7 +122,7 @@ export function NewEmail(props) {
             Admin Page
           </a>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
