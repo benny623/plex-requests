@@ -10,11 +10,11 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     type: "Movie",
     image: "",
   });
-  const [formErrors, setFormErrors] = useState({
-    title: "",
-    year: "",
-    email: "",
-  });
+  // const [formErrors, setFormErrors] = useState({
+  //   title: "",
+  //   year: "",
+  //   email: "",
+  // });
   const [status, setStatus] = useState<Status>({
     loading: false,
     error: "",
@@ -22,38 +22,38 @@ export const useFormHandlers = (refetchRequests: () => void) => {
   });
 
   // Validate form before submission
-  const validateForm = () => {
-    let valid = true;
-    const errors = {
-      title: "",
-      email: "",
-      year: "",
-    };
+  // const validateForm = () => {
+  //   let valid = true;
+  //   const errors = {
+  //     title: "",
+  //     email: "",
+  //     year: "",
+  //   };
 
-    // Title Validation
-    if (!formState.title) {
-      errors.title = "Title is required";
-      valid = false;
-    }
+  //   // Title Validation
+  //   if (!formState.title) {
+  //     errors.title = "Title is required";
+  //     valid = false;
+  //   }
 
-    // Email Validation
-    if (!formState.email) {
-      errors.email = "Email is required";
-      valid = false;
-    } else if (!/\S+@\S+\.\S+/.test(formState.email)) {
-      errors.email = "Please enter a valid email address";
-      valid = false;
-    }
+  //   // Email Validation
+  //   if (!formState.email) {
+  //     errors.email = "Email is required";
+  //     valid = false;
+  //   } else if (!/\S+@\S+\.\S+/.test(formState.email)) {
+  //     errors.email = "Please enter a valid email address";
+  //     valid = false;
+  //   }
 
-    // Year Validation
-    if (formState.year && !/^\d{4}$/.test(formState.year)) {
-      errors.year = "Year must be a 4-digit number";
-      valid = false;
-    }
+  //   // Year Validation
+  //   if (formState.year && !/^\d{4}$/.test(formState.year)) {
+  //     errors.year = "Year must be a 4-digit number";
+  //     valid = false;
+  //   }
 
-    setFormErrors(errors);
-    return valid;
-  };
+  //   setFormErrors(errors);
+  //   return valid;
+  // };
 
   // Handle form input changes
   const handleChange = (e: any) => {
@@ -65,10 +65,10 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     }));
 
     // Clear any existing errors for the field
-    setFormErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: "",
-    }));
+    // setFormErrors((prevErrors) => ({
+    //   ...prevErrors,
+    //   [name]: "",
+    // })); -- Other form verification in place
   };
 
   // Handle form submission
@@ -77,9 +77,9 @@ export const useFormHandlers = (refetchRequests: () => void) => {
       e.preventDefault();
 
       // Validate the form before submission
-      if (!validateForm()) {
-        return;
-      }
+      // if (!validateForm()) {
+      //   return;
+      // } -- Other form verification in place
 
       // Send notification to site admins
       sendNotification();
@@ -167,7 +167,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
   return {
     formState,
     setFormState,
-    formErrors,
+    //formErrors,
     status,
     handleChange,
     handleSubmit,

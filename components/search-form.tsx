@@ -13,7 +13,7 @@ export default function SearchForm({
   const {
     formState,
     setFormState,
-    formErrors,
+    //formErrors,
     status,
     handleChange,
     handleSubmit,
@@ -81,7 +81,7 @@ export default function SearchForm({
         }`,
         year: selected.year,
         type: selected.media_type,
-        image: `https://image.tmdb.org/t/p/w500${selected.poster}`
+        image: `https://image.tmdb.org/t/p/w500${selected.poster}`,
       }));
     }
 
@@ -115,6 +115,7 @@ export default function SearchForm({
               value={formState.title}
               onChange={handleChange}
               className="input input-bordered join-item flex-grow"
+              required
             />
             <button
               className="btn btn-primary join-item w-[83px]"
@@ -127,11 +128,6 @@ export default function SearchForm({
               )}
             </button>
           </div>
-          {formErrors.title && (
-            <p className="text-sm text-red-500 text-center pt-2">
-              {formErrors.title}
-            </p>
-          )}
         </div>
         <div className="form-control">
           <label className="label">
@@ -140,18 +136,15 @@ export default function SearchForm({
           <input
             id="year"
             name="year"
-            type="text"
+            type="number"
+            min="1900"
+            max={`${new Date().getFullYear() + 5}`}
             placeholder="Release year"
             maxLength={4}
             value={formState.year}
             onChange={handleChange}
             className="grow input input-bordered flex items-center gap-2"
           />
-          {formErrors.year && (
-            <p className="text-sm text-red-500 text-center pt-2">
-              {formErrors.year}
-            </p>
-          )}
         </div>
         <div className="form-control">
           <label className="label">
@@ -160,17 +153,13 @@ export default function SearchForm({
           <input
             id="email"
             name="email"
-            type="text"
+            type="email"
             placeholder="Your email"
             value={formState.email}
             onChange={handleChange}
             className="grow input input-bordered flex items-center"
+            required
           />
-          {formErrors.email && (
-            <p className="text-sm text-red-500 text-center pt-2">
-              {formErrors.email}
-            </p>
-          )}
         </div>
         <div className="form-control">
           <label className="label">
@@ -274,6 +263,14 @@ export default function SearchForm({
                         <p className="text-sm italic font-normal text-accent">
                           {result.media_type}
                         </p>
+                      </div>
+                      <div className="flex flex-col justify-center">
+                        {result.mpaa && (
+                          <p className="badge badge-outline">{result.mpaa}</p>
+                        )}
+                        {result.tvcr && (
+                          <p className="badge badge-outline">{result.tvcr}</p>
+                        )}
                       </div>
                     </div>
                     <p className="max-h-20 overflow-auto">{result.overview}</p>

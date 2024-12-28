@@ -39,6 +39,58 @@ export default async function handler(req, res) {
     }
   };
 
+  const getMPAA = async (id, year) => {
+    try {
+      const response = await fetch(
+        `${process.env.TMDB_BASE_URL}/movie/${id}?api_key=${process.env.TMDB_API_KEY}&append_to_response=release_dates`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      // Filter data to only include US results and grab the rating (based off of the release year)
+      const filteredData = data.release_dates.results
+        .find((i) => i.iso_3166_1 === "US")
+        .release_dates.find(
+          (i) => i.release_date.slice(0, 10) === year || i.certification
+        ).certification;
+
+      // Send season data
+      return filteredData;
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  };
+
+  const getTVCR = async (id) => {
+    try {
+      const response = await fetch(
+        `${process.env.TMDB_BASE_URL}/tv/${id}/content_ratings?api_key=${process.env.TMDB_API_KEY}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      // Filter data to only include US results and grab the rating
+      const filteredData = data.results.find(
+        (i) => i.iso_3166_1 === "US"
+      ).rating;
+
+      // Send season data
+      return filteredData;
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  };
+
   try {
     const { query } = req.query;
 
@@ -65,17 +117,24 @@ export default async function handler(req, res) {
 
     const data = await Promise.all(
       rawData.results?.map(async (i) => {
-        // Filter out People and items that have a vote count less than 10
+        // Filter out People and media that have a vote count less than 10
         if (i.media_type !== "person" && i.vote_count >= 10) {
           const keywords = await getKeywords(i.media_type, i.id); // Keyword data
           const seasons = i.media_type === "tv" ? await getSeasons(i.id) : null; // Season count data
+          const mpaa =
+            i.media_type === "movie"
+              ? await getMPAA(i.id, i.release_date)
+              : null; // Get the MPAA rating
+          const tvcr = i.media_type === "tv" ? await getTVCR(i.id) : null;
 
           // Check if it's an Anime
           const isAnime = keywords?.some((keyword) => keyword.id === 210024);
 
           // Check if it's a Seasonal Movie
           const seasonalKeywordIds = [65, 207317, 336879, 323756, 3335, 4543]; // May need to add more to this or break out into own .json file
-          const isSeasonal = keywords?.some((keyword) => seasonalKeywordIds.includes(keyword.id));
+          const isSeasonal = keywords?.some((keyword) =>
+            seasonalKeywordIds.includes(keyword.id)
+          );
 
           const getMediaType = (type) => {
             if (type === "tv") {
@@ -103,6 +162,8 @@ export default async function handler(req, res) {
             media_type: getMediaType(i.media_type),
             rating: Math.round(i.vote_average * 10) / 10,
             ...(seasons && { seasons: seasons }),
+            ...(mpaa && { mpaa: mpaa }),
+            ...(tvcr && { tvcr: tvcr }),
           };
         }
         return null; // Filters out "person" items explicitly

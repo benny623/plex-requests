@@ -5,7 +5,7 @@ export default function NewEmail(props) {
   const styles = {
     container: {
       width: "100%",
-      backgroundColor: "#191e24",
+      //backgroundColor: "#191e24",
       padding: "40px 0",
       margin: 0,
       fontFamily: "Arial, sans-serif",
@@ -55,7 +55,7 @@ export default function NewEmail(props) {
     button: {
       display: "inline-block",
       padding: "12px 24px",
-      backgroundColor: "#6366F1",
+      backgroundColor: "#00cdb7",
       color: "white",
       textDecoration: "none",
       borderRadius: "8px",
