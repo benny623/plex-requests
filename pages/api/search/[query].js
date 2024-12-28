@@ -91,6 +91,22 @@ export default async function handler(req, res) {
     }
   };
 
+  const getMediaType = (type, isAnime, isSeasonal) => {
+    if (type === "tv") {
+      return isAnime ? "Anime" : "TV Show";
+    }
+
+    // Capitalize type
+    const baseType =
+      String(type).charAt(0).toUpperCase() + String(type).slice(1);
+
+    if (isAnime) {
+      return `Anime ${baseType}`;
+    }
+
+    return isSeasonal ? `Seasonal ${baseType}` : baseType;
+  };
+
   try {
     const { query } = req.query;
 
@@ -136,22 +152,6 @@ export default async function handler(req, res) {
             seasonalKeywordIds.includes(keyword.id)
           );
 
-          const getMediaType = (type) => {
-            if (type === "tv") {
-              return isAnime ? "Anime" : "TV Show";
-            }
-
-            // Capitalize type
-            const baseType =
-              String(type).charAt(0).toUpperCase() + String(type).slice(1);
-
-            if (isAnime) {
-              return `Anime ${baseType}`;
-            }
-
-            return isSeasonal ? `Seasonal ${baseType}` : baseType;
-          };
-
           return {
             id: i.id,
             keywords: keywords || [],
@@ -159,7 +159,7 @@ export default async function handler(req, res) {
             year: `${i.release_date || i.first_air_date}`.split("-")[0],
             overview: i.overview,
             poster: i.poster_path,
-            media_type: getMediaType(i.media_type),
+            media_type: getMediaType(i.media_type, isAnime, isSeasonal),
             rating: Math.round(i.vote_average * 10) / 10,
             ...(seasons && { seasons: seasons }),
             ...(mpaa && { mpaa: mpaa }),
