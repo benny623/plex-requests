@@ -55,7 +55,7 @@ export default function NewEmail(props) {
     button: {
       display: "inline-block",
       padding: "12px 24px",
-      backgroundColor: "#6366F1",
+      backgroundColor: "#00cdb7",
       color: "white",
       textDecoration: "none",
       borderRadius: "8px",
