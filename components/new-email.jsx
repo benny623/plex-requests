@@ -5,7 +5,7 @@ export default function NewEmail(props) {
   const styles = {
     container: {
       width: "100%",
-      //backgroundColor: "#191e24",
+      backgroundColor: "#191e24",
       padding: "40px 0",
       margin: 0,
       fontFamily: "Arial, sans-serif",
