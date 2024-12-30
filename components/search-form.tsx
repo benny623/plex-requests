@@ -219,7 +219,6 @@ export default function SearchForm({
         <div className="modal-box w-11/12 max-w-5xl relative">
           {/* Modal Header */}
           <div className="sticky top-0 bg-base-100 z-50 flex items-center justify-between px-4 py-2 shadow-lg rounded-lg gap-4">
-            {/* <h3 className="text-lg font-bold">Search Results</h3> */}
             <input
               id="search-title"
               name="title"
@@ -238,12 +237,12 @@ export default function SearchForm({
           {/* Scrollable Content */}
           <div className="h-4/6 overflow-y-auto space-y-4 pt-5">
             {!searchResults.length ? (
-              <div className="text-center">No results found</div>
+              <div className="text-center animate-appear">No results found</div>
             ) : (
               searchResults.map((result: any) => (
                 <div
                   key={result.id}
-                  className="card card-side bg-base-300 shadow-xl h-96"
+                  className="card card-side bg-base-300 shadow-xl h-96 animate-altappear"
                 >
                   <figure className="w-1/3">
                     {result.poster ? (

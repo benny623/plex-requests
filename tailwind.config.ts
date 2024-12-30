@@ -13,6 +13,20 @@ export default {
         foreground: "var(--foreground)",
       },
     },
+    keyframes: {
+      appear: {
+        "0%": {
+          opacity: "0",
+        },
+        "100%": {
+          opacity: "1",
+        },
+      },
+    },
+    animation: {
+      appear: "appear 1s ease-in-out",
+      altappear: "appear .2s ease-in-out",
+    },
   },
   plugins: [require("daisyui")],
   daisyui: {
