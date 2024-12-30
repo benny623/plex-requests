@@ -26,16 +26,14 @@ export default function SearchForm({
 
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
 
-  const handleSearch = async (e: any) => {
-    e.preventDefault();
-
-    if (!formState.title.trim()) return;
+  const handleSearch = async (title: string) => {
+    if (!title.trim()) return;
     if (searchQuery.loading) return;
 
     setSearchQuery((prevState) => ({ ...prevState, loading: true }));
 
     try {
-      const response = await fetch(`/api/search/${formState.title}`);
+      const response = await fetch(`/api/search/${title}`);
       const data = await response.json();
 
       setSearchQuery((prevState) => ({
@@ -99,9 +97,7 @@ export default function SearchForm({
     }
   };
 
-  const handleSearchChange = async (e: any) => {
-    handleSearch(e);
-    
+  const handleSearchChange = (e: any) => {
     const { name, value } = e.target;
 
     setFormState((prevState) => ({
@@ -109,7 +105,7 @@ export default function SearchForm({
       [name]: value,
     }));
 
-    
+    handleSearch(value);
   };
 
   return (
@@ -132,7 +128,7 @@ export default function SearchForm({
             />
             <button
               className="btn btn-primary join-item w-[83px]"
-              onClick={handleSearch}
+              onClick={() => handleSearch(formState.title)}
             >
               {searchQuery.loading ? (
                 <span className="loading loading-dots loading-xs"></span>
@@ -222,16 +218,16 @@ export default function SearchForm({
       <dialog id="search_modal" className="modal">
         <div className="modal-box w-11/12 max-w-5xl relative">
           {/* Modal Header */}
-          <div className="sticky top-0 bg-base-100 z-50 flex items-center justify-between px-4 py-2 shadow rounded-lg">
+          <div className="sticky top-0 bg-base-100 z-50 flex items-center justify-between px-4 py-2 shadow-lg rounded-lg gap-4">
             {/* <h3 className="text-lg font-bold">Search Results</h3> */}
             <input
-              //id="title"
+              id="search-title"
               name="title"
               type="text"
               placeholder="Media title"
               value={formState.title}
               onChange={handleSearchChange}
-              className="input input-bordered join-item flex-grow"
+              className="input flex-grow"
               required
             />
             <form method="dialog">

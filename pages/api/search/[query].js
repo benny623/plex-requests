@@ -50,7 +50,6 @@ export default async function handler(req, res) {
       }
 
       const data = await response.json();
-      console.log(data)
 
       // Filter data to only include US results and grab the rating (based off of the release year)
       const filteredData = data.release_dates.results
