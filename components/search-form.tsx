@@ -81,7 +81,7 @@ export default function SearchForm({
         }`,
         year: selected.year,
         type: selected.media_type,
-        image: `https://image.tmdb.org/t/p/w500${selected.poster}`,
+        image: selected.poster,
       }));
     }
 

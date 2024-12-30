@@ -69,7 +69,11 @@ export default function NewEmail(props) {
         <tr>
           {image && (
             <td style={styles.imageCell}>
-              <img src={image} alt={`${title} poster`} style={styles.image} />
+              <img
+                src={`https://image.tmdb.org/t/p/w500${image}`}
+                alt={`${title} poster`}
+                style={styles.image}
+              />
             </td>
           )}
           <td style={styles.contentCell}>
