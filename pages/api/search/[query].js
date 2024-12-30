@@ -50,6 +50,7 @@ export default async function handler(req, res) {
       }
 
       const data = await response.json();
+      console.log(data)
 
       // Filter data to only include US results and grab the rating (based off of the release year)
       const filteredData = data.release_dates.results
@@ -136,12 +137,12 @@ export default async function handler(req, res) {
         // Filter out People and media that have a vote count less than 10
         if (i.media_type !== "person" && i.vote_count >= 10) {
           const keywords = await getKeywords(i.media_type, i.id); // Keyword data
-          const seasons = i.media_type === "tv" ? await getSeasons(i.id) : null; // Season count data
+          const seasons = i.media_type === "tv" && (await getSeasons(i.id)); // Season count data
           const mpaa =
             i.media_type === "movie"
               ? await getMPAA(i.id, i.release_date)
               : null; // Get the MPAA rating
-          const tvcr = i.media_type === "tv" ? await getTVCR(i.id) : null;
+          const tvcr = i.media_type === "tv" && (await getTVCR(i.id));
 
           // Check if it's an Anime
           const isAnime = keywords?.some((keyword) => keyword.id === 210024);

@@ -99,6 +99,19 @@ export default function SearchForm({
     }
   };
 
+  const handleSearchChange = async (e: any) => {
+    handleSearch(e);
+    
+    const { name, value } = e.target;
+
+    setFormState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+
+    
+  };
+
   return (
     <>
       <form className="card-body" onSubmit={handleSubmit}>
@@ -210,7 +223,17 @@ export default function SearchForm({
         <div className="modal-box w-11/12 max-w-5xl relative">
           {/* Modal Header */}
           <div className="sticky top-0 bg-base-100 z-50 flex items-center justify-between px-4 py-2 shadow rounded-lg">
-            <h3 className="text-lg font-bold">Search Results</h3>
+            {/* <h3 className="text-lg font-bold">Search Results</h3> */}
+            <input
+              //id="title"
+              name="title"
+              type="text"
+              placeholder="Media title"
+              value={formState.title}
+              onChange={handleSearchChange}
+              className="input input-bordered join-item flex-grow"
+              required
+            />
             <form method="dialog">
               <button className="btn btn-sm btn-circle btn-ghost">✕</button>
             </form>
