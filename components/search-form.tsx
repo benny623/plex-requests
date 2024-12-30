@@ -26,16 +26,14 @@ export default function SearchForm({
 
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
 
-  const handleSearch = async (e: any) => {
-    e.preventDefault();
-
-    if (!formState.title.trim()) return;
+  const handleSearch = async (title: string) => {
+    if (!title.trim()) return;
     if (searchQuery.loading) return;
 
     setSearchQuery((prevState) => ({ ...prevState, loading: true }));
 
     try {
-      const response = await fetch(`/api/search/${formState.title}`);
+      const response = await fetch(`/api/search/${title}`);
       const data = await response.json();
 
       setSearchQuery((prevState) => ({
@@ -81,7 +79,7 @@ export default function SearchForm({
         }`,
         year: selected.year,
         type: selected.media_type,
-        image: `https://image.tmdb.org/t/p/w500${selected.poster}`,
+        image: selected.poster,
       }));
     }
 
@@ -97,6 +95,17 @@ export default function SearchForm({
       default:
         return "text-error";
     }
+  };
+
+  const handleSearchChange = (e: any) => {
+    const { name, value } = e.target;
+
+    setFormState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+
+    handleSearch(value);
   };
 
   return (
@@ -119,7 +128,7 @@ export default function SearchForm({
             />
             <button
               className="btn btn-primary join-item w-[83px]"
-              onClick={handleSearch}
+              onClick={() => handleSearch(formState.title)}
             >
               {searchQuery.loading ? (
                 <span className="loading loading-dots loading-xs"></span>
@@ -209,8 +218,17 @@ export default function SearchForm({
       <dialog id="search_modal" className="modal">
         <div className="modal-box w-11/12 max-w-5xl relative">
           {/* Modal Header */}
-          <div className="sticky top-0 bg-base-100 z-50 flex items-center justify-between px-4 py-2 shadow rounded-lg">
-            <h3 className="text-lg font-bold">Search Results</h3>
+          <div className="sticky top-0 bg-base-100 z-50 flex items-center justify-between px-4 py-2 shadow-lg rounded-lg gap-4">
+            <input
+              id="search-title"
+              name="title"
+              type="text"
+              placeholder="Media title"
+              value={formState.title}
+              onChange={handleSearchChange}
+              className="input flex-grow"
+              required
+            />
             <form method="dialog">
               <button className="btn btn-sm btn-circle btn-ghost">✕</button>
             </form>
@@ -219,12 +237,12 @@ export default function SearchForm({
           {/* Scrollable Content */}
           <div className="h-4/6 overflow-y-auto space-y-4 pt-5">
             {!searchResults.length ? (
-              <div className="text-center">No results found</div>
+              <div className="text-center animate-appear">No results found</div>
             ) : (
               searchResults.map((result: any) => (
                 <div
                   key={result.id}
-                  className="card card-side bg-base-300 shadow-xl h-96"
+                  className="card card-side bg-base-300 shadow-xl h-96 animate-altappear"
                 >
                   <figure className="w-1/3">
                     {result.poster ? (

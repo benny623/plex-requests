@@ -71,7 +71,7 @@ export default function UpdateEmail(props) {
       display: "inline-block",
       padding: "12px 24px",
       backgroundColor: "#00cdb7",
-      color: "white",
+      color: "#1d232a",
       textDecoration: "none",
       borderRadius: "8px",
       fontWeight: "bold",
@@ -80,7 +80,7 @@ export default function UpdateEmail(props) {
       display: "inline-block",
       padding: "8px 15px",
       backgroundColor: statusColor(status),
-      color: "white",
+      color: "#1d232a",
       fontSize: "14px",
       fontWeight: "bold",
       borderRadius: "50px",
@@ -94,13 +94,18 @@ export default function UpdateEmail(props) {
         <tr>
           {image && (
             <td style={styles.imageCell}>
-              <img src={image} alt={`${title} poster`} style={styles.image} />
+              <img
+                src={`https://image.tmdb.org/t/p/w500${image}`}
+                alt={`${title} poster`}
+                style={styles.image}
+              />
             </td>
           )}
           <td style={styles.contentCell}>
             <h1 style={styles.title}>{title}</h1>
             <p style={styles.paragraph}>
-              <strong>Status:</strong> <span style={styles.badge}>{status}</span>
+              <strong>Status:</strong>{" "}
+              <span style={styles.badge}>{status}</span>
             </p>
             {note && (
               <p style={styles.paragraph}>

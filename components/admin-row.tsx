@@ -80,7 +80,7 @@ const AdminRow: React.FC<RequestRowProps> = ({
           <textarea
             id="note"
             name="note"
-            value={request.request_note}
+            value={request.request_note || ""}
             onBlur={(e) => onNoteBlur(e, request.request_id)}
             onChange={(e) => onNoteChange(e, request.request_id)}
             className="textarea textarea-bordered w-full"

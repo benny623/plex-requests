@@ -56,7 +56,7 @@ export default function NewEmail(props) {
       display: "inline-block",
       padding: "12px 24px",
       backgroundColor: "#00cdb7",
-      color: "white",
+      color: "#1d232a",
       textDecoration: "none",
       borderRadius: "8px",
       fontWeight: "bold",
@@ -69,7 +69,11 @@ export default function NewEmail(props) {
         <tr>
           {image && (
             <td style={styles.imageCell}>
-              <img src={image} alt={`${title} poster`} style={styles.image} />
+              <img
+                src={`https://image.tmdb.org/t/p/w500${image}`}
+                alt={`${title} poster`}
+                style={styles.image}
+              />
             </td>
           )}
           <td style={styles.contentCell}>
