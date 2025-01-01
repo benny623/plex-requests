@@ -6,7 +6,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     title: "",
     year: "",
     email: "",
-    status: "New",
     type: "Movie",
     image: "",
   });
@@ -138,7 +137,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
           title: "",
           year: "",
           email: "",
-          status: "New",
           type: "Movie",
           image: "",
         });
