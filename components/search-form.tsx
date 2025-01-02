@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
 import { SearchResult } from "@/lib/types";
 import Image from "next/image";
@@ -10,14 +10,8 @@ export default function SearchForm({
 }: {
   refetchRequests: () => void;
 }) {
-  const {
-    formState,
-    setFormState,
-    //formErrors,
-    status,
-    handleChange,
-    handleSubmit,
-  } = useFormHandlers(refetchRequests);
+  const { formState, setFormState, status, handleChange, handleSubmit } =
+    useFormHandlers(refetchRequests);
 
   const [searchQuery, setSearchQuery] = useState({
     loading: false,
@@ -25,6 +19,8 @@ export default function SearchForm({
   });
 
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+
+  const [rememberEmail, setRememberEmail] = useState(false);
 
   const handleSearch = async (title: string) => {
     if (!title.trim()) return;
@@ -108,6 +104,28 @@ export default function SearchForm({
     handleSearch(value);
   };
 
+  const handleCheckboxChange = (e: any) => {
+    const isChecked = e.target.checked;
+
+    setRememberEmail(isChecked);
+
+    if (isChecked) {
+      localStorage.setItem("email", formState.email);
+    } else {
+      localStorage.removeItem("email");
+    }
+  };
+
+  // Check for value from "remember email" checkbox on form
+  useEffect(() => {
+    const email = localStorage.getItem("email") || "";
+
+    if (email) {
+      setRememberEmail(true);
+      setFormState((prevState) => ({ ...prevState, email }));
+    }
+  }, []);
+
   return (
     <>
       <form className="card-body" onSubmit={handleSubmit}>
@@ -170,6 +188,22 @@ export default function SearchForm({
             required
           />
         </div>
+        {formState.email && (
+          <div className="form-control">
+            <label className="label cursor-pointer">
+              <span className="label-text">Remember email</span>
+              <input
+                id="remember"
+                name="remember"
+                type="checkbox"
+                className="checkbox"
+                checked={rememberEmail}
+                onChange={handleCheckboxChange}
+              />
+            </label>
+          </div>
+        )}
+
         <div className="form-control">
           <label className="label">
             <span className="label-text">Type *</span>

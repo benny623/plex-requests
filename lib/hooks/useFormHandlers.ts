@@ -6,15 +6,10 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     title: "",
     year: "",
     email: "",
-    status: "New",
     type: "Movie",
     image: "",
   });
-  // const [formErrors, setFormErrors] = useState({
-  //   title: "",
-  //   year: "",
-  //   email: "",
-  // });
+
   const [status, setStatus] = useState<Status>({
     loading: false,
     error: "",
@@ -76,11 +71,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     async (e: any) => {
       e.preventDefault();
 
-      // Validate the form before submission
-      // if (!validateForm()) {
-      //   return;
-      // } -- Other form verification in place
-
       // Send notification to site admins
       sendNotification();
 
@@ -138,7 +128,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
           title: "",
           year: "",
           email: "",
-          status: "New",
           type: "Movie",
           image: "",
         });
@@ -167,7 +156,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
   return {
     formState,
     setFormState,
-    //formErrors,
     status,
     handleChange,
     handleSubmit,
