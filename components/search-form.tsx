@@ -81,9 +81,7 @@ export default function SearchForm({
         title: `${selected.title}${
           season !== "Complete" ? ` (${season.name})` : "" // TODO: split the season select into it's own value rather than appending to title
         }`.trim(),
-        //year: selected.year,
         type: selected.media_type,
-        //image: selected.poster,
         optional: {
           ...(selected.year && season !== "Complete"
             ? { year: parseInt(season.air_date.split("-")[0]) }
