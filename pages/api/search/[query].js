@@ -152,6 +152,8 @@ export default async function handler(req, res) {
             seasonalKeywordIds.includes(keyword.id)
           );
 
+          // TODO: filter season data to only include air_date, episode_count, id, name, and (maybe) poster_path
+
           return {
             id: i.id,
             keywords: keywords || [],

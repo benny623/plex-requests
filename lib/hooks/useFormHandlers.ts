@@ -1,13 +1,12 @@
 import { useState, useCallback } from "react";
-import { Status } from "@/lib/types";
+import { FormState, Status } from "@/lib/types";
 
 export const useFormHandlers = (refetchRequests: () => void) => {
-  const [formState, setFormState] = useState({
+  const [formState, setFormState] = useState<FormState>({
     title: "",
-    year: "",
     email: "",
     type: "Movie",
-    image: "",
+    optional: {},
   });
 
   const [status, setStatus] = useState<Status>({
@@ -59,11 +58,10 @@ export const useFormHandlers = (refetchRequests: () => void) => {
       [name]: value,
     }));
 
-    // Clear any existing errors for the field
-    // setFormErrors((prevErrors) => ({
-    //   ...prevErrors,
-    //   [name]: "",
-    // })); -- Other form verification in place
+    setStatus((prevState) => ({
+      ...prevState,
+      success: false,
+    }));
   };
 
   // Handle form submission
@@ -79,6 +77,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     [formState, refetchRequests]
   );
 
+  // Send notification for updated status
   const sendNotification = async () => {
     try {
       const res = await fetch("/api/send-request", {
@@ -92,12 +91,9 @@ export const useFormHandlers = (refetchRequests: () => void) => {
       const result = await res.json();
 
       if (res.ok) {
-        console.log("POST Success");
-
         // Refetch requests data for table
         refetchRequests();
 
-        // Send notification for updated status
         try {
           const response = await fetch("/api/new-notification", {
             method: "POST",
@@ -106,10 +102,11 @@ export const useFormHandlers = (refetchRequests: () => void) => {
             },
             body: JSON.stringify({
               title: formState.title,
-              year: formState.year,
+              //year: formState.optional.year,
               type: formState.type,
               email: formState.email,
-              image: formState.image,
+              //image: formState.image,
+              // TODO: add the "optional" object here for email
             }),
           });
 
@@ -124,13 +121,16 @@ export const useFormHandlers = (refetchRequests: () => void) => {
           console.error("Error sending notification", err);
         }
 
-        setFormState({
-          title: "",
-          year: "",
-          email: "",
-          type: "Movie",
-          image: "",
-        });
+        // TODO: this originally reset the formState, not sure if I still want this or if there's a better solution
+        //       the main issue here is that it resets the email field even if "Remember email" is checked
+        // setFormState({
+        //   title: "",
+        //   year: "",
+        //   email: "",
+        //   type: "Movie",
+        //   image: "",
+        //   optional: {},
+        // });
 
         setStatus({ loading: false, error: "", success: true });
       } else {

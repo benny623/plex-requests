@@ -10,17 +10,14 @@ export default function SearchForm({
 }: {
   refetchRequests: () => void;
 }) {
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [rememberEmail, setRememberEmail] = useState(false);
   const { formState, setFormState, status, handleChange, handleSubmit } =
     useFormHandlers(refetchRequests);
-
   const [searchQuery, setSearchQuery] = useState({
     loading: false,
     error: "",
   });
-
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-
-  const [rememberEmail, setRememberEmail] = useState(false);
 
   const handleSearch = async (title: string) => {
     if (!title.trim()) return;
@@ -60,22 +57,44 @@ export default function SearchForm({
   const selectResult = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
     e.preventDefault();
 
-    const seasonElement = document.getElementById(
-      `season-${id}`
-    ) as HTMLSelectElement;
-    const selectedSeason = seasonElement?.value || "All Seasons";
+    // Function for finding the selected season data
+    const getSelectedSeason = (object: any) => {
+      const seasonElement = document.getElementById(
+        `season-${id}`
+      ) as HTMLSelectElement;
+
+      if (seasonElement?.value !== "Complete") {
+        return object.seasons.find(
+          (season: any) => season.id === parseInt(seasonElement.value)
+        );
+      }
+
+      return "Complete";
+    };
 
     const selected = searchResults.find((result: any) => result.id === id);
+    const season = getSelectedSeason(selected);
+
+    console.log(season);
 
     if (selected) {
       setFormState((prevState) => ({
         ...prevState,
-        title: `${selected.title} ${
-          selectedSeason !== "All Seasons" ? ` (${selectedSeason})` : ""
-        }`,
-        year: selected.year,
+        title: `${selected.title}${
+          season !== "Complete" ? ` (${season.name})` : "" // TODO: split the season select into it's own value rather than appending to title
+        }`.trim(),
+        //year: selected.year,
         type: selected.media_type,
         image: selected.poster,
+        optional: {
+          ...(selected.year && season !== "Complete"
+            ? { year: parseInt(season.air_date.split("-")[0]) }
+            : { year: parseInt(selected.year) }),
+          ...(selected.poster && { image: selected.poster }),
+          ...(selected.mpaa && { rating: selected.mpaa }),
+          ...(selected.tvcr && { rating: selected.tvcr }),
+          ...(selected.seasons && { seasons: selected.seasons }),
+        },
       }));
     }
 
@@ -120,6 +139,7 @@ export default function SearchForm({
   useEffect(() => {
     const email = localStorage.getItem("email") || "";
 
+    // Check if the email exists in localstorage and set accordingly
     if (email) {
       setRememberEmail(true);
       setFormState((prevState) => ({ ...prevState, email }));
@@ -146,7 +166,10 @@ export default function SearchForm({
             />
             <button
               className="btn btn-primary join-item w-[83px]"
-              onClick={() => handleSearch(formState.title)}
+              onClick={(e) => {
+                e.preventDefault();
+                handleSearch(formState.title);
+              }}
             >
               {searchQuery.loading ? (
                 <span className="loading loading-dots loading-xs"></span>
@@ -168,7 +191,7 @@ export default function SearchForm({
             max={`${new Date().getFullYear() + 5}`}
             placeholder="Release year"
             maxLength={4}
-            value={formState.year}
+            value={formState.optional.year}
             onChange={handleChange}
             className="grow input input-bordered flex items-center gap-2"
           />
@@ -203,7 +226,6 @@ export default function SearchForm({
             </label>
           </div>
         )}
-
         <div className="form-control">
           <label className="label">
             <span className="label-text">Type *</span>
@@ -342,12 +364,12 @@ export default function SearchForm({
                         <select
                           id={`season-${result.id}`}
                           name="season"
-                          defaultValue={"All Seasons"}
+                          defaultValue={"Complete"}
                           className="select select-bordered w-full sm:w-auto"
                         >
-                          <option value={"All Seasons"}>All Seasons</option>
+                          <option value={"Complete"}>Complete</option>
                           {result.seasons?.map((season: any) => (
-                            <option key={season.id} value={season.name}>
+                            <option key={season.id} value={season.id}>
                               {season.name}
                             </option>
                           ))}

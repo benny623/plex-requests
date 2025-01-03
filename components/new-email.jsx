@@ -78,9 +78,11 @@ export default function NewEmail(props) {
           )}
           <td style={styles.contentCell}>
             <h1 style={styles.title}>{title}</h1>
-            <p style={styles.paragraph}>
-              <strong>Year:</strong> {year}
-            </p>
+            {year && ( // TODO: change this condition to "optional" and fill in optional data accordingly
+              <p style={styles.paragraph}>
+                <strong>Year:</strong> {year}
+              </p>
+            )}
             <p style={styles.paragraph}>
               <strong>Type:</strong> {type}
             </p>
