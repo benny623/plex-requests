@@ -146,7 +146,10 @@ export default function SearchForm({
             />
             <button
               className="btn btn-primary join-item w-[83px]"
-              onClick={() => handleSearch(formState.title)}
+              onClick={(e) => {
+                e.preventDefault();
+                handleSearch(formState.title);
+              }}
             >
               {searchQuery.loading ? (
                 <span className="loading loading-dots loading-xs"></span>
