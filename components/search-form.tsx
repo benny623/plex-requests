@@ -75,8 +75,6 @@ export default function SearchForm({
     const selected = searchResults.find((result: any) => result.id === id);
     const season = getSelectedSeason(selected);
 
-    console.log(season);
-
     if (selected) {
       setFormState((prevState) => ({
         ...prevState,
@@ -85,7 +83,7 @@ export default function SearchForm({
         }`.trim(),
         //year: selected.year,
         type: selected.media_type,
-        image: selected.poster,
+        //image: selected.poster,
         optional: {
           ...(selected.year && season !== "Complete"
             ? { year: parseInt(season.air_date.split("-")[0]) }
@@ -93,7 +91,7 @@ export default function SearchForm({
           ...(selected.poster && { image: selected.poster }),
           ...(selected.mpaa && { rating: selected.mpaa }),
           ...(selected.tvcr && { rating: selected.tvcr }),
-          ...(selected.seasons && { seasons: selected.seasons }),
+          ...(selected.seasons && { season_count: selected.seasons.length }),
         },
       }));
     }

@@ -105,6 +105,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
               //year: formState.optional.year,
               type: formState.type,
               email: formState.email,
+              optional: formState.optional,
               //image: formState.image,
               // TODO: add the "optional" object here for email
             }),

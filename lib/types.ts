@@ -7,7 +7,7 @@ export interface Request {
   request_type: string;
   request_status: string;
   request_note: string;
-  request_optional: Optional | null;
+  request_optional: Optional;
 }
 
 // Optional Type
@@ -16,7 +16,7 @@ export interface Optional {
   poster?: string;
   rating?: string;
   original_name?: string;
-  // season_count?: number;
+  season_count?: number;
   // season_data?: Seasons;
 }
 
