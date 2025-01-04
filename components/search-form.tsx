@@ -63,6 +63,7 @@ export default function SearchForm({
         `season-${id}`
       ) as HTMLSelectElement;
 
+      // Check if the season select element is set to Complete, and if it's not return the selected season data
       if (seasonElement?.value !== "Complete") {
         return object.seasons.find(
           (season: any) => season.id === parseInt(seasonElement.value)
