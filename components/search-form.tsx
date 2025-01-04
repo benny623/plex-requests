@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
 import { SearchResult } from "@/lib/types";
 import Image from "next/image";
+import { time } from "console";
 
 export default function SearchForm({
   refetchRequests,
@@ -19,7 +20,15 @@ export default function SearchForm({
     error: "",
   });
 
-  const handleSearch = async (title: string) => {
+  const debounce = (func: (...args: any[]) => void, delay: number) => {
+    let timeout: NodeJS.Timeout;
+    return (...args: any[]) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), delay);
+    };
+  };
+
+  const handleSearch = debounce(async (title: string) => {
     if (!title.trim()) return;
     if (searchQuery.loading) return;
 
@@ -52,36 +61,48 @@ export default function SearchForm({
         document.getElementById("search_modal") as HTMLDialogElement
       ).showModal();
     }
-  };
+  }, 300);
 
   const selectResult = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
     e.preventDefault();
 
-    // Function for finding the selected season data
-    const getSelectedSeason = (object: any) => {
-      const seasonElement = document.getElementById(
-        `season-${id}`
-      ) as HTMLSelectElement;
+    // Get selected media by id
+    const selected = searchResults.find((result: any) => result.id === id);
+    if (!selected) {
+      console.error(`Result with id ${id} not found`);
+      return;
+    }
+    
+    const seasonElement = document.getElementById(
+      `season-${id}`
+    ) as HTMLSelectElement | null;
 
-      // Check if the season select element is set to Complete, and if it's not return the selected season data
-      if (seasonElement?.value !== "Complete") {
-        return object.seasons.find(
-          (season: any) => season.id === parseInt(seasonElement.value)
-        );
+    let seasonData = {name: ""};
+    if (seasonElement && seasonElement.value !== "Complete") {
+      // Find the selected season data
+      const season = selected?.seasons.find(
+        (season: any) => season.id === parseInt(seasonElement.value)
+      );
+
+      if (!season) {
+        console.error(`Season with id ${seasonElement.value} not found`);
+        return;
       }
 
-      return "Complete";
-    };
+      seasonData = season.name;
+    }
 
-    const selected = searchResults.find((result: any) => result.id === id);
-    const season = getSelectedSeason(selected);
+    const year = seasonName
+    ? parseInt(seasonData.split("-")[0], 10) || selected.year : selected.year;
 
     if (selected) {
       setFormState((prevState) => ({
         ...prevState,
-        title: `${selected.title}${
-          season !== "Complete" ? ` (${season.name})` : "" // TODO: split the season select into it's own value rather than appending to title
-        }`.trim(),
+        title: seasonElement
+          ? selected.title + season !== "Complete"
+            ? season.name
+            : ""
+          : selected.title.trim(),
         type: selected.media_type,
         optional: {
           ...(selected.year && season !== "Complete"
