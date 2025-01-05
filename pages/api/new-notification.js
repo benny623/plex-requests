@@ -8,10 +8,10 @@ export default async function handler(req, res) {
   const htmlContent = ReactDOMServer.renderToStaticMarkup(
     <NewEmail
       title={title}
-      year={optional.year}
+      year={optional.year || ""}
       type={type}
       email={email}
-      image={optional.image}
+      image={optional.image || ""}
     />
   );
 

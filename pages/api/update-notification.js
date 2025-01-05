@@ -24,7 +24,7 @@ export default async function handler(req, res) {
         title={emailData[0].request_title}
         status={emailData[0].request_status}
         note={emailData[0].request_note}
-        image={emailData[0].request_optional.image}
+        image={emailData[0].request_optional.image || ""}
       />
     );
 
