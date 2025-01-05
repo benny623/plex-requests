@@ -7,6 +7,30 @@ export interface Request {
   request_type: string;
   request_status: string;
   request_note: string;
+  request_optional: Optional;
+}
+
+// Optional Type
+export interface Optional {
+  year?: string | number;
+  poster?: string;
+  rating?: string;
+  original_name?: string;
+  season_count?: number;
+  // season_data?: Seasons;
+}
+
+// Seasons Type
+export interface Seasons {
+  year: string | number;
+  episodes: string | number;
+}
+
+export interface FormState {
+  title: string;
+  email: string;
+  type: string;
+  optional: Optional;
 }
 
 // Loading Status Type
@@ -23,6 +47,9 @@ export interface SearchResult {
   year: string;
   media_type: string;
   poster: string;
+  mpaa: string | null;
+  tvcr: string | null;
+  seasons: [];
 }
 
 // Request Table Props

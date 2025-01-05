@@ -51,15 +51,21 @@ export default async function handler(req, res) {
 
       const data = await response.json();
 
-      // Filter data to only include US results and grab the rating (based off of the release year)
-      const filteredData = data.release_dates.results
-        .find((i) => i.iso_3166_1 === "US")
-        .release_dates.find(
-          (i) => i.release_date.slice(0, 10) === year || i.certification
-        ).certification;
+      // Filter data to only include US results
+      const releaseDates = data?.release_dates?.results || [];
+      const usResults = releaseDates.find((i) => i.iso_3166_1 === "US");
 
-      // Send season data
-      return filteredData;
+      if (!usResults || !usResults.release_dates) {
+        return null;
+      }
+
+      // Grab the rating (based off of the release year)
+      const filteredData = usResults.release_dates.find(
+        (i) => i.release_date?.slice(0, 10) === year && i.certification
+      )?.certification;
+
+      // Send MPAA rating
+      return filteredData || null;
     } catch (err) {
       console.error(err);
       return null;
@@ -78,13 +84,12 @@ export default async function handler(req, res) {
 
       const data = await response.json();
 
-      // Filter data to only include US results and grab the rating
-      const filteredData = data.results.find(
-        (i) => i.iso_3166_1 === "US"
-      ).rating;
+      // Filter data to only include US results
+      const results = data?.results || [];
+      const usResult = results.find((i) => i.iso_31661_1 === "US");
 
-      // Send season data
-      return filteredData;
+      // Send the rating
+      return usResult?.rating || null;
     } catch (err) {
       console.error(err);
       return null;
@@ -161,7 +166,16 @@ export default async function handler(req, res) {
             poster: i.poster_path,
             media_type: getMediaType(i.media_type, isAnime, isSeasonal),
             rating: Math.round(i.vote_average * 10) / 10,
-            ...(seasons && { seasons: seasons }),
+            ...(seasons?.length && {
+              seasons: seasons
+                .filter((season) => !!season.air_date)
+                .map(({ id, air_date, episode_count, name }) => ({
+                  id,
+                  air_date,
+                  episode_count,
+                  name,
+                })),
+            }),
             ...(mpaa && { mpaa: mpaa }),
             ...(tvcr && { tvcr: tvcr }),
           };

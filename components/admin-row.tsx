@@ -50,7 +50,7 @@ const AdminRow: React.FC<RequestRowProps> = ({
           </button>
         </td>
         <td>{request.request_title}</td>
-        <td>{request.request_year}</td>
+        <td>{request.request_optional.year}</td>
         <td>{request.request_type}</td>
         <td>
           <select

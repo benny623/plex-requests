@@ -13,7 +13,7 @@ const RequestTable: React.FC<RequestTableProps> = ({
       <div className="card w-full sm:w-3/4 xl:w-2/3 bg-base-100 shadow-xl">
         <div className="card-body">
           <div className="overflow-x-auto">
-            <table className="table w-full max-w-5xl border-collapse table-pin-rows">
+            <table className="table w-full border-collapse table-pin-rows">
               <thead>
                 <tr>
                   <th>Title</th>

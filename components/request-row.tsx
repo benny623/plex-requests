@@ -24,7 +24,7 @@ const RequestRow: React.FC<RequestRowProps> = ({ request }) => {
   return (
     <tr>
       <td>{request.request_title}</td>
-      <td>{request.request_year}</td>
+      <td>{request.request_optional.year}</td>
       <td>{request.request_type}</td>
       <td>
         <p
