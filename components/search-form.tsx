@@ -159,8 +159,10 @@ export default function SearchForm({
   };
 
   const updateStoredEmail = () => {
-    rememberEmail && localStorage.setItem("email", formState.email);
-  }
+    if (rememberEmail && formState.email) {
+      localStorage.setItem("email", formState.email);
+    }
+  };
 
   // Check for value from "remember email" checkbox on form
   useEffect(() => {
@@ -397,7 +399,6 @@ export default function SearchForm({
                         >
                           <option value={"Complete"}>Complete</option>
                           {result.seasons?.map((season: any) => (
-                            
                             <option key={season.id} value={season.id}>
                               {season.name}
                             </option>
