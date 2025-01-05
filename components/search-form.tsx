@@ -60,7 +60,7 @@ export default function SearchForm({
         document.getElementById("search_modal") as HTMLDialogElement
       ).showModal();
     }
-  }, 300);
+  }, 500);
 
   const selectResult = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
     e.preventDefault();
