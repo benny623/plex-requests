@@ -158,6 +158,10 @@ export default function SearchForm({
     }
   };
 
+  const updateStoredEmail = () => {
+    rememberEmail && localStorage.setItem("email", formState.email);
+  }
+
   // Check for value from "remember email" checkbox on form
   useEffect(() => {
     const email = localStorage.getItem("email") || "";
@@ -230,9 +234,7 @@ export default function SearchForm({
             placeholder="Your email"
             value={formState.email}
             onChange={handleChange}
-            onBlur={() => {
-              rememberEmail && localStorage.setItem("email", formState.email);
-            }}
+            onBlur={updateStoredEmail}
             className="grow input input-bordered flex items-center"
             required
           />
