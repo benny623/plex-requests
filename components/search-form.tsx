@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
 import { SearchResult } from "@/lib/types";
 import Image from "next/image";
-import { time } from "console";
 
 export default function SearchForm({
   refetchRequests,
@@ -72,51 +71,57 @@ export default function SearchForm({
       console.error(`Result with id ${id} not found`);
       return;
     }
-    
+
     const seasonElement = document.getElementById(
       `season-${id}`
     ) as HTMLSelectElement | null;
 
-    let seasonData = {name: ""};
-    if (seasonElement && seasonElement.value !== "Complete") {
-      // Find the selected season data
-      const season = selected?.seasons.find(
-        (season: any) => season.id === parseInt(seasonElement.value)
-      );
+    const getSeasonName = (object: any) => {
+      if (seasonElement && seasonElement.value !== "Complete") {
+        // Find the selected season data
+        const seasonData = object?.seasons.find(
+          (season: any) => season.id === parseInt(seasonElement.value)
+        );
 
-      if (!season) {
-        console.error(`Season with id ${seasonElement.value} not found`);
-        return;
+        if (!seasonData) {
+          console.error(`Season with id ${seasonElement.value} not found`);
+          return;
+        }
+        return seasonData;
       }
+      return "Complete";
+    };
 
-      seasonData = season.name;
-    }
+    const season = getSeasonName(selected);
 
-    const year = seasonName
-    ? parseInt(seasonData.split("-")[0], 10) || selected.year : selected.year;
+    console.log(season);
 
-    if (selected) {
-      setFormState((prevState) => ({
-        ...prevState,
-        title: seasonElement
-          ? selected.title + season !== "Complete"
-            ? season.name
-            : ""
+    setFormState((prevState) => ({
+      ...prevState,
+      title:
+        season !== "Complete"
+          ? selected.title + " - " + season.name
           : selected.title.trim(),
-        type: selected.media_type,
-        optional: {
-          ...(selected.year && season !== "Complete"
-            ? { year: parseInt(season.air_date.split("-")[0]) }
-            : { year: parseInt(selected.year) }),
-          ...(selected.poster && { image: selected.poster }),
-          ...(selected.mpaa && { rating: selected.mpaa }),
-          ...(selected.tvcr && { rating: selected.tvcr }),
-          ...(selected.seasons && { season_count: selected.seasons.length }),
-        },
-      }));
-    }
+      type: selected.media_type,
+      optional: {
+        ...(selected.year
+          ? {
+              year:
+                season !== "Complete"
+                  ? season.air_date && parseInt(season.air_date.split("-")[0])
+                  : parseInt(selected.year),
+            }
+          : null),
+        ...(selected.poster && { image: selected.poster }),
+        ...(selected.mpaa && { rating: selected.mpaa }),
+        ...(selected.tvcr && { rating: selected.tvcr }),
+        ...(selected.seasons && { season_count: selected.seasons.length }),
+      },
+    }));
 
     (document.getElementById("search_modal") as HTMLDialogElement).close();
+
+    console.log(formState);
   };
 
   const ratingColor = (rating: number) => {
@@ -209,7 +214,7 @@ export default function SearchForm({
             max={`${new Date().getFullYear() + 5}`}
             placeholder="Release year"
             maxLength={4}
-            value={formState.optional.year}
+            value={formState.optional.year || ""}
             onChange={handleChange}
             className="grow input input-bordered flex items-center gap-2"
           />
@@ -225,6 +230,9 @@ export default function SearchForm({
             placeholder="Your email"
             value={formState.email}
             onChange={handleChange}
+            onBlur={() => {
+              rememberEmail && localStorage.setItem("email", formState.email);
+            }}
             className="grow input input-bordered flex items-center"
             required
           />
@@ -387,6 +395,7 @@ export default function SearchForm({
                         >
                           <option value={"Complete"}>Complete</option>
                           {result.seasons?.map((season: any) => (
+                            
                             <option key={season.id} value={season.id}>
                               {season.name}
                             </option>

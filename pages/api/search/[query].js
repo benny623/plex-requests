@@ -54,7 +54,7 @@ export default async function handler(req, res) {
       // Filter data to only include US results and grab the rating (based off of the release year)
       const filteredData = data.release_dates.results
         .find((i) => i.iso_3166_1 === "US")
-        .release_dates.find(
+        .release_dates?.find(
           (i) => i.release_date.slice(0, 10) === year || i.certification
         ).certification;
 
@@ -151,9 +151,7 @@ export default async function handler(req, res) {
           const isSeasonal = keywords?.some((keyword) =>
             seasonalKeywordIds.includes(keyword.id)
           );
-
-          // TODO: filter season data to only include air_date, episode_count, id, name, and (maybe) poster_path
-
+          
           return {
             id: i.id,
             keywords: keywords || [],
@@ -163,7 +161,16 @@ export default async function handler(req, res) {
             poster: i.poster_path,
             media_type: getMediaType(i.media_type, isAnime, isSeasonal),
             rating: Math.round(i.vote_average * 10) / 10,
-            ...(seasons && { seasons: seasons }),
+            ...(seasons?.length && {
+              seasons: seasons
+                .filter((season) => !!season.air_date)
+                .map(({ id, air_date, episode_count, name }) => ({
+                  id,
+                  air_date,
+                  episode_count,
+                  name,
+                })),
+            }),
             ...(mpaa && { mpaa: mpaa }),
             ...(tvcr && { tvcr: tvcr }),
           };
