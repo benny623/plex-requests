@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { RequestRowProps } from "@/lib/types";
 
 const AdminRow: React.FC<RequestRowProps> = ({
@@ -49,9 +50,6 @@ const AdminRow: React.FC<RequestRowProps> = ({
             </svg>
           </button>
         </td>
-        <td>{request.request_title}</td>
-        <td>{request.request_optional.year}</td>
-        <td>{request.request_type}</td>
         <td>
           <select
             id="status"
@@ -77,9 +75,41 @@ const AdminRow: React.FC<RequestRowProps> = ({
           </select>
         </td>
         <td>
+          {request.request_optional.image && (
+            <Image
+              src={`https://image.tmdb.org/t/p/w500${request.request_optional.image}`}
+              alt={`${request.request_title} poster`}
+              width={85}
+              height={150}
+            />
+          )}
+        </td>
+        <td>{request.request_title}</td>
+        <td>
+          <div className="flex flex-col">
+            <p className="text-sm font-bold">{request.request_type}</p>
+            {request.request_optional.year && (
+              <p className="text-sm font-normal">
+                {request.request_optional.year}
+              </p>
+            )}
+            {request.request_optional.rating && (
+              <p className="text-sm font-normal">
+                {request.request_optional.rating}
+              </p>
+            )}
+            {request.request_optional.seasons && (
+              <p className="text-sm font-normal">
+                Seasons: {request.request_optional.seasons.length}
+              </p>
+            )}
+          </div>
+        </td>
+        <td>
           <textarea
             id="note"
             name="note"
+            placeholder="Note..."
             value={request.request_note || ""}
             onBlur={(e) => onNoteBlur(e, request.request_id)}
             onChange={(e) => onNoteChange(e, request.request_id)}

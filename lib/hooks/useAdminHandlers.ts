@@ -35,9 +35,6 @@ export function useAdminHandlers(
         throw new Error("Failed to update status");
       }
 
-      const updatedRequest = await response.json();
-      console.log("Status updated", updatedRequest);
-
       // Send notification
       sendNotification(requestId);
     } catch (err) {
@@ -91,9 +88,6 @@ export function useAdminHandlers(
       if (!response.ok) {
         throw new Error("Failed to update note");
       }
-
-      const updatedRequest = await response.json();
-      console.log("Note updated", updatedRequest);
     } catch (err) {
       console.error("Error updating note:", err);
 
@@ -126,9 +120,6 @@ export function useAdminHandlers(
         throw new Error("Failed to delete note");
       }
 
-      const deletedRequest = await response.json();
-      console.log("Request deleted", deletedRequest);
-
       // Update local state by removing the deleted request
       setRequests((prevRequests) =>
         prevRequests.filter((request) => request.request_id !== requestId)
@@ -155,10 +146,6 @@ export function useAdminHandlers(
       if (!response.ok) {
         throw new Error("Failed to send notification");
       }
-
-      const notification = await response.json();
-
-      console.log("Notification sent", notification);
     } catch (err) {
       console.error("Error sending notification", err);
     }

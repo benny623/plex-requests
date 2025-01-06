@@ -60,7 +60,7 @@ export default function SearchForm({
         document.getElementById("search_modal") as HTMLDialogElement
       ).showModal();
     }
-  }, 500);
+  }, 300);
 
   const selectResult = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
     e.preventDefault();
@@ -94,34 +94,45 @@ export default function SearchForm({
 
     const season = getSeasonName(selected);
 
-    console.log(season);
-
-    setFormState((prevState) => ({
-      ...prevState,
-      title:
-        season !== "Complete"
-          ? selected.title + " - " + season.name
-          : selected.title.trim(),
-      type: selected.media_type,
-      optional: {
-        ...(selected.year
-          ? {
-              year:
-                season !== "Complete"
-                  ? season.air_date && parseInt(season.air_date.split("-")[0])
-                  : parseInt(selected.year),
-            }
-          : null),
-        ...(selected.poster && { image: selected.poster }),
-        ...(selected.mpaa && { rating: selected.mpaa }),
-        ...(selected.tvcr && { rating: selected.tvcr }),
-        ...(selected.seasons && { season_count: selected.seasons.length }),
-      },
-    }));
+    // Run seperate query if a specific season is selected
+    if (season !== "Complete") {
+      console.log("this is selected");
+      setFormState((prevState) => ({
+        ...prevState,
+        title: selected.title + " - " + season.name,
+        type: selected.media_type,
+        optional: {
+          ...(selected.year && {
+            year: parseInt(season.air_date.split("-")[0]),
+          }),
+          ...(selected.poster && { image: season.poster_path }),
+          ...(selected.tvcr && { rating: selected.tvcr }),
+        },
+      }));
+    } else {
+      // Run standard query if it's a movie or complete series
+      setFormState((prevState) => ({
+        ...prevState,
+        title: selected.title.trim(),
+        type: selected.media_type,
+        optional: {
+          ...(selected.year && { year: parseInt(selected.year) }),
+          ...(selected.poster && { image: selected.poster }),
+          ...(selected.mpaa && { rating: selected.mpaa }),
+          ...(selected.tvcr && { rating: selected.tvcr }),
+          ...(selected.seasons && {
+            seasons:
+              season === "Complete"
+                ? selected.seasons.filter(
+                    (season: any) => season.name !== "Specials"
+                  )
+                : season,
+          }),
+        },
+      }));
+    }
 
     (document.getElementById("search_modal") as HTMLDialogElement).close();
-
-    console.log(formState);
   };
 
   const ratingColor = (rating: number) => {
@@ -187,7 +198,7 @@ export default function SearchForm({
               id="title"
               name="title"
               type="text"
-              placeholder="Media title"
+              placeholder="Media Title"
               value={formState.title}
               onChange={handleChange}
               className="input input-bordered join-item flex-grow"
@@ -309,7 +320,7 @@ export default function SearchForm({
               id="search-title"
               name="title"
               type="text"
-              placeholder="Media title"
+              placeholder="Search..."
               value={formState.title}
               onChange={handleSearchChange}
               className="input flex-grow"

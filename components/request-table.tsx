@@ -16,10 +16,10 @@ const RequestTable: React.FC<RequestTableProps> = ({
             <table className="table w-full border-collapse table-pin-rows">
               <thead>
                 <tr>
+                  <th>Status</th>
                   <th>Title</th>
                   <th>Release Year</th>
                   <th>Type</th>
-                  <th>Status</th>
                   <th>Note</th>
                 </tr>
               </thead>
