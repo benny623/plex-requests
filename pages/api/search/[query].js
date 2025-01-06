@@ -169,11 +169,12 @@ export default async function handler(req, res) {
             ...(seasons?.length && {
               seasons: seasons
                 .filter((season) => !!season.air_date)
-                .map(({ id, air_date, episode_count, name }) => ({
+                .map(({ id, air_date, episode_count, name, poster_path }) => ({
                   id,
                   air_date,
                   episode_count,
                   name,
+                  poster_path,
                 })),
             }),
             ...(mpaa && { mpaa: mpaa }),

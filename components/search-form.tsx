@@ -187,7 +187,7 @@ export default function SearchForm({
               id="title"
               name="title"
               type="text"
-              placeholder="Media title"
+              placeholder="Media Title"
               value={formState.title}
               onChange={handleChange}
               className="input input-bordered join-item flex-grow"
@@ -309,7 +309,7 @@ export default function SearchForm({
               id="search-title"
               name="title"
               type="text"
-              placeholder="Media title"
+              placeholder="Search..."
               value={formState.title}
               onChange={handleSearchChange}
               className="input flex-grow"

@@ -10,13 +10,13 @@ export default async function handler(req, res) {
     const result = await query(
       `
           INSERT INTO
-            requests (request_title, request_year, request_requestor, request_status, request_timestamp, request_type, request_image, request_optional)
+            requests (request_title, request_requestor, request_status, request_type, request_optional, request_timestamp)
           VALUES
-            ($1, $2, $3, $4, NOW(), $5, $6, $7)
+            ($1, $2, $3, $4, $5, NOW())
           RETURNING
             *
         `,
-      [title, parseInt(year) || null, email, "New", type, image, optional]
+      [title, email, "New", type, optional]
     );
     // Send back the inserted data
     res.status(201).json({

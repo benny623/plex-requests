@@ -13,17 +13,19 @@ export interface Request {
 // Optional Type
 export interface Optional {
   year?: string | number;
-  poster?: string;
+  image?: string;
   rating?: string;
   original_name?: string;
-  season_count?: number;
-  // season_data?: Seasons;
+  seasons?: Seasons[];
 }
 
 // Seasons Type
 export interface Seasons {
-  year: string | number;
-  episodes: string | number;
+  id: string;
+  name: string;
+  air_date: string | number;
+  episode_count: string | number;
+  poster_path: string;
 }
 
 export interface FormState {

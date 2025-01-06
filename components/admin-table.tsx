@@ -46,10 +46,10 @@ const AdminTable: React.FC<RequestTableProps> = ({
         <thead>
           <tr>
             <th></th>
-            <th>Title</th>
-            <th>Release Year</th>
-            <th>Type</th>
             <th>Status</th>
+            <th>Poster</th>
+            <th>Title</th>
+            <th>Additional Info</th>
             <th>Note</th>
           </tr>
         </thead>
@@ -94,7 +94,7 @@ const AdminTable: React.FC<RequestTableProps> = ({
               </button>
             </form>
             <h3 className="font-bold text-lg">
-              Are you sure you want to delete this?
+              Are you sure?
             </h3>
             <p className="my-4">Request: {modalData.request_title}</p>
             <div className="modal-action gap-4">
