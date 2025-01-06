@@ -79,8 +79,8 @@ const AdminRow: React.FC<RequestRowProps> = ({
             <Image
               src={`https://image.tmdb.org/t/p/w500${request.request_optional.image}`}
               alt={`${request.request_title} poster`}
-              width={75}
-              height={125}
+              width={85}
+              height={135}
             />
           )}
         </td>

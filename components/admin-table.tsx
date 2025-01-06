@@ -42,7 +42,7 @@ const AdminTable: React.FC<RequestTableProps> = ({
 
   return (
     <>
-      <table className="table max-w-5xl border-collapse table-pin-rows pt-10">
+      <table className="table w-full lg:w-3/4 border-collapse table-pin-rows pt-10">
         <thead>
           <tr>
             <th></th>
@@ -93,10 +93,11 @@ const AdminTable: React.FC<RequestTableProps> = ({
                 ✕
               </button>
             </form>
-            <h3 className="font-bold text-lg">
-              Are you sure?
-            </h3>
-            <p className="my-4">Request: {modalData.request_title}</p>
+            <h3 className="font-bold text-lg">Are you sure?</h3>
+            <p className="my-4">
+              Deleting Request:{" "}
+              <span className="font-bold">{modalData.request_title}</span>
+            </p>
             <div className="modal-action gap-4">
               <button className="btn btn-neutral" onClick={handleModalCancel}>
                 Cancel

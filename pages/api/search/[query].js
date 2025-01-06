@@ -84,12 +84,11 @@ export default async function handler(req, res) {
 
       const data = await response.json();
 
-      // Filter data to only include US results
-      const results = data?.results || [];
-      const usResult = results.find((i) => i.iso_31661_1 === "US");
+      // Filter data to only include US results and grab the rating
+      const filteredData = data?.results.find((i) => i.iso_3166_1 === "US");
 
-      // Send the rating
-      return usResult?.rating || null;
+      // Send season data
+      return filteredData?.rating || null;
     } catch (err) {
       console.error(err);
       return null;
