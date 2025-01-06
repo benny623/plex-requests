@@ -3,7 +3,7 @@ import { query } from "@/lib/db";
 export default async function handler(req, res) {
   console.log(`Request recieved ${JSON.stringify(req.body)}`);
 
-  const { title, year, email, type, image, optional } = req.body; // Get form and user data
+  const { title, email, type, optional } = req.body; // Get form and user data
 
   try {
     // Run SQL query to insert data
