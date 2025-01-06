@@ -94,34 +94,45 @@ export default function SearchForm({
 
     const season = getSeasonName(selected);
 
-    console.log(season);
-
-    setFormState((prevState) => ({
-      ...prevState,
-      title:
-        season !== "Complete"
-          ? selected.title + " - " + season.name
-          : selected.title.trim(),
-      type: selected.media_type,
-      optional: {
-        ...(selected.year
-          ? {
-              year:
-                season !== "Complete"
-                  ? season.air_date && parseInt(season.air_date.split("-")[0])
-                  : parseInt(selected.year),
-            }
-          : null),
-        ...(selected.poster && { image: selected.poster }),
-        ...(selected.mpaa && { rating: selected.mpaa }),
-        ...(selected.tvcr && { rating: selected.tvcr }),
-        ...(selected.seasons && { season_count: selected.seasons.length }),
-      },
-    }));
+    // Run seperate query if a specific season is selected
+    if (season !== "Complete") {
+      console.log("this is selected");
+      setFormState((prevState) => ({
+        ...prevState,
+        title: selected.title + " - " + season.name,
+        type: selected.media_type,
+        optional: {
+          ...(selected.year && {
+            year: parseInt(season.air_date.split("-")[0]),
+          }),
+          ...(selected.poster && { image: season.poster_path }),
+          ...(selected.tvcr && { rating: selected.tvcr }),
+        },
+      }));
+    } else {
+      // Run standard query if it's a movie or complete series
+      setFormState((prevState) => ({
+        ...prevState,
+        title: selected.title.trim(),
+        type: selected.media_type,
+        optional: {
+          ...(selected.year && { year: parseInt(selected.year) }),
+          ...(selected.poster && { image: selected.poster }),
+          ...(selected.mpaa && { rating: selected.mpaa }),
+          ...(selected.tvcr && { rating: selected.tvcr }),
+          ...(selected.seasons && {
+            seasons:
+              season === "Complete"
+                ? selected.seasons.filter(
+                    (season: any) => season.name !== "Specials"
+                  )
+                : season,
+          }),
+        },
+      }));
+    }
 
     (document.getElementById("search_modal") as HTMLDialogElement).close();
-
-    console.log(formState);
   };
 
   const ratingColor = (rating: number) => {

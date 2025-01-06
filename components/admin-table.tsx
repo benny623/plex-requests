@@ -42,7 +42,7 @@ const AdminTable: React.FC<RequestTableProps> = ({
 
   return (
     <>
-      <table className="table w-full lg:w-3/4 border-collapse table-pin-rows pt-10">
+      <table className="table w-full xl:w-3/4 border-collapse table-pin-rows pt-10">
         <thead>
           <tr>
             <th></th>

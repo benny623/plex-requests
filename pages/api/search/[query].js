@@ -170,7 +170,7 @@ export default async function handler(req, res) {
                 .filter((season) => !!season.air_date)
                 .map(({ id, air_date, episode_count, name, poster_path }) => ({
                   id,
-                  air_date,
+                  air_date: air_date.split("-")[0],
                   episode_count,
                   name,
                   poster_path,

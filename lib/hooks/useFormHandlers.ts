@@ -102,12 +102,9 @@ export const useFormHandlers = (refetchRequests: () => void) => {
             },
             body: JSON.stringify({
               title: formState.title,
-              //year: formState.optional.year,
               type: formState.type,
               email: formState.email,
               optional: formState.optional,
-              //image: formState.image,
-              // TODO: add the "optional" object here for email
             }),
           });
 
@@ -115,9 +112,9 @@ export const useFormHandlers = (refetchRequests: () => void) => {
             throw new Error("Failed to send notification");
           }
 
-          const notification = await response.json();
+          //const notification = await response.json();
 
-          console.log("Notification sent", notification);
+          //console.log("Notification sent", notification);
         } catch (err) {
           console.error("Error sending notification", err);
         }
