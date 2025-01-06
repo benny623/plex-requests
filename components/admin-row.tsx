@@ -25,7 +25,7 @@ const AdminRow: React.FC<RequestRowProps> = ({
 
   return (
     <>
-      <tr>
+      <tr className="text-slate-100">
         <td>
           <button
             className="transition ease-in-out hover:scale-110 hover:text-red-500 duration-200"

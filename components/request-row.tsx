@@ -22,7 +22,7 @@ const RequestRow: React.FC<RequestRowProps> = ({ request }) => {
   };
 
   return (
-    <tr>
+    <tr className="text-slate-100">
       <td>{request.request_title}</td>
       <td>{request.request_optional.year}</td>
       <td>{request.request_type}</td>
