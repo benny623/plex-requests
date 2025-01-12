@@ -34,6 +34,47 @@ export default function Home() {
     fetchCompletedData();
   }, []);
 
+  const renderRequestCards = (requests: any, setModalData: any) => {
+    return requests.map((request: any) => (
+      <RequestCard
+        key={request.request_id}
+        request={request}
+        setModalData={setModalData}
+      />
+    ));
+  };
+
+  const renderRequestsTable = (requests: any, setModalData: any) => {
+    if (currentRequests.length === 1) {
+      return (
+        <>
+          <div></div>
+          {renderRequestCards(requests, setModalData)}
+        </>
+      );
+    }
+
+    if (currentRequests.length > 0) {
+      return renderRequestCards(requests, setModalData);
+    }
+
+    return (
+      <div className="text-2xl font-bold lg:col-span-2 xl:col-span-3">
+        No requests found
+      </div>
+    );
+  };
+
+  const StatusComponent = ({ status, requests, setModalData }) => {
+    if (status.loading || !status.success) {
+      return (
+        <span className="loading loading-dots loading-lg lg:col-span-2 xl:col-span-3"></span>
+      );
+    }
+    
+    return renderRequestsTable(requests, setModalData)
+  };
+
   return (
     <div className="h-screen">
       <div className="hero bg-base-200 min-h-screen px-4">
@@ -125,9 +166,7 @@ export default function Home() {
             <button
               onClick={() => {
                 setTable(!table);
-                document
-                  .querySelector(".requests-table")
-                  ?.scrollIntoView(true);
+                document.querySelector(".requests-table")?.scrollIntoView(true);
               }}
               className="text-info font-bold hover:text-accent transition-all duration-200"
             >
@@ -139,9 +178,7 @@ export default function Home() {
             <button
               onClick={() => {
                 setTable(!table);
-                document
-                  .querySelector(".requests-table")
-                  ?.scrollIntoView(true);
+                document.querySelector(".requests-table")?.scrollIntoView(true);
               }}
               className="text-info font-bold hover:text-accent transition-all duration-200"
             >
