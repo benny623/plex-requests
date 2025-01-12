@@ -52,9 +52,9 @@ export default function Home() {
                   .querySelector(".requests-table")
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="text-info font-bold mt-4"
+              className="text-info font-bold mt-4 hover:text-accent transition-all duration-200"
             >
-              See current requests
+              See current requests ▼
             </button>
           </div>
           <div className="card bg-base-100 w-full sm:w-80 md:w-96 lg:w-[28rem] shrink-0 shadow-2xl">
