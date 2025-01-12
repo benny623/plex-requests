@@ -64,6 +64,7 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Request Card Table */}
       <div className="requests-table min-h-screen -mb-[88px] flex justify-center items-center bg-base-200">
         <div className="grid gap-8 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 w-11/12 sm:w-3/4 justify-items-center">
           {!table ? (
