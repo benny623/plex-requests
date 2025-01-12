@@ -8,6 +8,7 @@ export interface Request {
   request_status: string;
   request_note: string;
   request_optional: Optional;
+  request_timestamp: string;
 }
 
 // Optional Type
@@ -53,6 +54,25 @@ export interface SearchResult {
   tvcr: string | null;
   seasons: [];
 }
+
+// Home Page Modal Type
+export interface ModalType {
+  request_id: number;
+  request_title: string;
+  request_year: number;
+  request_requestor: string;
+  request_type: string;
+  request_status: string;
+  request_note: string;
+  request_optional: Optional;
+  request_timestamp: string;
+}
+
+// Request Card Props
+export type RequestCardProps = {
+  request: Request;
+  setModalData?: React.Dispatch<React.SetStateAction<ModalType | null>>;
+};
 
 // Request Table Props
 export type RequestTableProps = {

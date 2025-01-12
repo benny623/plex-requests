@@ -6,7 +6,6 @@ export default async function handler(req, res) {
           SELECT
             request_id, 
             request_title,
-            request_year,
             request_type,
             request_status,
             request_note

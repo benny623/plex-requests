@@ -6,11 +6,11 @@ export default async function handler(req, res) {
           SELECT
             request_id, 
             request_title,
-            request_year,
             request_type,
             request_status,
             request_note,
-            request_optional
+            request_optional,
+            request_timestamp
           FROM requests
           WHERE
             request_status <> 'Complete'
