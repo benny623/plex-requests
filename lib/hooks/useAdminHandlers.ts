@@ -117,7 +117,7 @@ export function useAdminHandlers(
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete note");
+        throw new Error("Failed to delete request");
       }
 
       // Update local state by removing the deleted request
@@ -125,7 +125,7 @@ export function useAdminHandlers(
         prevRequests.filter((request) => request.request_id !== requestId)
       );
     } catch (err) {
-      console.error("Error deleting note:", err);
+      console.error("Error deleting request:", err);
     }
   };
 

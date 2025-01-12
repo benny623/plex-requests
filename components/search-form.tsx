@@ -96,7 +96,6 @@ export default function SearchForm({
 
     // Run seperate query if a specific season is selected
     if (season !== "Complete") {
-      console.log("this is selected");
       setFormState((prevState) => ({
         ...prevState,
         title: selected.title + " - " + season.name,
@@ -193,7 +192,7 @@ export default function SearchForm({
           <label className="label">
             <span className="label-text">Title *</span>
           </label>
-          <div className="join flex">
+          <div className="join flex sm:flex-row">
             <input
               id="title"
               name="title"
@@ -201,7 +200,7 @@ export default function SearchForm({
               placeholder="Media Title"
               value={formState.title}
               onChange={handleChange}
-              className="input input-bordered join-item flex-grow"
+              className="input input-bordered join-item flex-grow w-full"
               required
             />
             <button

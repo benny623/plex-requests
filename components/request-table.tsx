@@ -18,8 +18,8 @@ const RequestTable: React.FC<RequestTableProps> = ({
                 <tr>
                   <th>Status</th>
                   <th>Title</th>
-                  <th>Release Year</th>
-                  <th>Type</th>
+                  {/* <th>Release Year</th>
+                  <th>Type</th> */}
                   <th>Note</th>
                 </tr>
               </thead>

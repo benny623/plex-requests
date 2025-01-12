@@ -25,7 +25,7 @@ const RequestRow: React.FC<RequestRowProps> = ({ request }) => {
     <tr className="text-slate-100">
       <td>
         <p
-          className={`rounded-lg text-center border-2 p-2 ${statusColor(
+          className={`rounded-lg text-center border-2 p-2 w-44 ${statusColor(
             request.request_status
           )}`}
         >
@@ -33,11 +33,9 @@ const RequestRow: React.FC<RequestRowProps> = ({ request }) => {
         </p>
       </td>
       <td>{request.request_title}</td>
-      <td>{request.request_optional.year}</td>
-      <td>{request.request_type}</td>
-      <td>
-        <p>{request.request_note}</p>
-      </td>
+      {/* <td>{request.request_optional.year}</td>
+      <td>{request.request_type}</td> */}
+      <td>{request.request_note}</td>
     </tr>
   );
 };

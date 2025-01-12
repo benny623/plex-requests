@@ -1,6 +1,8 @@
 import React from "react";
 import Image from "next/image";
+
 import { RequestRowProps } from "@/lib/types";
+import { statusColor } from "@/lib/helpers";
 
 const AdminRow: React.FC<RequestRowProps> = ({
   request,
@@ -9,21 +11,6 @@ const AdminRow: React.FC<RequestRowProps> = ({
   onNoteBlur,
   onRequestDelete,
 }) => {
-  const statusColor = (status: string) => {
-    switch (status) {
-      case "New":
-        return "select-secondary";
-      case "In Progress":
-        return "select-primary";
-      case "Pending":
-        return "select-warning";
-      case "Complete":
-        return "select-success";
-      default:
-        return "";
-    }
-  };
-
   return (
     <>
       <tr className="text-slate-100">
