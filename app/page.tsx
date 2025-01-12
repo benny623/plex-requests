@@ -69,7 +69,7 @@ export default function Home() {
           {!table ? (
             !currentStatus.loading && currentStatus.success ? (
               currentRequests.length > 0 ? (
-                currentRequests.length === 1 ? (
+                currentRequests.length === 1 ? ( // TODO: Make this logic cleaner and add to Completed Requests section below
                   <>
                     <div></div>
                     {currentRequests.map((request) => (

@@ -39,7 +39,7 @@ const RequestCard: React.FC<RequestCardProps> = ({ request, setModalData }) => {
         </figure>
       )}
       <div className="card-body">
-        <p className="font-bold">{request.request_title}</p>
+        <p className="font-bold w-full">{request.request_title}</p>
         <p
           className={`badge badge-outline ${statusColor(request.request_status)}`}
         >

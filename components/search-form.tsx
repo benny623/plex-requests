@@ -357,9 +357,9 @@ export default function SearchForm({
                   </figure>
                   <div className="card-body overflow-hidden w-2/3">
                     <h2 className="card-title line-clamp-1">{result.title}</h2>
-                    <div className="flex items-center gap-4 sm:gap-8 sm:w-1/2 h-24">
+                    <div className="flex items-center gap-4 h-24">
                       <div
-                        className={`radial-progress ${ratingColor(
+                        className={`radial-progress max-sm:hidden ${ratingColor(
                           result.rating
                         )}`}
                         style={
@@ -380,10 +380,10 @@ export default function SearchForm({
                       </div>
                       <div className="flex flex-col justify-center">
                         {result.mpaa && (
-                          <p className="badge badge-outline">{result.mpaa}</p>
+                          <p className="sm:badge sm:badge-outline">{result.mpaa}</p>
                         )}
                         {result.tvcr && (
-                          <p className="badge badge-outline">{result.tvcr}</p>
+                          <p className="sm:badge sm:badge-outline">{result.tvcr}</p>
                         )}
                       </div>
                     </div>
