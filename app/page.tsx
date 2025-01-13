@@ -13,6 +13,12 @@ import {
 import SearchForm from "@/components/search-form";
 import RequestCard from "@/components/request-card";
 
+// type MainComponentType = {
+//   status: Status;
+//   requests: Request;
+//   setModalData: React.Dispatch<React.SetStateAction<boolean>>;
+// }
+
 export default function Home() {
   const {
     requests: currentRequests,
@@ -34,49 +40,49 @@ export default function Home() {
     fetchCompletedData();
   }, []);
 
-  const renderRequestCards = (requests: any, setModalData: any) => {
-    return requests.map((request: any) => (
-      <RequestCard
-        key={request.request_id}
-        request={request}
-        setModalData={setModalData}
-      />
-    ));
-  };
+  // const renderRequestCards = (requests: any, setModalData: any) => {
+  //   return requests.map((request: any) => (
+  //     <RequestCard
+  //       key={request.request_id}
+  //       request={request}
+  //       setModalData={setModalData}
+  //     />
+  //   ));
+  // };
 
-  const renderRequestsTable = (requests: any, setModalData: any) => {
-    if (currentRequests.length === 1) {
-      return (
-        <>
-          <div></div>
-          {renderRequestCards(requests, setModalData)}
-        </>
-      );
-    }
+  // const renderRequestsTable = (requests: any, setModalData: any) => {
+  //   if (currentRequests.length === 1) {
+  //     return (
+  //       <>
+  //         <div></div>
+  //         {renderRequestCards(requests, setModalData)}
+  //       </>
+  //     );
+  //   }
 
-    if (currentRequests.length > 0) {
-      return renderRequestCards(requests, setModalData);
-    }
+  //   if (currentRequests.length > 0) {
+  //     return renderRequestCards(requests, setModalData);
+  //   }
 
-    return (
-      <div className="text-2xl font-bold lg:col-span-2 xl:col-span-3">
-        No requests found
-      </div>
-    );
-  };
+  //   return (
+  //     <div className="text-2xl font-bold lg:col-span-2 xl:col-span-3">
+  //       No requests found
+  //     </div>
+  //   );
+  // };
 
-  const StatusComponent = ({ status, requests, setModalData }) => {
-    if (status.loading || !status.success) {
-      return (
-        <span className="loading loading-dots loading-lg lg:col-span-2 xl:col-span-3"></span>
-      );
-    }
-    
-    return renderRequestsTable(requests, setModalData)
-  };
+  // const MainComponent: React.FC<MainComponentType> = ({ status, requests, setModalData }) => {
+  //   if (status.loading || !status.success) {
+  //     return (
+  //       <span className="loading loading-dots loading-lg lg:col-span-2 xl:col-span-3"></span>
+  //     );
+  //   }
+
+  //   return renderRequestsTable(requests, setModalData)
+  // };
 
   return (
-    <div className="h-screen">
+    <div className="h-screen text-slate-200">
       <div className="hero bg-base-200 min-h-screen px-4">
         <div className="hero-content flex flex-col lg:flex-row-reverse lg:items-center gap-8">
           <div className="text-center lg:pl-20 lg:text-left max-w-xl">
@@ -219,7 +225,6 @@ export default function Home() {
                       {modalData.request_optional.year}
                     </p>
                   )}
-
                   <p className="text-sm italic font-normal text-accent">
                     {modalData.request_type}
                   </p>
