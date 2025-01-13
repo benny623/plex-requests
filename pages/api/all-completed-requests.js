@@ -14,8 +14,6 @@ export default async function handler(req, res) {
           FROM requests
           WHERE
             request_status = 'Complete'
-          AND
-            request_timestamp > NOW() - interval '14' day
           ORDER BY
             request_timestamp DESC;
         `);

@@ -6,7 +6,7 @@ import AdminTable from "@/components/admin-table";
 
 import {
   fetchCurrentRequests,
-  fetchCompleteRequests,
+  fetchAllCompleteRequests,
 } from "@/lib/fetchRequests";
 import { useFetchData } from "@/lib/hooks/useFetchData";
 
@@ -22,7 +22,7 @@ const AdminPage = () => {
     setRequests: setCompletedRequests,
     status: completedStatus,
     fetchData: fetchCompletedData,
-  } = useFetchData(fetchCompleteRequests);
+  } = useFetchData(fetchAllCompleteRequests);
   const [isAdmin, setIsAdmin] = useState(false);
   const [table, setTable] = useState(false);
 

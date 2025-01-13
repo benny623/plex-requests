@@ -28,6 +28,16 @@ export const fetchCompleteRequests = async () => {
   return await response.json();
 };
 
+export const fetchAllCompleteRequests = async () => {
+  const response = await fetch("/api/all-completed-requests");
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch all requests");
+  }
+
+  return await response.json();
+};
+
 export const fetchSingleRequest = async (id: string, token: string) => {
   const baseUrl =
     typeof window !== "undefined"
