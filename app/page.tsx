@@ -11,6 +11,7 @@ import {
 } from "@/lib/fetchRequests";
 
 import SearchForm from "@/components/search-form";
+import ManualForm from "@/components/manual-form";
 import RequestCard from "@/components/request-card";
 
 // type MainComponentType = {
@@ -32,6 +33,7 @@ export default function Home() {
   } = useFetchData(fetchCompleteRequests);
 
   const [table, setTable] = useState(false);
+  const [manual, setManual] = useState(false);
   const [modalData, setModalData] = useState<ModalType | null>(null);
 
   // Fetch inital data
@@ -85,13 +87,23 @@ export default function Home() {
     <div className="h-screen text-slate-200">
       <div className="hero bg-base-200 min-h-screen px-4">
         <div className="hero-content flex flex-col lg:flex-row-reverse lg:items-center gap-8">
-          <div className="text-center lg:pl-20 lg:text-left max-w-xl">
+          <div className="text-center lg:pl-20 lg:text-left max-w-xl gap-4">
             <h1 className="text-3xl md:text-4xl font-bold">
               Submit a request! 🎬
             </h1>
             <p className="pt-6 text-base md:text-lg">
-              Submit a media request by searching or manually filling out the
-              form!
+              Search for a TV Show, Movie or Anime to request! We will recieve
+              an email and get started on your request. If you are unable to
+              find your request via search, use the{" "}
+              <span
+                className="font-bold text-info hover:text-accent transition-all duration-200"
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  setManual(!manual);
+                }}
+              >
+                Manual Form
+              </span>
             </p>
             <button
               onClick={() => {
@@ -105,7 +117,11 @@ export default function Home() {
             </button>
           </div>
           <div className="card bg-base-100 w-full sm:w-80 md:w-96 lg:w-[28rem] shrink-0 shadow-2xl">
-            <SearchForm refetchRequests={fetchCurrentData} />
+            {!manual ? (
+              <SearchForm refetchRequests={fetchCurrentData} />
+            ) : (
+              <ManualForm refetchRequests={fetchCurrentData} />
+            )}
           </div>
         </div>
       </div>
