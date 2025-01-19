@@ -190,7 +190,7 @@ export default function SearchForm({
       <form className="card-body" onSubmit={handleSubmit}>
         <div className="form-control">
           <label className="label">
-            <span className="label-text">Title *</span>
+            <span className="label-text">Search</span>
           </label>
           <div className="join flex sm:flex-row">
             <input
@@ -220,24 +220,7 @@ export default function SearchForm({
         </div>
         <div className="form-control">
           <label className="label">
-            <span className="label-text">Year</span>
-          </label>
-          <input
-            id="year"
-            name="year"
-            type="number"
-            min="1900"
-            max={`${new Date().getFullYear() + 5}`}
-            placeholder="Release year"
-            maxLength={4}
-            value={formState.optional.year || ""}
-            onChange={handleChange}
-            className="grow input input-bordered flex items-center gap-2"
-          />
-        </div>
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text">Requestor Email *</span>
+            <span className="label-text">Email</span>
           </label>
           <input
             id="email"
@@ -266,27 +249,6 @@ export default function SearchForm({
             </label>
           </div>
         )}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text">Type *</span>
-          </label>
-          <select
-            id="type"
-            name="type"
-            value={formState.type}
-            onChange={handleChange}
-            className="select select-bordered"
-          >
-            <option value="Anime">Anime</option>
-            <option value="Anime Movie">Anime Movie</option>
-            <option value="Movie">Movie</option>
-            <option value="Seasonal Movie">Seasonal Movie</option>
-            <option value="TV Show">TV Show</option>
-          </select>
-        </div>
-        <div className="form-control mt-4 flex items-center">
-          <p className="label-text text-warning">* Required</p>
-        </div>
         <div className="form-control mt-6">
           <button className="btn btn-primary" disabled={status.loading}>
             {status.loading ? (

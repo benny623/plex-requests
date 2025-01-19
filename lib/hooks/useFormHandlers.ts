@@ -53,6 +53,22 @@ export const useFormHandlers = (refetchRequests: () => void) => {
   const handleChange = (e: any) => {
     const { name, value } = e.target;
 
+    if (name === "year") {
+      setFormState((prevState) => ({
+        ...prevState,
+        optional: {
+          [name]: value,
+        },
+      }));
+
+      setStatus((prevState) => ({
+        ...prevState,
+        success: false,
+      }));
+
+      return;
+    }
+
     setFormState((prevState) => ({
       ...prevState,
       [name]: value,
