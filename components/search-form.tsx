@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
-import { SearchResult } from "@/lib/types";
 import Image from "next/image";
 
 export default function SearchForm({
@@ -10,129 +9,23 @@ export default function SearchForm({
 }: {
   refetchRequests: () => void;
 }) {
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [rememberEmail, setRememberEmail] = useState(false);
-  const { formState, setFormState, status, handleChange, handleSubmit } =
-    useFormHandlers(refetchRequests);
-  const [searchQuery, setSearchQuery] = useState({
-    loading: false,
-    error: "",
-  });
-
-  const debounce = (func: (...args: any[]) => void, delay: number) => {
-    let timeout: NodeJS.Timeout;
-    return (...args: any[]) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func(...args), delay);
-    };
-  };
-
-  const handleSearch = debounce(async (title: string) => {
-    if (!title.trim()) return;
-    if (searchQuery.loading) return;
-
-    setSearchQuery((prevState) => ({ ...prevState, loading: true }));
-
-    try {
-      const response = await fetch(`/api/search/${title}`);
-      const data = await response.json();
-
-      setSearchQuery((prevState) => ({
-        ...prevState,
-        error: "",
-        loading: false,
-      }));
-
-      setSearchResults(data);
-    } catch (err) {
-      console.error(err);
-      setSearchQuery((prevState) => ({
-        ...prevState,
-        error: "Failed to search movies",
-      }));
-    } finally {
-      setSearchQuery((prevState) => ({
-        ...prevState,
-        loading: false,
-        error: "",
-      }));
-      (
-        document.getElementById("search_modal") as HTMLDialogElement
-      ).showModal();
-    }
-  }, 300);
-
-  const selectResult = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
-    e.preventDefault();
-
-    // Get selected media by id
-    const selected = searchResults.find((result: any) => result.id === id);
-    if (!selected) {
-      console.error(`Result with id ${id} not found`);
-      return;
-    }
-
-    const seasonElement = document.getElementById(
-      `season-${id}`
-    ) as HTMLSelectElement | null;
-
-    const getSeasonName = (object: any) => {
-      if (seasonElement && seasonElement.value !== "Complete") {
-        // Find the selected season data
-        const seasonData = object?.seasons.find(
-          (season: any) => season.id === parseInt(seasonElement.value)
-        );
-
-        if (!seasonData) {
-          console.error(`Season with id ${seasonElement.value} not found`);
-          return;
-        }
-        return seasonData;
-      }
-      return "Complete";
-    };
-
-    const season = getSeasonName(selected);
-
-    // Run seperate query if a specific season is selected
-    if (season !== "Complete") {
-      setFormState((prevState) => ({
-        ...prevState,
-        title: selected.title + " - " + season.name,
-        type: selected.media_type,
-        optional: {
-          ...(selected.year && {
-            year: parseInt(season.air_date.split("-")[0]),
-          }),
-          ...(selected.poster && { image: season.poster_path }),
-          ...(selected.tvcr && { rating: selected.tvcr }),
-        },
-      }));
-    } else {
-      // Run standard query if it's a movie or complete series
-      setFormState((prevState) => ({
-        ...prevState,
-        title: selected.title.trim(),
-        type: selected.media_type,
-        optional: {
-          ...(selected.year && { year: parseInt(selected.year) }),
-          ...(selected.poster && { image: selected.poster }),
-          ...(selected.mpaa && { rating: selected.mpaa }),
-          ...(selected.tvcr && { rating: selected.tvcr }),
-          ...(selected.seasons && {
-            seasons:
-              season === "Complete"
-                ? selected.seasons.filter(
-                    (season: any) => season.name !== "Specials"
-                  )
-                : season,
-          }),
-        },
-      }));
-    }
-
-    (document.getElementById("search_modal") as HTMLDialogElement).close();
-  };
+  const {
+    formState,
+    ready,
+    status,
+    searchQuery,
+    searchResults,
+    rememberEmail,
+    setRememberEmail,
+    setFormState,
+    handleChange,
+    handleSubmit,
+    handleSearch,
+    selectResult,
+    handleSearchChange,
+    handleCheckboxChange,
+    updateStoredEmail,
+  } = useFormHandlers(refetchRequests);
 
   const ratingColor = (rating: number) => {
     switch (true) {
@@ -142,35 +35,6 @@ export default function SearchForm({
         return "text-warning";
       default:
         return "text-error";
-    }
-  };
-
-  const handleSearchChange = (e: any) => {
-    const { name, value } = e.target;
-
-    setFormState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-
-    handleSearch(value);
-  };
-
-  const handleCheckboxChange = (e: any) => {
-    const isChecked = e.target.checked;
-
-    setRememberEmail(isChecked);
-
-    if (isChecked) {
-      localStorage.setItem("email", formState.email);
-    } else {
-      localStorage.removeItem("email");
-    }
-  };
-
-  const updateStoredEmail = () => {
-    if (rememberEmail && formState.email) {
-      localStorage.setItem("email", formState.email);
     }
   };
 
@@ -250,7 +114,7 @@ export default function SearchForm({
           </div>
         )}
         <div className="form-control mt-6">
-          <button className="btn btn-primary" disabled={status.loading}>
+          <button className="btn btn-primary" disabled={!ready}>
             {status.loading ? (
               <span className="loading loading-dots loading-xs"></span>
             ) : (
@@ -342,10 +206,14 @@ export default function SearchForm({
                       </div>
                       <div className="flex flex-col justify-center">
                         {result.mpaa && (
-                          <p className="sm:badge sm:badge-outline">{result.mpaa}</p>
+                          <p className="sm:badge sm:badge-outline">
+                            {result.mpaa}
+                          </p>
                         )}
                         {result.tvcr && (
-                          <p className="sm:badge sm:badge-outline">{result.tvcr}</p>
+                          <p className="sm:badge sm:badge-outline">
+                            {result.tvcr}
+                          </p>
                         )}
                       </div>
                     </div>
