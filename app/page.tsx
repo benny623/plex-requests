@@ -91,20 +91,40 @@ export default function Home() {
             <h1 className="text-3xl md:text-4xl font-bold">
               Submit a request! 🎬
             </h1>
-            <p className="pt-6 text-base md:text-lg">
-              Search for a TV Show, Movie or Anime to request! We will recieve
-              an email and get started on your request. If you are unable to
-              find your request via search, use the{" "}
-              <span
-                className="font-bold text-info hover:text-accent transition-all duration-200"
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  setManual(!manual);
-                }}
-              >
-                Manual Form
-              </span>
-            </p>
+            {!manual ? (
+              <p className="pt-6 text-base md:text-lg">
+                Search for a TV Show, Movie or Anime to request!
+                <br />
+                If you are unable to find your request via search, click{" "}
+                <span
+                  className="font-bold text-info hover:text-accent transition-all duration-200"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setManual(!manual);
+                  }}
+                >
+                  here
+                </span>{" "}
+                to use the Manual Form!
+              </p>
+            ) : (
+              <p className="pt-6 text-base md:text-lg">
+                Fill out the form to submit a request!
+                <br />
+                Click{" "}
+                <span
+                  className="font-bold text-info hover:text-accent transition-all duration-200"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setManual(!manual);
+                  }}
+                >
+                  here
+                </span>{" "}
+                to swap back to the Search form.
+              </p>
+            )}
+
             <button
               onClick={() => {
                 document

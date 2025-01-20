@@ -1,7 +1,11 @@
 import { useState, useCallback } from "react";
 import { FormState, Status } from "@/lib/types";
+import { SearchResult } from "@/lib/types";
 
 export const useFormHandlers = (refetchRequests: () => void) => {
+  const [ready, setReady] = useState(false);
+  const [rememberEmail, setRememberEmail] = useState(false);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [formState, setFormState] = useState<FormState>({
     title: "",
     email: "",
@@ -13,6 +17,11 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     loading: false,
     error: "",
     success: false,
+  });
+
+  const [searchQuery, setSearchQuery] = useState({
+    loading: false,
+    error: "",
   });
 
   // Validate form before submission
@@ -66,6 +75,8 @@ export const useFormHandlers = (refetchRequests: () => void) => {
         success: false,
       }));
 
+      //setReady(false);
+
       return;
     }
 
@@ -78,6 +89,8 @@ export const useFormHandlers = (refetchRequests: () => void) => {
       ...prevState,
       success: false,
     }));
+
+    //setReady(false);
   };
 
   // Handle form submission
@@ -89,6 +102,8 @@ export const useFormHandlers = (refetchRequests: () => void) => {
       sendNotification();
 
       setStatus({ loading: true, error: "", success: false });
+
+      setReady(false);
     },
     [formState, refetchRequests]
   );
@@ -167,11 +182,168 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     }
   };
 
+  const debounce = (func: (...args: any[]) => void, delay: number) => {
+    let timeout: NodeJS.Timeout;
+    return (...args: any[]) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), delay);
+    };
+  };
+
+  const handleSearch = debounce(async (title: string) => {
+    if (!title.trim()) return;
+    if (searchQuery.loading) return;
+
+    setSearchQuery((prevState) => ({ ...prevState, loading: true }));
+
+    try {
+      const response = await fetch(`/api/search/${title}`);
+      const data = await response.json();
+
+      setSearchQuery((prevState) => ({
+        ...prevState,
+        error: "",
+        loading: false,
+      }));
+
+      setSearchResults(data);
+    } catch (err) {
+      console.error(err);
+      setSearchQuery((prevState) => ({
+        ...prevState,
+        error: "Failed to search movies",
+      }));
+    } finally {
+      setSearchQuery((prevState) => ({
+        ...prevState,
+        loading: false,
+        error: "",
+      }));
+      (
+        document.getElementById("search_modal") as HTMLDialogElement
+      ).showModal();
+    }
+  }, 300);
+
+  const selectResult = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
+    e.preventDefault();
+
+    // Get selected media by id
+    const selected = searchResults.find((result: any) => result.id === id);
+    if (!selected) {
+      console.error(`Result with id ${id} not found`);
+      return;
+    }
+
+    const seasonElement = document.getElementById(
+      `season-${id}`
+    ) as HTMLSelectElement | null;
+
+    const getSeasonName = (object: any) => {
+      if (seasonElement && seasonElement.value !== "Complete") {
+        // Find the selected season data
+        const seasonData = object?.seasons.find(
+          (season: any) => season.id === parseInt(seasonElement.value)
+        );
+
+        if (!seasonData) {
+          console.error(`Season with id ${seasonElement.value} not found`);
+          return;
+        }
+        return seasonData;
+      }
+      return "Complete";
+    };
+
+    const season = getSeasonName(selected);
+
+    // Run seperate query if a specific season is selected
+    if (season !== "Complete") {
+      setFormState((prevState) => ({
+        ...prevState,
+        title: selected.title + " - " + season.name,
+        type: selected.media_type,
+        optional: {
+          ...(selected.year && {
+            year: parseInt(season.air_date.split("-")[0]),
+          }),
+          ...(selected.poster && { image: season.poster_path }),
+          ...(selected.tvcr && { rating: selected.tvcr }),
+        },
+      }));
+      setReady(true);
+      (document.getElementById("search_modal") as HTMLDialogElement).close();
+      return;
+    }
+    // Run standard query if it's a movie or complete series
+    setFormState((prevState) => ({
+      ...prevState,
+      title: selected.title.trim(),
+      type: selected.media_type,
+      optional: {
+        ...(selected.year && { year: parseInt(selected.year) }),
+        ...(selected.poster && { image: selected.poster }),
+        ...(selected.mpaa && { rating: selected.mpaa }),
+        ...(selected.tvcr && { rating: selected.tvcr }),
+        ...(selected.seasons && {
+          seasons:
+            season === "Complete"
+              ? selected.seasons.filter(
+                  (season: any) => season.name !== "Specials"
+                )
+              : season,
+        }),
+      },
+    }));
+    setReady(true);
+    (document.getElementById("search_modal") as HTMLDialogElement).close();
+  };
+
+  const handleSearchChange = (e: any) => {
+    const { name, value } = e.target;
+
+    setFormState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+
+    handleSearch(value);
+  };
+
+  const handleCheckboxChange = (e: any) => {
+    const isChecked = e.target.checked;
+
+    setRememberEmail(isChecked);
+
+    if (isChecked) {
+      localStorage.setItem("email", formState.email);
+    } else {
+      localStorage.removeItem("email");
+    }
+  };
+
+  const updateStoredEmail = () => {
+    if (rememberEmail && formState.email) {
+      localStorage.setItem("email", formState.email);
+    }
+  };
+
   return {
     formState,
-    setFormState,
+    ready,
     status,
+    searchQuery,
+    searchResults,
+    rememberEmail,
+    setRememberEmail,
+    setFormState,
     handleChange,
     handleSubmit,
+    sendNotification,
+    handleSearch,
+    selectResult,
+    handleSearchChange,
+    handleCheckboxChange,
+    updateStoredEmail,
   };
 };
