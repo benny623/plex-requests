@@ -75,7 +75,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
         success: false,
       }));
 
-      //setReady(false);
+      setReady(false);
 
       return;
     }
@@ -90,7 +90,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
       success: false,
     }));
 
-    //setReady(false);
+    setReady(false);
   };
 
   // Handle form submission
