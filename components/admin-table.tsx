@@ -50,6 +50,7 @@ const AdminTable: React.FC<RequestTableProps> = ({
             <th>Poster</th>
             <th>Title</th>
             <th>Additional Info</th>
+            <th>Requestor Email</th>
             <th>Note</th>
           </tr>
         </thead>
