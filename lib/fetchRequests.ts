@@ -58,3 +58,35 @@ export const fetchSingleRequest = async (id: string, token: string) => {
 
   return await response.json();
 };
+
+export const adminFetchCurrentRequests = async (token: string) => {
+  const response = await fetch("/api/current-requests", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch all requests");
+  }
+
+  return await response.json();
+}
+
+export const adminFetchAllCompleteRequests = async (token: string) => {
+  const response = await fetch("/api/all-completed-requests", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch all requests");
+  }
+
+  return await response.json();
+}
