@@ -1,3 +1,6 @@
+const baseUrl =
+  typeof window !== "undefined" ? window.location.origin : process.env.BASE_URL;
+
 export const statusColor = (status: string) => {
   switch (status) {
     case "New":
@@ -27,4 +30,21 @@ export const formateDate = (isoDate: string) => {
 
   // Return formatted string for "Time on Date"
   return `${month}/${day}/${year} at ${formattedHours}:${minutes} ${amPm}`;
+};
+
+export const checkAdmin = async (token: string) => {
+  try {
+    const res = await fetch(`${baseUrl}/api/check-admin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token }),
+    });
+    const data = await res.json();
+    return data.isAdmin || false;
+  } catch (err) {
+    console.error("Error validating admin:", err);
+    return false;
+  }
 };

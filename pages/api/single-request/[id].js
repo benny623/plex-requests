@@ -1,38 +1,13 @@
 import { query } from "@/lib/db";
+import { checkAdmin } from "@/lib/helpers";
 
 export default async function handler(req, res) {
   const { id } = req.query; // Get request ID
   const token = req.headers.authorization?.split(" ")[1]; // Get the token from auth headers
 
-  const baseUrl =
-    typeof window !== "undefined"
-      ? window.location.origin
-      : process.env.BASE_URL;
-
-  if (!token) {
-    return res.status(400).json({ error: "Token is required" });
-  }
-
-  const checkAdmin = async (token) => {
-    try {
-      const res = await fetch(`${baseUrl}/api/check-admin`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token }),
-      });
-      const data = await res.json();
-      return data.isAdmin || false;
-    } catch (err) {
-      console.error("Error validating admin:", err);
-      return false;
-    }
-  };
-
   const isAdmin = await checkAdmin(token);
 
-  if (!isAdmin) {
+  if (!isAdmin || !token) {
     return res.status(405).json({ error: "Unauthorized" });
   }
 

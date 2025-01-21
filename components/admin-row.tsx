@@ -106,6 +106,9 @@ const AdminRow: React.FC<RequestRowProps> = ({
           </div>
         </td>
         <td>
+          {request.request_requestor}
+        </td>
+        <td>
           <textarea
             id="note"
             name="note"

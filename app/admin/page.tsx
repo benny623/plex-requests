@@ -5,10 +5,11 @@ import React, { useState, useEffect } from "react";
 import AdminTable from "@/components/admin-table";
 
 import {
-  fetchCurrentRequests,
-  fetchAllCompleteRequests,
+  adminFetchCurrentRequests,
+  adminFetchAllCompleteRequests,
 } from "@/lib/fetchRequests";
 import { useFetchData } from "@/lib/hooks/useFetchData";
+import { checkAdmin } from "@/lib/helpers";
 
 const AdminPage = () => {
   const {
@@ -16,41 +17,34 @@ const AdminPage = () => {
     setRequests: setCurrentRequests,
     status: currentStatus,
     fetchData: fetchCurrentData,
-  } = useFetchData(fetchCurrentRequests);
+  } = useFetchData(() =>
+    adminFetchCurrentRequests(window.localStorage.getItem("isAdmin") || "")
+  );
   const {
     requests: completedRequests,
     setRequests: setCompletedRequests,
     status: completedStatus,
     fetchData: fetchCompletedData,
-  } = useFetchData(fetchAllCompleteRequests);
+  } = useFetchData(() =>
+    adminFetchAllCompleteRequests(window.localStorage.getItem("isAdmin") || "")
+  );
   const [isAdmin, setIsAdmin] = useState(false);
   const [table, setTable] = useState(false);
 
   // Set isAdmin on page load
   useEffect(() => {
-    const checkAdmin = async () => {
-      try {
-        const res = await fetch("/api/check-admin", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            token: window.localStorage.getItem("isAdmin"),
-          }),
-        });
-        const data = await res.json();
+    const getData = async () => {
+      const adminStatus = await checkAdmin(
+        window.localStorage.getItem("isAdmin") || ""
+      );
+      setIsAdmin(adminStatus);
 
-        if (data.isAdmin) {
-          setIsAdmin(true);
-          fetchCurrentData();
-          fetchCompletedData();
-        }
-      } catch (err) {
-        console.error("Error validating admin:", err);
+      if (adminStatus) {
+        fetchCurrentData();
+        fetchCompletedData();
       }
     };
-    checkAdmin();
+    getData();
   }, []);
 
   return (
