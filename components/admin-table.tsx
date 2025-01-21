@@ -69,14 +69,14 @@ const AdminTable: React.FC<RequestTableProps> = ({
               ))
             ) : (
               <tr>
-                <td colSpan={6} className="text-center">
+                <td colSpan={7} className="text-center">
                   No current requests
                 </td>
               </tr>
             )
           ) : (
             <tr>
-              <td colSpan={6} className="text-center">
+              <td colSpan={7} className="text-center">
                 <span className="loading loading-dots loading-md"></span>
               </td>
             </tr>
