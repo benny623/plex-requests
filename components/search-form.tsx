@@ -113,6 +113,11 @@ export default function SearchForm({
             </label>
           </div>
         )}
+        {ready && (
+          <div className="form-control mt-6 text-center text-success">
+            Media data attached, ready to submit!
+          </div>
+        )}
         <div className="form-control mt-6">
           <button className="btn btn-primary" disabled={!ready}>
             {status.loading ? (
