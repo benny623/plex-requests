@@ -67,11 +67,11 @@ export default function SearchForm({
                 placeholder="Media Title"
                 value={formState.title}
                 onChange={handleChange}
-                className="input input-bordered join-item"
+                className="input join-item"
                 required
               />
               <button
-                className="btn btn-primary join-item w-[86px]"
+                className="btn btn-soft btn-primary join-item w-[86px]"
                 onClick={(e) => {
                   e.preventDefault();
                   handleSearch(formState.title);
@@ -89,11 +89,11 @@ export default function SearchForm({
               id="email"
               name="email"
               type="email"
-              placeholder="Your email"
+              placeholder="mail@site.com"
               value={formState.email}
               onChange={handleChange}
               onBlur={updateStoredEmail}
-              className="input input-bordered flex items-center w-full"
+              className="input validator w-full"
               required
             />
             <div className="text-center">
@@ -111,12 +111,12 @@ export default function SearchForm({
                 </label>
               )}
             </div>
-            {!ready && (
+            {ready && (
               <div className="text-center my-4 text-success">
                 Media data attached, ready to submit!
               </div>
             )}
-            <button className="btn btn-neutral" disabled={!ready}>
+            <button className="btn" disabled={!ready}>
               {status.loading ? (
                 <span className="loading loading-dots loading-xs"></span>
               ) : (
