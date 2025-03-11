@@ -191,7 +191,7 @@ export default function Home() {
               ))
             ) : (
               <div className="text-2xl font-bold lg:col-span-2 xl:col-span-3">
-                No completed requests
+                No recently completed requests
               </div>
             )
           ) : (

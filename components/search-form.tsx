@@ -51,81 +51,79 @@ export default function SearchForm({
 
   return (
     <>
-      <form className="card-body" onSubmit={handleSubmit}>
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text">Search</span>
-          </label>
-          <div className="join flex sm:flex-row">
+      {/* Search Card */}
+      <div
+        className="card bg-base-100   shrink-0 shadow-2xl"
+        onSubmit={handleSubmit}
+      >
+        <div className="card-body">
+          <fieldset className="fieldset">
+            <label className="fieldset-label">Search</label>
+            <div className="join">
+              <input
+                id="title"
+                name="title"
+                type="text"
+                placeholder="Media Title"
+                value={formState.title}
+                onChange={handleChange}
+                className="input input-bordered join-item"
+                required
+              />
+              <button
+                className="btn btn-primary join-item w-[86px]"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSearch(formState.title);
+                }}
+              >
+                {searchQuery.loading ? (
+                  <span className="loading loading-dots loading-xs"></span>
+                ) : (
+                  "Search"
+                )}
+              </button>
+            </div>
+            <label className="fieldset-label">Email</label>
             <input
-              id="title"
-              name="title"
-              type="text"
-              placeholder="Media Title"
-              value={formState.title}
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Your email"
+              value={formState.email}
               onChange={handleChange}
-              className="input input-bordered join-item grow w-full"
+              onBlur={updateStoredEmail}
+              className="input input-bordered flex items-center w-full"
               required
             />
-            <button
-              className="btn btn-primary join-item w-[83px]"
-              onClick={(e) => {
-                e.preventDefault();
-                handleSearch(formState.title);
-              }}
-            >
-              {searchQuery.loading ? (
+            <div className="text-center">
+              {formState.email && (
+                <label className="label cursor-pointer">
+                  <span className="label-text">Remember email</span>
+                  <input
+                    id="remember"
+                    name="remember"
+                    type="checkbox"
+                    className="checkbox"
+                    checked={rememberEmail}
+                    onChange={handleCheckboxChange}
+                  />
+                </label>
+              )}
+            </div>
+            {!ready && (
+              <div className="text-center my-4 text-success">
+                Media data attached, ready to submit!
+              </div>
+            )}
+            <button className="btn btn-neutral" disabled={!ready}>
+              {status.loading ? (
                 <span className="loading loading-dots loading-xs"></span>
               ) : (
-                "Search"
+                "Submit"
               )}
             </button>
-          </div>
-        </div>
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text">Email</span>
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="Your email"
-            value={formState.email}
-            onChange={handleChange}
-            onBlur={updateStoredEmail}
-            className="grow input input-bordered flex items-center"
-            required
-          />
-        </div>
-        {formState.email && (
-          <div className="form-control">
-            <label className="label cursor-pointer">
-              <span className="label-text">Remember email</span>
-              <input
-                id="remember"
-                name="remember"
-                type="checkbox"
-                className="checkbox"
-                checked={rememberEmail}
-                onChange={handleCheckboxChange}
-              />
-            </label>
-          </div>
-        )}
-        {ready && (
-          <div className="form-control mt-6 text-center text-success">
-            Media data attached, ready to submit!
-          </div>
-        )}
-        <div className="form-control mt-6">
-          <button className="btn btn-primary" disabled={!ready}>
-            {status.loading ? (
-              <span className="loading loading-dots loading-xs"></span>
-            ) : (
-              "Submit"
-            )}
-          </button>
+          </fieldset>
         </div>
         {status.error && (
           <div className="form-control mt-4 flex items-center">
@@ -141,7 +139,9 @@ export default function SearchForm({
             </div>
           </div>
         )}
-      </form>
+      </div>
+
+      {/* Search Modal */}
       <dialog id="search_modal" className="modal">
         <div className="modal-box w-11/12 max-w-5xl relative">
           {/* Modal Header */}
