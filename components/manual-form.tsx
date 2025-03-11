@@ -45,7 +45,7 @@ export default function ManualForm({
             placeholder="Media Title"
             value={formState.title}
             onChange={handleChange}
-            className="input input-bordered join-item flex-grow w-full"
+            className="input input-bordered join-item grow w-full"
             required
           />
         </div>

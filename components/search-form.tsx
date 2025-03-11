@@ -64,7 +64,7 @@ export default function SearchForm({
               placeholder="Media Title"
               value={formState.title}
               onChange={handleChange}
-              className="input input-bordered join-item flex-grow w-full"
+              className="input input-bordered join-item grow w-full"
               required
             />
             <button
@@ -153,7 +153,7 @@ export default function SearchForm({
               placeholder="Search..."
               value={formState.title}
               onChange={handleSearchChange}
-              className="input flex-grow"
+              className="input grow"
               required
             />
             <form method="dialog">
