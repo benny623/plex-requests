@@ -131,9 +131,25 @@ export default function Home() {
                   .querySelector(".requests-table")
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="text-info font-bold mt-4 hover:text-accent transition-all duration-200"
+              className="btn btn-soft btn-info font-bold mt-4 hover:text-accent transition-all duration-200"
             >
-              See current requests ▼
+              <span className="flex items-center gap-2">
+                See current requests{" "}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
+                  />
+                </svg>
+              </span>
             </button>
           </div>
           <div className="card bg-base-100 w-full sm:w-80 md:w-96 lg:w-[28rem] shrink-0 shadow-2xl">

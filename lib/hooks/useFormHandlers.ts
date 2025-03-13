@@ -3,7 +3,6 @@ import { FormState, Status } from "@/lib/types";
 import { SearchResult } from "@/lib/types";
 
 export const useFormHandlers = (refetchRequests: () => void) => {
-  const [ready, setReady] = useState(false);
   const [rememberEmail, setRememberEmail] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [formState, setFormState] = useState<FormState>({
@@ -62,35 +61,10 @@ export const useFormHandlers = (refetchRequests: () => void) => {
   const handleChange = (e: any) => {
     const { name, value } = e.target;
 
-    if (name === "year") {
-      setFormState((prevState) => ({
-        ...prevState,
-        optional: {
-          [name]: value,
-        },
-      }));
-
-      setStatus((prevState) => ({
-        ...prevState,
-        success: false,
-      }));
-
-      setReady(false);
-
-      return;
-    }
-
-    setFormState((prevState) => ({
+    return setFormState((prevState) => ({
       ...prevState,
       [name]: value,
     }));
-
-    setStatus((prevState) => ({
-      ...prevState,
-      success: false,
-    }));
-
-    setReady(false);
   };
 
   // Handle form submission
@@ -103,7 +77,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
 
       setStatus({ loading: true, error: "", success: false });
 
-      setReady(false);
+      //setReady(false);
     },
     [formState, refetchRequests]
   );
@@ -271,7 +245,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
           ...(selected.tvcr && { rating: selected.tvcr }),
         },
       }));
-      setReady(true);
       (document.getElementById("search_modal") as HTMLDialogElement).close();
       return;
     }
@@ -295,7 +268,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
         }),
       },
     }));
-    setReady(true);
+    
     (document.getElementById("search_modal") as HTMLDialogElement).close();
   };
 
@@ -330,7 +303,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
 
   return {
     formState,
-    ready,
     status,
     searchQuery,
     searchResults,

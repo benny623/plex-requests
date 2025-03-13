@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
 import Image from "next/image";
 
@@ -11,7 +11,7 @@ export default function SearchForm({
 }) {
   const {
     formState,
-    ready,
+
     status,
     searchQuery,
     searchResults,
@@ -26,6 +26,8 @@ export default function SearchForm({
     handleCheckboxChange,
     updateStoredEmail,
   } = useFormHandlers(refetchRequests);
+
+  const [ready, setReady] = useState(false);
 
   const ratingColor = (rating: number) => {
     switch (true) {
@@ -49,11 +51,26 @@ export default function SearchForm({
     }
   }, []);
 
+  // Check if form is filled out
+  useEffect(() => {
+    const emailInput = document.querySelector<HTMLInputElement>(
+      'input[name="email"]'
+    );
+    if (
+      formState.title &&
+      formState.optional &&
+      formState.email &&
+      emailInput?.checkValidity()
+    ) {
+      setReady(true);
+    }
+  }, [formState]);
+
   return (
     <>
       {/* Search Card */}
-      <div
-        className="card bg-base-100   shrink-0 shadow-2xl"
+      <form
+        className="card bg-base-100 shrink-0 shadow-2xl"
         onSubmit={handleSubmit}
       >
         <div className="card-body">
@@ -112,8 +129,29 @@ export default function SearchForm({
               )}
             </div>
             {ready && (
-              <div className="text-center my-4 text-success">
-                Media data attached, ready to submit!
+              <div>
+                <div className="flex flex-row gap-10 justify-center items-center text-center">
+                  <Image
+                    src={`https://image.tmdb.org/t/p/w500${formState.optional.image}`}
+                    width={100}
+                    height={150}
+                    alt={formState.title}
+                    className="rounded-lg"
+                  />
+                  <ul>
+                    <li className="font-bold text-lg">{formState.title}</li>
+                    <li className="italic text-sm">{formState.type}</li>
+                    {formState.optional.year && (
+                      <li className="text-sm">{formState.optional.year}</li>
+                    )}
+                    {formState.optional.rating && (
+                      <li className="badge">{formState.optional.rating}</li>
+                    )}
+                  </ul>
+                </div>
+                <div className="text-center my-4 text-success">
+                  Media data attached, ready to submit!
+                </div>
               </div>
             )}
             <button className="btn" disabled={!ready}>
@@ -123,23 +161,19 @@ export default function SearchForm({
                 "Submit"
               )}
             </button>
+            {status.error && (
+              <div className="text-center text-red-500">
+                <p>Error: {status.error}</p>
+              </div>
+            )}
+            {status.success && (
+              <div className="text-center mt-3 text-success">
+                Request submitted successfully!
+              </div>
+            )}
           </fieldset>
         </div>
-        {status.error && (
-          <div className="form-control mt-4 flex items-center">
-            <div className="mt-4 text-red-500">
-              <p>Error: {status.error}</p>
-            </div>
-          </div>
-        )}
-        {status.success && (
-          <div className="form-control mt-4 flex items-center">
-            <div className="mt-4 text-green-500">
-              Request submitted successfully!
-            </div>
-          </div>
-        )}
-      </div>
+      </form>
 
       {/* Search Modal */}
       <dialog id="search_modal" className="modal">
@@ -205,7 +239,7 @@ export default function SearchForm({
                       </div>
                       <div className="flex flex-col justify-center">
                         <p className="text-lg font-normal">{result.year}</p>
-                        <p className="text-sm italic font-normal text-accent">
+                        <p className="text-sm italic font-normal">
                           {result.media_type}
                         </p>
                       </div>
