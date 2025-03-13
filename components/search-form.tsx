@@ -11,11 +11,12 @@ export default function SearchForm({
 }) {
   const {
     formState,
-
+    ready,
     status,
     searchQuery,
     searchResults,
     rememberEmail,
+    setReady,
     setRememberEmail,
     setFormState,
     handleChange,
@@ -26,8 +27,6 @@ export default function SearchForm({
     handleCheckboxChange,
     updateStoredEmail,
   } = useFormHandlers(refetchRequests);
-
-  const [ready, setReady] = useState(false);
 
   const ratingColor = (rating: number) => {
     switch (true) {
@@ -48,23 +47,26 @@ export default function SearchForm({
     if (email) {
       setRememberEmail(true);
       setFormState((prevState) => ({ ...prevState, email }));
+      setReady((prevState) => ({
+        ...prevState,
+        email: true,
+      }));
     }
   }, []);
 
-  // Check if form is filled out
   useEffect(() => {
     const emailInput = document.querySelector<HTMLInputElement>(
       'input[name="email"]'
     );
-    if (
-      formState.title &&
-      formState.optional &&
-      formState.email &&
-      emailInput?.checkValidity()
-    ) {
-      setReady(true);
+    // If email exists and is valid set email ready state to true
+    if (emailInput?.checkValidity()) {
+      setReady((prevState) => ({
+        ...prevState,
+        email: true,
+      }));
     }
-  }, [formState]);
+    console.log(ready);
+  }, []);
 
   return (
     <>
@@ -124,11 +126,14 @@ export default function SearchForm({
                     className="checkbox"
                     checked={rememberEmail}
                     onChange={handleCheckboxChange}
+                    disabled={!document
+                      .querySelector<HTMLInputElement>('input[name="email"]')
+                      ?.checkValidity()}
                   />
                 </label>
               )}
             </div>
-            {ready && (
+            {ready.media && ready.email && (
               <div>
                 <div className="flex flex-row gap-10 justify-center items-center text-center">
                   <Image
@@ -154,7 +159,7 @@ export default function SearchForm({
                 </div>
               </div>
             )}
-            <button className="btn" disabled={!ready}>
+            <button className="btn" disabled={!ready.media || !ready.email}>
               {status.loading ? (
                 <span className="loading loading-dots loading-xs"></span>
               ) : (

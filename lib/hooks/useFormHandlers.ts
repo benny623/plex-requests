@@ -3,6 +3,10 @@ import { FormState, Status } from "@/lib/types";
 import { SearchResult } from "@/lib/types";
 
 export const useFormHandlers = (refetchRequests: () => void) => {
+  const [ready, setReady] = useState<{ media: boolean; email: boolean }>({
+    media: false,
+    email: false,
+  });
   const [rememberEmail, setRememberEmail] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [formState, setFormState] = useState<FormState>({
@@ -59,7 +63,32 @@ export const useFormHandlers = (refetchRequests: () => void) => {
 
   // Handle form input changes
   const handleChange = (e: any) => {
-    const { name, value } = e.target;
+    const { name, value, validity } = e.target;
+
+    // If email is valid set email ready state to true
+    if (name === "email" && !validity.valid) {
+      setReady((prevState) => ({
+        ...prevState,
+        email: false,
+      }));
+    }
+
+    if (name === "email" && validity.valid) {
+      setReady((prevState) => ({
+        ...prevState,
+        email: true,
+      }));
+    }
+
+    // If the title is changed, set title ready state to false
+    if (name === "title") {
+      setReady((prevState) => ({
+        ...prevState,
+        media: false,
+      }));
+    }
+
+    console.log(ready)
 
     return setFormState((prevState) => ({
       ...prevState,
@@ -77,7 +106,11 @@ export const useFormHandlers = (refetchRequests: () => void) => {
 
       setStatus({ loading: true, error: "", success: false });
 
-      //setReady(false);
+      // Set media ready state to false
+      setReady((prevState) => ({
+        ...prevState,
+        media: false,
+      }));
     },
     [formState, refetchRequests]
   );
@@ -268,8 +301,13 @@ export const useFormHandlers = (refetchRequests: () => void) => {
         }),
       },
     }));
-    
+
     (document.getElementById("search_modal") as HTMLDialogElement).close();
+
+    setReady((prevState) => ({
+      ...prevState,
+      media: true,
+    }));
   };
 
   const handleSearchChange = (e: any) => {
@@ -285,7 +323,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
 
   const handleCheckboxChange = (e: any) => {
     const isChecked = e.target.checked;
-
     setRememberEmail(isChecked);
 
     if (isChecked) {
@@ -302,11 +339,13 @@ export const useFormHandlers = (refetchRequests: () => void) => {
   };
 
   return {
+    ready,
     formState,
     status,
     searchQuery,
     searchResults,
     rememberEmail,
+    setReady,
     setRememberEmail,
     setFormState,
     handleChange,

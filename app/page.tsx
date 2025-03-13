@@ -14,12 +14,6 @@ import SearchForm from "@/components/search-form";
 import ManualForm from "@/components/manual-form";
 import RequestCard from "@/components/request-card";
 
-// type MainComponentType = {
-//   status: Status;
-//   requests: Request;
-//   setModalData: React.Dispatch<React.SetStateAction<boolean>>;
-// }
-
 export default function Home() {
   const {
     requests: currentRequests,
@@ -41,47 +35,6 @@ export default function Home() {
     fetchCurrentData();
     fetchCompletedData();
   }, []);
-
-  // const renderRequestCards = (requests: any, setModalData: any) => {
-  //   return requests.map((request: any) => (
-  //     <RequestCard
-  //       key={request.request_id}
-  //       request={request}
-  //       setModalData={setModalData}
-  //     />
-  //   ));
-  // };
-
-  // const renderRequestsTable = (requests: any, setModalData: any) => {
-  //   if (currentRequests.length === 1) {
-  //     return (
-  //       <>
-  //         <div></div>
-  //         {renderRequestCards(requests, setModalData)}
-  //       </>
-  //     );
-  //   }
-
-  //   if (currentRequests.length > 0) {
-  //     return renderRequestCards(requests, setModalData);
-  //   }
-
-  //   return (
-  //     <div className="text-2xl font-bold lg:col-span-2 xl:col-span-3">
-  //       No requests found
-  //     </div>
-  //   );
-  // };
-
-  // const MainComponent: React.FC<MainComponentType> = ({ status, requests, setModalData }) => {
-  //   if (status.loading || !status.success) {
-  //     return (
-  //       <span className="loading loading-dots loading-lg lg:col-span-2 xl:col-span-3"></span>
-  //     );
-  //   }
-
-  //   return renderRequestsTable(requests, setModalData)
-  // };
 
   return (
     <div className="h-screen text-slate-200">
@@ -131,10 +84,10 @@ export default function Home() {
                   .querySelector(".requests-table")
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="btn btn-soft btn-info font-bold mt-4 hover:text-accent transition-all duration-200"
+              className="btn btn-soft btn-info font-bold mt-4"
             >
               <span className="flex items-center gap-2">
-                See current requests{" "}
+                See current requests
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
