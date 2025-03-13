@@ -54,11 +54,11 @@ export default function SearchForm({
     }
   }, []);
 
+  // If email exists and is valid set email ready state to true
   useEffect(() => {
     const emailInput = document.querySelector<HTMLInputElement>(
       'input[name="email"]'
     );
-    // If email exists and is valid set email ready state to true
     if (emailInput?.checkValidity()) {
       setReady((prevState) => ({
         ...prevState,

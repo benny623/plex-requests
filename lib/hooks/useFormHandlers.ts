@@ -27,40 +27,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     error: "",
   });
 
-  // Validate form before submission
-  // const validateForm = () => {
-  //   let valid = true;
-  //   const errors = {
-  //     title: "",
-  //     email: "",
-  //     year: "",
-  //   };
-
-  //   // Title Validation
-  //   if (!formState.title) {
-  //     errors.title = "Title is required";
-  //     valid = false;
-  //   }
-
-  //   // Email Validation
-  //   if (!formState.email) {
-  //     errors.email = "Email is required";
-  //     valid = false;
-  //   } else if (!/\S+@\S+\.\S+/.test(formState.email)) {
-  //     errors.email = "Please enter a valid email address";
-  //     valid = false;
-  //   }
-
-  //   // Year Validation
-  //   if (formState.year && !/^\d{4}$/.test(formState.year)) {
-  //     errors.year = "Year must be a 4-digit number";
-  //     valid = false;
-  //   }
-
-  //   setFormErrors(errors);
-  //   return valid;
-  // };
-
   // Handle form input changes
   const handleChange = (e: any) => {
     const { name, value, validity } = e.target;
@@ -88,8 +54,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
       }));
     }
 
-    console.log(ready)
-
     return setFormState((prevState) => ({
       ...prevState,
       [name]: value,
@@ -105,12 +69,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
       sendNotification();
 
       setStatus({ loading: true, error: "", success: false });
-
-      // Set media ready state to false
-      setReady((prevState) => ({
-        ...prevState,
-        media: false,
-      }));
     },
     [formState, refetchRequests]
   );
@@ -149,26 +107,26 @@ export const useFormHandlers = (refetchRequests: () => void) => {
           if (!response.ok) {
             throw new Error("Failed to send notification");
           }
-
-          //const notification = await response.json();
-
-          //console.log("Notification sent", notification);
         } catch (err) {
           console.error("Error sending notification", err);
         }
 
-        // TODO: this originally reset the formState, not sure if I still want this or if there's a better solution
-        //       the main issue here is that it resets the email field even if "Remember email" is checked
-        // setFormState({
-        //   title: "",
-        //   year: "",
-        //   email: "",
-        //   type: "Movie",
-        //   image: "",
-        //   optional: {},
-        // });
+        setFormState((prevState) => ({
+          ...prevState,
+          title: "",
+          year: "",
+          type: "Movie",
+          image: "",
+          optional: {},
+        }));
 
         setStatus({ loading: false, error: "", success: true });
+
+        // Set media ready state to false
+        setReady((prevState) => ({
+          ...prevState,
+          media: false,
+        }));
       } else {
         console.log(`POST Failure: ${result.error || "An error occurred"}`);
 
