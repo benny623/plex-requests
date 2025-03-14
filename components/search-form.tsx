@@ -54,20 +54,6 @@ export default function SearchForm({
     }
   }, []);
 
-  // If email exists and is valid set email ready state to true
-  useEffect(() => {
-    const emailInput = document.querySelector<HTMLInputElement>(
-      'input[name="email"]'
-    );
-    if (emailInput?.checkValidity()) {
-      setReady((prevState) => ({
-        ...prevState,
-        email: true,
-      }));
-    }
-    console.log(ready);
-  }, []);
-
   return (
     <>
       {/* Search Card */}
@@ -126,9 +112,7 @@ export default function SearchForm({
                     className="checkbox"
                     checked={rememberEmail}
                     onChange={handleCheckboxChange}
-                    disabled={!document
-                      .querySelector<HTMLInputElement>('input[name="email"]')
-                      ?.checkValidity()}
+                    disabled={!ready.email}
                   />
                 </label>
               )}

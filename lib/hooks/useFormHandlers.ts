@@ -52,6 +52,23 @@ export const useFormHandlers = (refetchRequests: () => void) => {
         ...prevState,
         media: false,
       }));
+
+      // Reset status
+      setStatus({
+        loading: false,
+        error: "",
+        success: false,
+      });
+    }
+
+    // If year is input on the manual form we need to change the formState
+    if (name === "year") {
+      return setFormState((prevState) => ({
+        ...prevState,
+        optional: {
+          [name]: value,
+        },
+      }));
     }
 
     return setFormState((prevState) => ({
