@@ -16,6 +16,7 @@ export default function SearchForm({
     searchQuery,
     searchResults,
     rememberEmail,
+    setReady,
     setRememberEmail,
     setFormState,
     handleChange,
@@ -46,102 +47,124 @@ export default function SearchForm({
     if (email) {
       setRememberEmail(true);
       setFormState((prevState) => ({ ...prevState, email }));
+      setReady((prevState) => ({
+        ...prevState,
+        email: true,
+      }));
     }
   }, []);
 
   return (
     <>
-      <form className="card-body" onSubmit={handleSubmit}>
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text">Search</span>
-          </label>
-          <div className="join flex sm:flex-row">
+      {/* Search Card */}
+      <form
+        className="card bg-base-100 shrink-0 shadow-2xl"
+        onSubmit={handleSubmit}
+      >
+        <div className="card-body">
+          <fieldset className="fieldset">
+            <label className="fieldset-label">Search</label>
+            <div className="join">
+              <input
+                id="title"
+                name="title"
+                type="text"
+                placeholder="Media Title"
+                value={formState.title}
+                onChange={handleChange}
+                className="input join-item"
+                required
+              />
+              <button
+                className="btn btn-soft btn-primary join-item w-[86px]"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSearch(formState.title);
+                }}
+              >
+                {searchQuery.loading ? (
+                  <span className="loading loading-dots loading-xs"></span>
+                ) : (
+                  "Search"
+                )}
+              </button>
+            </div>
+            <label className="fieldset-label">Email</label>
             <input
-              id="title"
-              name="title"
-              type="text"
-              placeholder="Media Title"
-              value={formState.title}
+              id="email"
+              name="email"
+              type="email"
+              placeholder="mail@site.com"
+              value={formState.email}
               onChange={handleChange}
-              className="input input-bordered join-item flex-grow w-full"
+              onBlur={updateStoredEmail}
+              className="input validator w-full"
               required
             />
-            <button
-              className="btn btn-primary join-item w-[83px]"
-              onClick={(e) => {
-                e.preventDefault();
-                handleSearch(formState.title);
-              }}
-            >
-              {searchQuery.loading ? (
+            <div className="text-center">
+              {formState.email && (
+                <label className="label cursor-pointer">
+                  <span className="label-text">Remember email</span>
+                  <input
+                    id="remember"
+                    name="remember"
+                    type="checkbox"
+                    className="checkbox"
+                    checked={rememberEmail}
+                    onChange={handleCheckboxChange}
+                    disabled={!ready.email}
+                  />
+                </label>
+              )}
+            </div>
+            {ready.media && ready.email && (
+              <div>
+                <div className="flex flex-row gap-10 justify-center items-center text-center">
+                  <Image
+                    src={`https://image.tmdb.org/t/p/w500${formState.optional.image}`}
+                    width={100}
+                    height={150}
+                    alt={formState.title}
+                    className="rounded-lg"
+                  />
+                  <ul>
+                    <li className="font-bold text-lg">{formState.title}</li>
+                    <li className="italic text-sm">{formState.type}</li>
+                    {formState.optional.year && (
+                      <li className="text-sm">{formState.optional.year}</li>
+                    )}
+                    {formState.optional.rating && (
+                      <li className="badge">{formState.optional.rating}</li>
+                    )}
+                  </ul>
+                </div>
+                <div className="text-center my-4 text-success">
+                  Media data attached, ready to submit!
+                </div>
+              </div>
+            )}
+            <button className="btn" disabled={!ready.media || !ready.email}>
+              {status.loading ? (
                 <span className="loading loading-dots loading-xs"></span>
               ) : (
-                "Search"
+                "Submit"
               )}
             </button>
-          </div>
-        </div>
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text">Email</span>
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="Your email"
-            value={formState.email}
-            onChange={handleChange}
-            onBlur={updateStoredEmail}
-            className="grow input input-bordered flex items-center"
-            required
-          />
-        </div>
-        {formState.email && (
-          <div className="form-control">
-            <label className="label cursor-pointer">
-              <span className="label-text">Remember email</span>
-              <input
-                id="remember"
-                name="remember"
-                type="checkbox"
-                className="checkbox"
-                checked={rememberEmail}
-                onChange={handleCheckboxChange}
-              />
-            </label>
-          </div>
-        )}
-        {ready && (
-          <div className="form-control mt-6 text-center text-success">
-            Media data attached, ready to submit!
-          </div>
-        )}
-        <div className="form-control mt-6">
-          <button className="btn btn-primary" disabled={!ready}>
-            {status.loading ? (
-              <span className="loading loading-dots loading-xs"></span>
-            ) : (
-              "Submit"
+            {status.error && (
+              <div className="text-center text-red-500">
+                <p>Error: {status.error}</p>
+              </div>
             )}
-          </button>
+            {status.success && (
+              <div className="text-center mt-3 text-success">
+                Request submitted successfully!
+              </div>
+            )}
+          </fieldset>
         </div>
-        {status.error && (
-          <div className="form-control mt-4 flex items-center">
-            <div className="mt-4 text-red-500">
-              <p>Error: {status.error}</p>
-            </div>
-          </div>
-        )}
-        {status.success && (
-          <div className="form-control mt-4 flex items-center">
-            <div className="mt-4 text-green-500">
-              Request submitted successfully!
-            </div>
-          </div>
-        )}
       </form>
+
+      {/* Search Modal */}
       <dialog id="search_modal" className="modal">
         <div className="modal-box w-11/12 max-w-5xl relative">
           {/* Modal Header */}
@@ -153,7 +176,7 @@ export default function SearchForm({
               placeholder="Search..."
               value={formState.title}
               onChange={handleSearchChange}
-              className="input flex-grow"
+              className="input grow"
               required
             />
             <form method="dialog">
@@ -205,7 +228,7 @@ export default function SearchForm({
                       </div>
                       <div className="flex flex-col justify-center">
                         <p className="text-lg font-normal">{result.year}</p>
-                        <p className="text-sm italic font-normal text-accent">
+                        <p className="text-sm italic font-normal">
                           {result.media_type}
                         </p>
                       </div>

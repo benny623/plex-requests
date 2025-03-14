@@ -3,7 +3,10 @@ import { FormState, Status } from "@/lib/types";
 import { SearchResult } from "@/lib/types";
 
 export const useFormHandlers = (refetchRequests: () => void) => {
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState<{ media: boolean; email: boolean }>({
+    media: false,
+    email: false,
+  });
   const [rememberEmail, setRememberEmail] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [formState, setFormState] = useState<FormState>({
@@ -24,73 +27,54 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     error: "",
   });
 
-  // Validate form before submission
-  // const validateForm = () => {
-  //   let valid = true;
-  //   const errors = {
-  //     title: "",
-  //     email: "",
-  //     year: "",
-  //   };
-
-  //   // Title Validation
-  //   if (!formState.title) {
-  //     errors.title = "Title is required";
-  //     valid = false;
-  //   }
-
-  //   // Email Validation
-  //   if (!formState.email) {
-  //     errors.email = "Email is required";
-  //     valid = false;
-  //   } else if (!/\S+@\S+\.\S+/.test(formState.email)) {
-  //     errors.email = "Please enter a valid email address";
-  //     valid = false;
-  //   }
-
-  //   // Year Validation
-  //   if (formState.year && !/^\d{4}$/.test(formState.year)) {
-  //     errors.year = "Year must be a 4-digit number";
-  //     valid = false;
-  //   }
-
-  //   setFormErrors(errors);
-  //   return valid;
-  // };
-
   // Handle form input changes
   const handleChange = (e: any) => {
-    const { name, value } = e.target;
+    const { name, value, validity } = e.target;
 
+    // If email is valid set email ready state to true
+    if (name === "email" && !validity.valid) {
+      setReady((prevState) => ({
+        ...prevState,
+        email: false,
+      }));
+    }
+
+    if (name === "email" && validity.valid) {
+      setReady((prevState) => ({
+        ...prevState,
+        email: true,
+      }));
+    }
+
+    // If the title is changed, set title ready state to false
+    if (name === "title") {
+      setReady((prevState) => ({
+        ...prevState,
+        media: false,
+      }));
+
+      // Reset status
+      setStatus({
+        loading: false,
+        error: "",
+        success: false,
+      });
+    }
+
+    // If year is input on the manual form we need to change the formState
     if (name === "year") {
-      setFormState((prevState) => ({
+      return setFormState((prevState) => ({
         ...prevState,
         optional: {
           [name]: value,
         },
       }));
-
-      setStatus((prevState) => ({
-        ...prevState,
-        success: false,
-      }));
-
-      setReady(false);
-
-      return;
     }
 
-    setFormState((prevState) => ({
+    return setFormState((prevState) => ({
       ...prevState,
       [name]: value,
     }));
-
-    setStatus((prevState) => ({
-      ...prevState,
-      success: false,
-    }));
-
-    setReady(false);
   };
 
   // Handle form submission
@@ -102,8 +86,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
       sendNotification();
 
       setStatus({ loading: true, error: "", success: false });
-
-      setReady(false);
     },
     [formState, refetchRequests]
   );
@@ -142,26 +124,26 @@ export const useFormHandlers = (refetchRequests: () => void) => {
           if (!response.ok) {
             throw new Error("Failed to send notification");
           }
-
-          //const notification = await response.json();
-
-          //console.log("Notification sent", notification);
         } catch (err) {
           console.error("Error sending notification", err);
         }
 
-        // TODO: this originally reset the formState, not sure if I still want this or if there's a better solution
-        //       the main issue here is that it resets the email field even if "Remember email" is checked
-        // setFormState({
-        //   title: "",
-        //   year: "",
-        //   email: "",
-        //   type: "Movie",
-        //   image: "",
-        //   optional: {},
-        // });
+        setFormState((prevState) => ({
+          ...prevState,
+          title: "",
+          year: "",
+          type: "Movie",
+          image: "",
+          optional: {},
+        }));
 
         setStatus({ loading: false, error: "", success: true });
+
+        // Set media ready state to false
+        setReady((prevState) => ({
+          ...prevState,
+          media: false,
+        }));
       } else {
         console.log(`POST Failure: ${result.error || "An error occurred"}`);
 
@@ -271,7 +253,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
           ...(selected.tvcr && { rating: selected.tvcr }),
         },
       }));
-      setReady(true);
       (document.getElementById("search_modal") as HTMLDialogElement).close();
       return;
     }
@@ -295,8 +276,13 @@ export const useFormHandlers = (refetchRequests: () => void) => {
         }),
       },
     }));
-    setReady(true);
+
     (document.getElementById("search_modal") as HTMLDialogElement).close();
+
+    setReady((prevState) => ({
+      ...prevState,
+      media: true,
+    }));
   };
 
   const handleSearchChange = (e: any) => {
@@ -312,7 +298,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
 
   const handleCheckboxChange = (e: any) => {
     const isChecked = e.target.checked;
-
     setRememberEmail(isChecked);
 
     if (isChecked) {
@@ -329,12 +314,13 @@ export const useFormHandlers = (refetchRequests: () => void) => {
   };
 
   return {
-    formState,
     ready,
+    formState,
     status,
     searchQuery,
     searchResults,
     rememberEmail,
+    setReady,
     setRememberEmail,
     setFormState,
     handleChange,
