@@ -48,7 +48,7 @@ const AdminPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-base-100">
+    <div className="min-h-screen bg-base-200">
       <div className="flex justify-start pl-10 pt-10">
         <Link href={"/"} className="btn btn-primary">
           Home

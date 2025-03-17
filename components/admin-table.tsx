@@ -83,8 +83,10 @@ const AdminTable: React.FC<RequestTableProps> = ({
           )}
         </tbody>
       </table>
+
+      {/* Deletion Modal */}
       {modalData && (
-        <dialog open className="modal bg-base-300 bg-opacity-50">
+        <dialog open className="modal bg-base-300/50">
           <div className="modal-box">
             <form method="dialog">
               <button
@@ -100,7 +102,7 @@ const AdminTable: React.FC<RequestTableProps> = ({
               <span className="font-bold">{modalData.request_title}</span>
             </p>
             <div className="modal-action gap-4">
-              <button className="btn btn-neutral" onClick={handleModalCancel}>
+              <button className="btn btn-soft" onClick={handleModalCancel}>
                 Cancel
               </button>
               <button className="btn btn-error" onClick={handleModalConfirm}>
