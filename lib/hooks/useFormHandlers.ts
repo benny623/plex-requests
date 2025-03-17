@@ -253,8 +253,13 @@ export const useFormHandlers = (refetchRequests: () => void) => {
           ...(selected.tvcr && { rating: selected.tvcr }),
         },
       }));
+      
       (document.getElementById("search_modal") as HTMLDialogElement).close();
-      return;
+
+      return setReady((prevState) => ({
+        ...prevState,
+        media: true,
+      }));
     }
     // Run standard query if it's a movie or complete series
     setFormState((prevState) => ({
@@ -279,7 +284,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
 
     (document.getElementById("search_modal") as HTMLDialogElement).close();
 
-    setReady((prevState) => ({
+    return setReady((prevState) => ({
       ...prevState,
       media: true,
     }));
