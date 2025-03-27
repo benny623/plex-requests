@@ -80,6 +80,7 @@ export function useAdminHandlers(
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${window.localStorage.getItem("isAdmin")}`,
         },
         body: JSON.stringify({
           note: newNote || "",
