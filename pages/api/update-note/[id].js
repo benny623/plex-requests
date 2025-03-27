@@ -1,10 +1,20 @@
 import { query } from "@/lib/db";
+import { checkAdmin } from "@/lib/helpers";
 
 export default async function handler(req, res) {
-  console.log(`Update recieved ${JSON.stringify(req.body)}`);
-
   const { id } = req.query; // Get request ID
   const { note } = req.body; // Get updated data
+  const token = req.headers.authorization?.split(" ")[1]; // Get the token from auth headers
+
+  if (req.method !== "PUT") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  const isAdmin = await checkAdmin(token);
+
+  if (!isAdmin || !token) {
+    return res.status(405).json({ error: "Unauthorized" });
+  }
 
   try {
     const { rows } = await query(
@@ -25,9 +35,9 @@ export default async function handler(req, res) {
       return res.status(404).json({ message: "Request not found" });
     }
 
-    res.status(200).json({ message: "Request update successful" });
+    return res.status(200).json({ message: "Request update successful" });
   } catch (err) {
     console.error("Error updating request:", err);
-    res.status(500).json({ error: "Error updating request" });
+    return res.status(500).json({ error: "Error updating request" });
   }
 }

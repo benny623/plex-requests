@@ -1,9 +1,11 @@
 import { query } from "@/lib/db";
 
 export default async function handler(req, res) {
-  console.log(`Request recieved ${JSON.stringify(req.body)}`);
-
   const { title, email, type, optional } = req.body; // Get form and user data
+
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 
   try {
     // Run SQL query to insert data

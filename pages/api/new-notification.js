@@ -5,6 +5,10 @@ import NewEmail from "@/components/new-email";
 export default async function handler(req, res) {
   const { title, type, email, optional } = req.body;
 
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
   const htmlContent = ReactDOMServer.renderToStaticMarkup(
     <NewEmail
       title={title}

@@ -4,6 +4,10 @@ import { checkAdmin } from "@/lib/helpers";
 export default async function handler(req, res) {
   const { id } = req.query; // Get request ID
   const token = req.headers.authorization?.split(" ")[1]; // Get the token from auth headers
+  
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 
   const isAdmin = await checkAdmin(token);
 
@@ -27,9 +31,9 @@ export default async function handler(req, res) {
       return res.status(200).json([]);
     }
 
-    res.json(result.rows || []);
+    return res.json(result.rows || []);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }
