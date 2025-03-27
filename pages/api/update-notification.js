@@ -1,13 +1,22 @@
 import ReactDOMServer from "react-dom/server";
 import NodeMailer from "nodemailer";
 import UpdateEmail from "@/components/update-email";
+
 import { fetchSingleRequest } from "@/lib/fetchRequests";
+import { checkAdmin } from "@/lib/helpers";
 
 export default async function handler(req, res) {
-  const { id, token } = req.body;
+  const { id } = req.body;
+  const token = req.headers.authorization?.split(" ")[1]; // Get the token from auth headers
 
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  const isAdmin = await checkAdmin(token);
+
+  if (!isAdmin || !token) {
+    return res.status(405).json({ error: "Unauthorized" });
   }
 
   const transporter = NodeMailer.createTransport({

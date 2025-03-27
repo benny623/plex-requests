@@ -25,6 +25,7 @@ export function useAdminHandlers(
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${window.localStorage.getItem("isAdmin")}`,
         },
         body: JSON.stringify({
           status: newStatus,
@@ -113,6 +114,7 @@ export function useAdminHandlers(
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${window.localStorage.getItem("isAdmin")}`,
         },
       });
 
@@ -136,10 +138,10 @@ export function useAdminHandlers(
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${window.localStorage.getItem("isAdmin")}`,
         },
         body: JSON.stringify({
           id: requestId,
-          token: window.localStorage.getItem("isAdmin"),
         }),
       });
 
