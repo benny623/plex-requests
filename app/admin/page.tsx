@@ -56,12 +56,12 @@ const AdminPage = () => {
       </div>
       {isAdmin &&
         (!table ? (
-          <div className="text-center text-xs font-bold text-base-content pt-4">
+          <div className="text-center pt-4">
             <button
               onClick={() => {
                 setTable(!table);
               }}
-              className="text-info font-bold"
+              className="btn btn-soft btn-secondary"
             >
               Completed Requests
             </button>
@@ -72,7 +72,7 @@ const AdminPage = () => {
               onClick={() => {
                 setTable(!table);
               }}
-              className="text-info font-bold"
+              className="btn btn-soft btn-secondary"
             >
               Current Requests
             </button>
