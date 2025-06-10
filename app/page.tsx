@@ -179,7 +179,7 @@ export default function Home() {
                 setTable(!table);
                 document.querySelector(".requests-table")?.scrollIntoView(true);
               }}
-              className="text-info font-bold hover:text-accent transition-all duration-200"
+              className="cursor-pointer text-info font-bold hover:text-accent transition-all duration-200"
             >
               Completed Requests
             </button>
@@ -191,7 +191,7 @@ export default function Home() {
                 setTable(!table);
                 document.querySelector(".requests-table")?.scrollIntoView(true);
               }}
-              className="text-info font-bold hover:text-accent transition-all duration-200"
+              className="cursor-pointer text-info font-bold hover:text-accent transition-all duration-200"
             >
               Go Back
             </button>
