@@ -29,7 +29,7 @@ const AdminRow: React.FC<RequestRowProps> = ({
       <tr className="text-slate-100">
         <td>
           <button
-            className="transition ease-in-out hover:scale-110 hover:text-red-500 duration-200"
+            className="cursor-pointer transition ease-in-out hover:scale-110 hover:text-red-500 duration-200"
             onClick={(e) => {
               onRequestDelete(e, request.request_id);
             }}
@@ -81,6 +81,7 @@ const AdminRow: React.FC<RequestRowProps> = ({
               alt={`${request.request_title} poster`}
               width={85}
               height={150}
+              draggable="false"
             />
           )}
         </td>
