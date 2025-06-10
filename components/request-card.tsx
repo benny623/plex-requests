@@ -35,6 +35,7 @@ const RequestCard: React.FC<RequestCardProps> = ({ request, setModalData }) => {
             width={75}
             height={115}
             className="object-cover w-full h-full"
+            draggable="false"
           />
         </figure>
       )}
