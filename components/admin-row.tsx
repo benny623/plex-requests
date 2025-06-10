@@ -81,6 +81,7 @@ const AdminRow: React.FC<RequestRowProps> = ({
               alt={`${request.request_title} poster`}
               width={85}
               height={150}
+              draggable="false"
             />
           )}
         </td>
