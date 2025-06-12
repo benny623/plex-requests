@@ -42,8 +42,12 @@ const AdminTable: React.FC<RequestTableProps> = ({
   };
 
   const sortData = (array: any, toFront: string) => {
-    const front = array.filter((item: any) => toFront.includes(item.request_status));
-    const back = array.filter((item: any) => !toFront.includes(item.request_status));
+    const front = array.filter((item: any) =>
+      toFront.includes(item.request_status)
+    );
+    const back = array.filter(
+      (item: any) => !toFront.includes(item.request_status)
+    );
     return front.concat(back);
   };
 
