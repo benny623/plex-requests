@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import AdminRow from "@/components/admin-row";
 
@@ -13,6 +13,7 @@ const AdminTable: React.FC<RequestTableProps> = ({
   loading,
 }) => {
   const [modalData, setModalData] = useState<Request | null>(null);
+  const [sortedData, setSortedData] = useState([]);
   const {
     handleStatusChange,
     handleNoteChange,
@@ -40,6 +41,16 @@ const AdminTable: React.FC<RequestTableProps> = ({
     setModalData(null); // Close modal
   };
 
+  const sortData = (array: any, toFront: string) => {
+    const front = array.filter((item: any) => toFront.includes(item.request_status));
+    const back = array.filter((item: any) => !toFront.includes(item.request_status));
+    return front.concat(back);
+  };
+
+  useEffect(() => {
+    setSortedData(sortData(requests, "In Progress"));
+  }, [requests]);
+
   return (
     <>
       <table className="table w-full xl:w-3/4 border-collapse table-pin-rows pt-10">
@@ -56,8 +67,8 @@ const AdminTable: React.FC<RequestTableProps> = ({
         </thead>
         <tbody>
           {!loading.loading && loading.success ? (
-            requests.length > 0 ? (
-              requests.map((request: Request) => (
+            sortedData.length > 0 ? (
+              sortedData.map((request: Request) => (
                 <AdminRow
                   key={request.request_id}
                   request={request}
