@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import Image from "next/image";
 
 import AdminRow from "@/components/admin-row";
 
@@ -13,7 +14,6 @@ const AdminTable: React.FC<RequestTableProps> = ({
   loading,
 }) => {
   const [modalData, setModalData] = useState<Request | null>(null);
-  const [sortedData, setSortedData] = useState([]);
   const {
     handleStatusChange,
     handleNoteChange,
@@ -41,20 +41,6 @@ const AdminTable: React.FC<RequestTableProps> = ({
     setModalData(null); // Close modal
   };
 
-  const sortData = (array: any, toFront: string) => {
-    const front = array.filter((item: any) =>
-      toFront.includes(item.request_status)
-    );
-    const back = array.filter(
-      (item: any) => !toFront.includes(item.request_status)
-    );
-    return front.concat(back);
-  };
-
-  useEffect(() => {
-    setSortedData(sortData(requests, "In Progress"));
-  }, [requests]);
-
   return (
     <>
       <table className="table w-full xl:w-3/4 border-collapse table-pin-rows pt-10">
@@ -71,8 +57,8 @@ const AdminTable: React.FC<RequestTableProps> = ({
         </thead>
         <tbody>
           {!loading.loading && loading.success ? (
-            sortedData.length > 0 ? (
-              sortedData.map((request: Request) => (
+            requests.length > 0 ? (
+              requests.map((request: Request) => (
                 <AdminRow
                   key={request.request_id}
                   request={request}
@@ -111,11 +97,34 @@ const AdminTable: React.FC<RequestTableProps> = ({
                 ✕
               </button>
             </form>
-            <h3 className="font-bold text-lg">Are you sure?</h3>
-            <p className="my-4">
-              Deleting Request:{" "}
-              <span className="font-bold">{modalData.request_title}</span>
-            </p>
+            <h3 className="font-bold text-lg mb-3">Are you sure?</h3>
+            <div className="grid grid-flow-col grid-rows-3 gap-4">
+              {modalData.request_optional.image && (
+                <Image
+                  src={`https://image.tmdb.org/t/p/w500${modalData.request_optional.image}`}
+                  alt={`${modalData.request_title} poster`}
+                  width={150}
+                  height={150}
+                  draggable="false"
+                  className="row-span-3 rounded-lg"
+                />
+              )}
+              <p className="col-span-2">
+                <span className="font-bold">Title: </span>
+                {modalData.request_title}
+              </p>
+              <p className="col-span-2">
+                <span className="font-bold">Requestor: </span>
+                {modalData.request_requestor}
+              </p>
+              {modalData.request_note && (
+                <p className="col-span-2">
+                <span className="font-bold">Note: </span>
+                {modalData.request_note}
+              </p>
+              )}
+            </div>
+
             <div className="modal-action gap-4">
               <button className="btn btn-soft" onClick={handleModalCancel}>
                 Cancel
