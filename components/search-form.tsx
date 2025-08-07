@@ -23,7 +23,7 @@ export default function SearchForm({
     handleSubmit,
     handleSearch,
     selectResult,
-    handleSearchChange,
+    //handleSearchChange, -- This may come back if we fix the search below
     handleCheckboxChange,
     updateStoredEmail,
   } = useFormHandlers(refetchRequests);
