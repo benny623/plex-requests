@@ -269,6 +269,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
         ...(selected.year && { year: parseInt(selected.year) }),
         ...(selected.poster && { image: selected.poster }),
         ...(selected.rated && { rated: selected.rated }),
+        ...(selected.seasons && { seasons: selected.seasons})
       },
     }));
 

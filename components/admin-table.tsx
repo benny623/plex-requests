@@ -101,7 +101,7 @@ const AdminTable: React.FC<RequestTableProps> = ({
             <div className="grid grid-flow-col grid-rows-3 gap-4">
               {modalData.request_optional.image && (
                 <Image
-                  src={`https://image.tmdb.org/t/p/w500${modalData.request_optional.image}`}
+                  src={`${modalData.request_optional.image}`}
                   alt={`${modalData.request_title} poster`}
                   width={150}
                   height={150}
