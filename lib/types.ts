@@ -48,10 +48,11 @@ export interface SearchResult {
   id: number;
   title: string;
   year: string;
-  media_type: string;
+  rated: string | null;
+  overview: string;
   poster: string;
-  mpaa: string | null;
-  tvcr: string | null;
+  media_type: string;
+  rating: string;
   seasons: [];
 }
 

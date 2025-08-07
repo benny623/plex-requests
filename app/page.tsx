@@ -207,7 +207,7 @@ export default function Home() {
             {modalData.request_optional.image && (
               <div className="md:w-1/2 w-full h-64 md:h-auto">
                 <img
-                  src={`https://image.tmdb.org/t/p/w500${modalData.request_optional.image}`}
+                  src={`${modalData.request_optional.image}`}
                   alt={`Poster for ${modalData.request_title}`}
                   className="h-full w-full object-cover rounded-t-lg md:rounded-l-lg md:rounded-tr-none"
                 />
