@@ -133,8 +133,11 @@ export default function SearchForm({
                     {formState.optional.year && (
                       <li className="text-sm">{formState.optional.year}</li>
                     )}
-                    {formState.optional.rating && (
-                      <li className="badge">{formState.optional.rating}</li>
+                    {formState.optional.rated && (
+                      <li className="badge badge-accent">{formState.optional.rated}</li>
+                    )}
+                    {formState.optional.episode_count && (
+                      <li className="text-sm">Episode Count:{" "}{formState.optional.episode_count}</li>
                     )}
                   </ul>
                 </div>
@@ -168,7 +171,8 @@ export default function SearchForm({
       <dialog id="search_modal" className="modal">
         <div className="modal-box w-11/12 max-w-5xl relative">
           {/* Modal Header */}
-          <div className="sticky top-0 bg-base-100 z-50 flex items-center justify-between px-4 py-2 shadow-lg rounded-lg gap-4">
+          {/* TODO: Fix errors that appeared due to new API. Commenting out for now */}
+          {/* <div className="sticky top-0 bg-base-100 z-50 flex items-center justify-between px-4 py-2 shadow-lg rounded-lg gap-4">
             <input
               id="search-title"
               name="title"
@@ -182,7 +186,7 @@ export default function SearchForm({
             <form method="dialog">
               <button className="btn btn-sm btn-circle btn-ghost">✕</button>
             </form>
-          </div>
+          </div> */}
 
           {/* Scrollable Content */}
           <div className="h-4/6 overflow-y-auto space-y-4 pt-5">

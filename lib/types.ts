@@ -15,18 +15,17 @@ export interface Request {
 export interface Optional {
   year?: string | number;
   image?: string;
-  rating?: string;
-  original_name?: string;
+  rated?: string;
   seasons?: Seasons[];
+  episode_count?: number;
 }
 
 // Seasons Type
 export interface Seasons {
   id: string;
   name: string;
-  air_date: string | number;
+  year: string | number;
   episode_count: string | number;
-  poster_path: string;
 }
 
 export interface FormState {

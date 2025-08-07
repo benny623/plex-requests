@@ -249,6 +249,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
           ...(selected.year && { year: season.year }),
           ...(selected.poster && { image: selected.poster }),
           ...(selected.rated && { rated: selected.rated }),
+          ...(season.episode_count && { episode_count: season.episode_count }),
         },
       }));
 
@@ -268,14 +269,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
         ...(selected.year && { year: parseInt(selected.year) }),
         ...(selected.poster && { image: selected.poster }),
         ...(selected.rated && { rated: selected.rated }),
-        // ...(selected.seasons && {
-        //   seasons:
-        //     season === "Complete"
-        //       ? selected.seasons.filter(
-        //           (season: any) => season.name !== "Specials"
-        //         )
-        //       : season,
-        // }),
       },
     }));
 

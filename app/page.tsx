@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { useFetchData } from "@/lib/hooks/useFetchData";
 import { ModalType } from "@/lib/types";
-import { statusColor, formateDate } from "@/lib/helpers";
+import { statusColor, formatDate } from "@/lib/helpers";
 import {
   fetchCurrentRequests,
   fetchCompleteRequests,
@@ -235,21 +235,21 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex flex-col justify-center">
-                  {modalData.request_optional.rating && (
-                    <p className="badge badge-outline">
-                      {modalData.request_optional.rating}
+                  {modalData.request_optional.rated && (
+                    <p className="badge badge-neutral">
+                      {modalData.request_optional.rated}
                     </p>
                   )}
                 </div>
               </div>
               <p
-                className={`badge badge-outline py-4 ${statusColor(modalData.request_status)}`}
+                className={`badge badge-sm badge-outline py-4 ${statusColor(modalData.request_status)}`}
               >
                 {modalData.request_status}
               </p>
               <p className="my-4">
                 <span className="font-bold">Requested On: </span>
-                {formateDate(modalData.request_timestamp)}
+                {formatDate(modalData.request_timestamp)}
               </p>
               {modalData.request_note && (
                 <p className="my-4">
