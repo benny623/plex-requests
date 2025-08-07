@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 
 import { RequestCardProps } from "@/lib/types";
-import { statusColor } from "@/lib/helpers";
+import { statusColor, formatDate } from "@/lib/helpers";
 
 const RequestCard: React.FC<RequestCardProps> = ({ request, setModalData }) => {
   const handleRequestSelect = (
@@ -30,8 +30,8 @@ const RequestCard: React.FC<RequestCardProps> = ({ request, setModalData }) => {
       {request.request_optional.image && (
         <figure>
           <Image
-            src={`https://image.tmdb.org/t/p/w500${request.request_optional.image}`}
-            alt="Movie"
+            src={`${request.request_optional.image}`}
+            alt={`${request.request_title}`}
             width={75}
             height={115}
             className="object-cover w-full h-full"
@@ -40,12 +40,20 @@ const RequestCard: React.FC<RequestCardProps> = ({ request, setModalData }) => {
         </figure>
       )}
       <div className="card-body">
-        <p className="font-bold w-full">{request.request_title}</p>
-        <p
-          className={`badge badge-outline ${statusColor(request.request_status)}`}
-        >
-          {request.request_status}
+        <h2 className="card-title">{request.request_title}</h2>
+        <p>
+          <span className="font-bold">Requested On: </span>
+          {formatDate(request.request_timestamp)}
         </p>
+        <div className="card-actions justify-end">
+          <div
+            className={`badge badge-outline ${statusColor(
+              request.request_status
+            )}`}
+          >
+            {request.request_status}
+          </div>
+        </div>
       </div>
     </div>
   );

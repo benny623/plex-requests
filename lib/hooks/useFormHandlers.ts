@@ -246,14 +246,13 @@ export const useFormHandlers = (refetchRequests: () => void) => {
         title: selected.title + " - " + season.name,
         type: selected.media_type,
         optional: {
-          ...(selected.year && {
-            year: parseInt(season.air_date.split("-")[0]),
-          }),
-          ...(selected.poster && { image: season.poster_path }),
-          ...(selected.tvcr && { rating: selected.tvcr }),
+          ...(selected.year && { year: season.year }),
+          ...(selected.poster && { image: selected.poster }),
+          ...(selected.rated && { rated: selected.rated }),
+          ...(season.episode_count && { episode_count: season.episode_count }),
         },
       }));
-      
+
       (document.getElementById("search_modal") as HTMLDialogElement).close();
 
       return setReady((prevState) => ({
@@ -269,16 +268,8 @@ export const useFormHandlers = (refetchRequests: () => void) => {
       optional: {
         ...(selected.year && { year: parseInt(selected.year) }),
         ...(selected.poster && { image: selected.poster }),
-        ...(selected.mpaa && { rating: selected.mpaa }),
-        ...(selected.tvcr && { rating: selected.tvcr }),
-        ...(selected.seasons && {
-          seasons:
-            season === "Complete"
-              ? selected.seasons.filter(
-                  (season: any) => season.name !== "Specials"
-                )
-              : season,
-        }),
+        ...(selected.rated && { rated: selected.rated }),
+        ...(selected.seasons && { seasons: selected.seasons})
       },
     }));
 

@@ -23,7 +23,7 @@ export default function SearchForm({
     handleSubmit,
     handleSearch,
     selectResult,
-    handleSearchChange,
+    //handleSearchChange, -- This may come back if we fix the search below
     handleCheckboxChange,
     updateStoredEmail,
   } = useFormHandlers(refetchRequests);
@@ -121,7 +121,7 @@ export default function SearchForm({
               <div>
                 <div className="flex flex-row gap-10 justify-center items-center text-center">
                   <Image
-                    src={`https://image.tmdb.org/t/p/w500${formState.optional.image}`}
+                    src={`${formState.optional.image}`}
                     width={100}
                     height={150}
                     alt={formState.title}
@@ -133,8 +133,11 @@ export default function SearchForm({
                     {formState.optional.year && (
                       <li className="text-sm">{formState.optional.year}</li>
                     )}
-                    {formState.optional.rating && (
-                      <li className="badge">{formState.optional.rating}</li>
+                    {formState.optional.rated && (
+                      <li className="badge badge-accent">{formState.optional.rated}</li>
+                    )}
+                    {formState.optional.episode_count && (
+                      <li className="text-sm">Episode Count:{" "}{formState.optional.episode_count}</li>
                     )}
                   </ul>
                 </div>
@@ -168,7 +171,8 @@ export default function SearchForm({
       <dialog id="search_modal" className="modal">
         <div className="modal-box w-11/12 max-w-5xl relative">
           {/* Modal Header */}
-          <div className="sticky top-0 bg-base-100 z-50 flex items-center justify-between px-4 py-2 shadow-lg rounded-lg gap-4">
+          {/* TODO: Fix errors that appeared due to new API. Commenting out for now */}
+          {/* <div className="sticky top-0 bg-base-100 z-50 flex items-center justify-between px-4 py-2 shadow-lg rounded-lg gap-4">
             <input
               id="search-title"
               name="title"
@@ -182,7 +186,7 @@ export default function SearchForm({
             <form method="dialog">
               <button className="btn btn-sm btn-circle btn-ghost">✕</button>
             </form>
-          </div>
+          </div> */}
 
           {/* Scrollable Content */}
           <div className="h-4/6 overflow-y-auto space-y-4 pt-5">
@@ -197,7 +201,7 @@ export default function SearchForm({
                   <figure className="w-1/3">
                     {result.poster ? (
                       <Image
-                        src={`https://image.tmdb.org/t/p/w500${result.poster}`}
+                        src={`${result.poster}`}
                         width={500}
                         height={750}
                         alt={result.title}
@@ -233,30 +237,23 @@ export default function SearchForm({
                         </p>
                       </div>
                       <div className="flex flex-col justify-center">
-                        {result.mpaa && (
+                        {result.rated && (
                           <p className="sm:badge sm:badge-outline">
-                            {result.mpaa}
-                          </p>
-                        )}
-                        {result.tvcr && (
-                          <p className="sm:badge sm:badge-outline">
-                            {result.tvcr}
+                            {result.rated}
                           </p>
                         )}
                       </div>
                     </div>
                     <p className="max-h-20 overflow-auto">{result.overview}</p>
-                    {/* TODO: Keyword lists tend to be large, and only grabbing 5 doesn't provide the most relevant info. Need to find a better solution if tags want to be included*/}
-                    {/* {result.keywords && (
+                    {result.genre && (
                       <div className="card-actions justify-start line-clamp-1 space-x-2">
-                        {result.keywords.slice(0, 5).map((tag: any) => (
-                          <div key={tag.id} className="badge badge-outline">
-                            {String(tag.name).charAt(0).toUpperCase() +
-                              String(tag.name).slice(1)}
+                        {result.genre.map((tag: string, index: number) => (
+                          <div key={index} className="badge badge-outline">
+                            {tag}
                           </div>
                         ))}
                       </div>
-                    )} */}
+                    )}
                     <div className="card-actions mt-auto  flex flex-wrap justify-end gap-2">
                       {result.seasons && (
                         <select

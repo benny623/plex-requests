@@ -16,7 +16,7 @@ export const statusColor = (status: string) => {
   }
 };
 
-export const formateDate = (isoDate: string) => {
+export const formatDate = (isoDate: string) => {
   const date = new Date(isoDate);
 
   // Extract components

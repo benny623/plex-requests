@@ -77,8 +77,8 @@ const AdminRow: React.FC<RequestRowProps> = ({
         <td>
           {request.request_optional.image && (
             <Image
-              src={`https://image.tmdb.org/t/p/w500${request.request_optional.image}`}
-              alt={`${request.request_title} poster`}
+              src={`${request.request_optional.image}`}
+              alt={`${request.request_title}`}
               width={85}
               height={150}
               draggable="false"
@@ -94,14 +94,19 @@ const AdminRow: React.FC<RequestRowProps> = ({
                 {request.request_optional.year}
               </p>
             )}
-            {request.request_optional.rating && (
+            {request.request_optional.rated && (
               <p className="text-sm font-normal">
-                {request.request_optional.rating}
+                {request.request_optional.rated}
               </p>
             )}
             {request.request_optional.seasons && (
               <p className="text-sm font-normal">
                 Seasons: {request.request_optional.seasons.length}
+              </p>
+            )}
+            {request.request_optional.episode_count && (
+              <p className="text-sm font-normal">
+                Episodes: {request.request_optional.episode_count}
               </p>
             )}
           </div>
