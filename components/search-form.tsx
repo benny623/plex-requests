@@ -134,10 +134,14 @@ export default function SearchForm({
                       <li className="text-sm">{formState.optional.year}</li>
                     )}
                     {formState.optional.rated && (
-                      <li className="badge badge-accent">{formState.optional.rated}</li>
+                      <li className="badge badge-accent">
+                        {formState.optional.rated}
+                      </li>
                     )}
                     {formState.optional.episode_count && (
-                      <li className="text-sm">Episode Count:{" "}{formState.optional.episode_count}</li>
+                      <li className="text-sm">
+                        Episode Count: {formState.optional.episode_count}
+                      </li>
                     )}
                   </ul>
                 </div>
@@ -188,6 +192,13 @@ export default function SearchForm({
             </form>
           </div> */}
 
+          {/* Add an X button for mobile closing */}
+          <div className="sticky top-0 z-50 flex items-center justify-end px-4 py-2 shadow-lg">
+            <form method="dialog">
+              <button className="btn btn-lg btn-circle btn-accent">✕</button>
+            </form>
+          </div>
+
           {/* Scrollable Content */}
           <div className="h-4/6 overflow-y-auto space-y-4 pt-5">
             {!searchResults.length ? (
@@ -230,23 +241,22 @@ export default function SearchForm({
                       >
                         {result.rating}
                       </div>
-                      <div className="flex flex-col justify-center">
+                      <div className="flex flex-col justify-center gap-2 sm:gap-0">
                         <p className="text-lg font-normal">{result.year}</p>
                         <p className="text-sm italic font-normal">
                           {result.media_type}
                         </p>
                       </div>
-                      <div className="flex flex-col justify-center">
+                      <div className="flex flex-col justify-center gap-2">
                         {result.rated && (
-                          <p className="sm:badge sm:badge-outline">
-                            {result.rated}
-                          </p>
+                          <p className="badge badge-outline">{result.rated}</p>
                         )}
+                        <p className={`${ratingColor(result.rating)} font-bold block sm:hidden`}>{result.rating}/10</p>
                       </div>
                     </div>
                     <p className="max-h-20 overflow-auto">{result.overview}</p>
                     {result.genre && (
-                      <div className="card-actions justify-start line-clamp-1 space-x-2">
+                      <div className="card-actions justify-start">
                         {result.genre.map((tag: string, index: number) => (
                           <div key={index} className="badge badge-outline">
                             {tag}
