@@ -193,7 +193,7 @@ export default function SearchForm({
           </div> */}
 
           {/* Add an X button for mobile closing */}
-          <div className="sticky top-0 z-50 flex items-center justify-end px-4 py-2 shadow-lg">
+          <div className="sticky top-0 z-50 flex items-center justify-end px-4 py-2">
             <form method="dialog">
               <button className="btn btn-lg btn-circle btn-accent">✕</button>
             </form>
@@ -251,7 +251,13 @@ export default function SearchForm({
                         {result.rated && (
                           <p className="badge badge-outline">{result.rated}</p>
                         )}
-                        <p className={`${ratingColor(result.rating)} font-bold block sm:hidden`}>{result.rating}/10</p>
+                        <p
+                          className={`${ratingColor(
+                            result.rating
+                          )} font-bold block sm:hidden`}
+                        >
+                          {result.rating}/10
+                        </p>
                       </div>
                     </div>
                     <p className="max-h-20 overflow-auto">{result.overview}</p>
