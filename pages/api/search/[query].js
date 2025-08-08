@@ -1,25 +1,4 @@
 export default async function handler(req, res) {
-  const getMoreData = async (imdbID) => {
-    try {
-      const response = await fetch(
-        `${process.env.OMDB_BASE_URL}/?apikey=${
-          process.env.OMDB_API_KEY
-        }&i=${encodeURIComponent(imdbID)}`
-      );
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-
-      return data;
-    } catch (error) {
-      console.error(error);
-      return {};
-    }
-  };
-
   const getMediaType = (type, genre, country) => {
     if (
       type === "series" &&
@@ -76,6 +55,23 @@ export default async function handler(req, res) {
     return results;
   };
 
+  const checkImage = async (url) => {
+    try {
+      const res = await fetch(url, { method: "HEAD" });
+      return res.ok && res.headers.get("content-type")?.startsWith("image/");
+    } catch {
+      return false;
+    }
+  };
+
+  const calcRelevance = (item) => {
+    const currentYear = new Date().getFullYear();
+    const recencyScore = Math.max(0, 1 - (currentYear - item.year) / 30);
+    const ratingScore = item.rating / 10;
+
+    return recencyScore * 0.7 + ratingScore * 0.3;
+  };
+
   try {
     const { query } = req.query;
 
@@ -97,24 +93,36 @@ export default async function handler(req, res) {
 
     const rawData = await response.json();
 
-    const data = await Promise.all(
-      rawData.Search?.map(async (result) => {
-        const moreData = await getMoreData(result.imdbID);
+    if (!rawData.Search) return [];
+
+    const detailedResults = await Promise.all(
+      rawData.Search.map(async (result) => {
+        const moreDataResponse = await fetch(
+          `${process.env.OMDB_BASE_URL}/?apikey=${
+            process.env.OMDB_API_KEY
+          }&i=${encodeURIComponent(result.imdbID)}`
+        );
+
+        const moreData = await moreDataResponse.json();
 
         return {
           id: moreData.imdbID,
           title: moreData.Title,
-          year: moreData.Year.split("–")[0],
+          year: parseInt(moreData.Year.split("–")[0]) || 0,
           rated: moreData.Rated,
+          ...(moreData.Rated === "N/A"
+            ? { rated: "NR" }
+            : { rated: moreData.Rated }),
           genre: moreData.Genre.split(",").map((tags) => tags.trim()),
-          overview: moreData.Plot,
-          poster: moreData.Poster,
+          ...(moreData.Plot !== "N/A" && { overview: moreData.Plot }),
+          ...(moreData.Poster !== "N/A" &&
+            (await checkImage(moreData.Poster)) && { poster: moreData.Poster }),
           media_type: getMediaType(
             moreData.Type,
             moreData.Genre.split(",").map((tags) => tags.trim()),
             moreData.Country
           ),
-          rating: moreData.imdbRating,
+          rating: parseFloat(moreData.imdbRating) || 0,
           ...(moreData.totalSeasons && {
             seasons: await getSeasonData(
               moreData.imdbID,
@@ -125,7 +133,11 @@ export default async function handler(req, res) {
       })
     );
 
-    res.status(200).json(data);
+    res
+      .status(200)
+      .json(
+        detailedResults.sort((a, b) => calcRelevance(b) - calcRelevance(a))
+      );
   } catch (error) {
     res
       .status(500)
