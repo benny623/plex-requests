@@ -28,6 +28,7 @@ export interface Seasons {
   episode_count: string | number;
 }
 
+// Form Type
 export interface FormState {
   title: string;
   email: string;

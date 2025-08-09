@@ -41,17 +41,15 @@ export default function SearchForm({
 
   // Check for value from "remember email" checkbox on form
   useEffect(() => {
-    const email = localStorage.getItem("email") || "";
+    const email = localStorage.getItem("email");
+    if (!email) return;
 
-    // Check if the email exists in localstorage and set accordingly
-    if (email) {
-      setRememberEmail(true);
-      setFormState((prevState) => ({ ...prevState, email }));
-      setReady((prevState) => ({
-        ...prevState,
-        email: true,
-      }));
-    }
+    setRememberEmail(true);
+    setFormState((prevState) => ({ ...prevState, email }));
+    setReady((prevState) => ({
+      ...prevState,
+      email: true,
+    }));
   }, []);
 
   return (
