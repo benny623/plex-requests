@@ -246,6 +246,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
         title: selected.title + " - " + season.name,
         type: selected.media_type,
         optional: {
+          imdbId: selected.id,
           ...(selected.year && { year: season.year }),
           ...(selected.poster && { image: selected.poster }),
           ...(selected.rated && { rated: selected.rated }),
@@ -266,10 +267,11 @@ export const useFormHandlers = (refetchRequests: () => void) => {
       title: selected.title.trim(),
       type: selected.media_type,
       optional: {
+        ...(selected.id && { imdbId: selected.id }),
         ...(selected.year && { year: parseInt(selected.year) }),
         ...(selected.poster && { image: selected.poster }),
         ...(selected.rated && { rated: selected.rated }),
-        ...(selected.seasons && { seasons: selected.seasons})
+        ...(selected.seasons && { seasons: selected.seasons }),
       },
     }));
 

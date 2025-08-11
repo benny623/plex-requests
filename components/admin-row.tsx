@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { RequestRowProps } from "@/lib/types";
 
 const AdminRow: React.FC<RequestRowProps> = ({
@@ -85,7 +86,20 @@ const AdminRow: React.FC<RequestRowProps> = ({
             />
           )}
         </td>
-        <td>{request.request_title}</td>
+        <td>
+          {request.request_optional.imdbId ? (
+            <Link
+              href={`https://www.imdb.com/title/${request.request_optional.imdbId}`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-info"
+            >
+              {request.request_title}
+            </Link>
+          ) : (
+            request.request_title
+          )}
+        </td>
         <td>
           <div className="flex flex-col">
             <p className="text-sm font-bold">{request.request_type}</p>
@@ -111,9 +125,7 @@ const AdminRow: React.FC<RequestRowProps> = ({
             )}
           </div>
         </td>
-        <td>
-          {request.request_requestor}
-        </td>
+        <td>{request.request_requestor}</td>
         <td>
           <textarea
             id="note"

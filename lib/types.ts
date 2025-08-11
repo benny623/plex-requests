@@ -13,6 +13,7 @@ export interface Request {
 
 // Optional Type
 export interface Optional {
+  imdbId?: string | number;
   year?: string | number;
   image?: string;
   rated?: string;
