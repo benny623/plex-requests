@@ -210,7 +210,7 @@ export default function SearchForm({
           </div>
 
           {/* Scrollable Content */}
-          <div className="h-4/6 overflow-y-auto space-y-4 pt-5">
+          <div className="h-4/6 overflow-y-auto space-y-4">
             {!searchResults.length ? (
               <div className="text-center animate-appear">No results found</div>
             ) : (
@@ -270,9 +270,9 @@ export default function SearchForm({
                         </p>
                       </div>
                     </div>
-                    <p className="max-h-20 overflow-auto">{result.overview}</p>
+                    <p className="max-h-15 overflow-auto">{result.overview}</p>
                     {result.genre && (
-                      <div className="card-actions justify-start">
+                      <div className="card-actions justify-start line-clamp-1">
                         {result.genre.map((tag: string, index: number) => (
                           <div key={index} className="badge badge-outline">
                             {tag}
@@ -280,7 +280,7 @@ export default function SearchForm({
                         ))}
                       </div>
                     )}
-                    <div className="card-actions mt-auto  flex flex-wrap justify-end gap-2">
+                    <div className="card-actions mt-auto flex flex-wrap justify-end gap-2">
                       {result.seasons && (
                         <select
                           id={`season-${result.id}`}
@@ -302,28 +302,21 @@ export default function SearchForm({
                           ))}
                         </select>
                       )}
-                      <div
-                        className={`${
-                          checkOnServer(
-                            result.onServer,
-                            selectedSeasons[result.id]
-                          )
-                            ? "tooltip"
-                            : ""
-                        }`}
-                        data-tip="Already on Server"
+                      <button
+                        className="btn btn-primary w-full sm:w-auto"
+                        onClick={(e) => selectResult(e, result.id)}
+                        disabled={checkOnServer(
+                          result.onServer,
+                          selectedSeasons[result.id]
+                        )}
                       >
-                        <button
-                          className="btn btn-primary w-full sm:w-auto"
-                          onClick={(e) => selectResult(e, result.id)}
-                          disabled={checkOnServer(
-                            result.onServer,
-                            selectedSeasons[result.id]
-                          )}
-                        >
-                          Select
-                        </button>
-                      </div>
+                        {checkOnServer(
+                          result.onServer,
+                          selectedSeasons[result.id]
+                        )
+                          ? "Already on Server"
+                          : "Select"}
+                      </button>
                     </div>
                   </div>
                 </div>
