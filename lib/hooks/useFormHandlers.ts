@@ -164,16 +164,18 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     }
   };
 
-  const debounce = (func: (...args: any[]) => void, delay: number) => {
-    let timeout: NodeJS.Timeout;
-    return (...args: any[]) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func(...args), delay);
-    };
-  };
+  // This was previously used for re-searching, may or may not re-add
+  // const debounce = (func: (...args: any[]) => void, delay: number) => {
+  //   let timeout: NodeJS.Timeout;
+  //   return (...args: any[]) => {
+  //     clearTimeout(timeout);
+  //     timeout = setTimeout(() => func(...args), delay);
+  //   };
+  // };
 
-  const handleSearch = debounce(async (title: string) => {
+  const handleSearch = async (title: string) => {
     if (!title.trim()) return;
+    setSearchResults([]);
     if (searchQuery.loading) return;
 
     setSearchQuery((prevState) => ({ ...prevState, loading: true }));
@@ -205,7 +207,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
         document.getElementById("search_modal") as HTMLDialogElement
       ).showModal();
     }
-  }, 300);
+  };
 
   const selectResult = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
     e.preventDefault();

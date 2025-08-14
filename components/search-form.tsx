@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFormHandlers } from "@/lib/hooks/useFormHandlers";
 import Image from "next/image";
 
@@ -37,6 +37,18 @@ export default function SearchForm({
       default:
         return "text-error";
     }
+  };
+
+  const [selectedSeasons, setSelectedSeasons] = useState<{
+    [id: string]: string;
+  }>({});
+
+  const checkOnServer = (onServer: boolean, season?: string) => {
+    if (season && season !== "Complete") {
+      return false;
+    }
+
+    return onServer;
   };
 
   // Check for value from "remember email" checkbox on form
@@ -273,10 +285,16 @@ export default function SearchForm({
                         <select
                           id={`season-${result.id}`}
                           name="season"
-                          defaultValue={"Complete"}
+                          value={selectedSeasons[result.id] || "Complete"}
                           className="select select-bordered w-full sm:w-auto"
+                          onChange={(e) =>
+                            setSelectedSeasons((prev) => ({
+                              ...prev,
+                              [result.id]: e.target.value,
+                            }))
+                          }
                         >
-                          <option value={"Complete"}>Complete</option>
+                          <option value="Complete">Complete</option>
                           {result.seasons?.map((season: any) => (
                             <option key={season.id} value={season.id}>
                               {season.name}
@@ -284,12 +302,28 @@ export default function SearchForm({
                           ))}
                         </select>
                       )}
-                      <button
-                        className="btn btn-primary w-full sm:w-auto"
-                        onClick={(e) => selectResult(e, result.id)}
+                      <div
+                        className={`${
+                          checkOnServer(
+                            result.onServer,
+                            selectedSeasons[result.id]
+                          )
+                            ? "tooltip"
+                            : ""
+                        }`}
+                        data-tip="Already on Server"
                       >
-                        Select
-                      </button>
+                        <button
+                          className="btn btn-primary w-full sm:w-auto"
+                          onClick={(e) => selectResult(e, result.id)}
+                          disabled={checkOnServer(
+                            result.onServer,
+                            selectedSeasons[result.id]
+                          )}
+                        >
+                          Select
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
