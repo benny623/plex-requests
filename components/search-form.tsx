@@ -127,7 +127,7 @@ export default function SearchForm({
                 </label>
               )}
             </div>
-            {ready.media && ready.email && (
+            {ready.media && (
               <div>
                 <div className="flex flex-row gap-10 justify-center items-center text-center">
                   <Image
@@ -156,7 +156,7 @@ export default function SearchForm({
                   </ul>
                 </div>
                 <div className="text-center my-4 text-success">
-                  Media data attached, ready to submit!
+                  Media data attached!
                 </div>
               </div>
             )}
