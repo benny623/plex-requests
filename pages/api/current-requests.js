@@ -25,6 +25,10 @@ export default async function handler(req, res) {
       WHERE
         request_status <> 'Complete'
       ORDER BY
+        CASE
+          WHEN request_status = 'In Progress' THEN 0
+          ELSE 1
+        END,
         request_timestamp DESC;
     `;
 
@@ -37,6 +41,10 @@ export default async function handler(req, res) {
         WHERE
           request_status <> 'Complete'
         ORDER BY
+          CASE
+            WHEN request_status = 'In Progress' THEN 0
+            ELSE 1
+          END,
           request_timestamp DESC;
       `;
     }

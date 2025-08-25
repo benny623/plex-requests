@@ -15,6 +15,10 @@ export default async function handler(req, res) {
             request_note
           FROM requests
           ORDER BY
+            CASE
+              WHEN request_status = 'In Progress' THEN 0
+              ELSE 1
+            END,
             request_timestamp DESC;
         `);
 
