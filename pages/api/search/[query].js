@@ -1,3 +1,5 @@
+import { loadJellyfinCache, searchJellyfin } from "@/lib/jellyfinCache";
+
 export default async function handler(req, res) {
   const getMediaType = (type, genre, country) => {
     if (type !== "series" || type !== "movie") {
@@ -67,26 +69,16 @@ export default async function handler(req, res) {
     }
   };
 
-  const searchJellyfin = async (imdbId) => {
-    try {
-      const response = await fetch(
-        `${process.env.JELLYFIN_BASE_URL}/Items?Recursive=true&IncludeItemTypes=Movie,Series&Fields=ProviderIds&api_key=${process.env.JELLYFIN_API_KEY}`
-      );
-
-      const data = await response.json();
-
-      return data.Items.some((item) => item.ProviderIds?.Imdb === imdbId);
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
-  };
-
   try {
     const { query } = req.query;
 
     if (!query) {
       return res.status(400).json({ error: "Query parameter is required" });
+    }
+
+    if (!global.jellyfinCacheLoaded) {
+      await loadJellyfinCache();
+      global.jellyfinCacheLoaded = true;
     }
 
     const response = await fetch(
