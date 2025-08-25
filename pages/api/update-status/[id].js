@@ -22,7 +22,8 @@ export default async function handler(req, res) {
         UPDATE
           requests
         SET
-          request_status = $1
+          request_status = $1,
+          request_modified_timestamp = NOW()
         WHERE
           request_id = $2
         RETURNING
