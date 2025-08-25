@@ -12,9 +12,9 @@ export default async function handler(req, res) {
     const result = await query(
       `
           INSERT INTO
-            requests (request_title, request_requestor, request_status, request_type, request_optional, request_timestamp)
+            requests (request_title, request_requestor, request_status, request_type, request_optional, request_timestamp, request_modified_timestamp)
           VALUES
-            ($1, $2, $3, $4, $5, NOW())
+            ($1, $2, $3, $4, $5, NOW(), NOW())
           RETURNING
             *
         `,

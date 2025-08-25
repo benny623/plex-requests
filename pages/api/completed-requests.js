@@ -14,12 +14,13 @@ export default async function handler(req, res) {
             request_status,
             request_note,
             request_optional,
-            request_timestamp
+            request_timestamp,
+            request_modified_timestamp
           FROM requests
           WHERE
             request_status = 'Complete'
           AND
-            request_timestamp > NOW() - interval '14' day
+            request_modified_timestamp > NOW() - interval '14' day
           ORDER BY
             request_timestamp DESC;
         `);

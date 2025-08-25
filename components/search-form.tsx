@@ -127,7 +127,7 @@ export default function SearchForm({
                 </label>
               )}
             </div>
-            {ready.media && ready.email && (
+            {ready.media && (
               <div>
                 <div className="flex flex-row gap-10 justify-center items-center text-center">
                   <Image
@@ -156,7 +156,7 @@ export default function SearchForm({
                   </ul>
                 </div>
                 <div className="text-center my-4 text-success">
-                  Media data attached, ready to submit!
+                  Media data attached!
                 </div>
               </div>
             )}
@@ -183,7 +183,7 @@ export default function SearchForm({
 
       {/* Search Modal */}
       <dialog id="search_modal" className="modal">
-        <div className="modal-box w-11/12 max-w-5xl relative">
+        <div className="modal-box w-11/12 max-w-5xl relative bg-base-200">
           {/* Modal Header */}
           {/* TODO: Fix errors that appeared due to new API. Commenting out for now */}
           {/* <div className="sticky top-0 bg-base-100 z-50 flex items-center justify-between px-4 py-2 shadow-lg rounded-lg gap-4">
@@ -203,14 +203,14 @@ export default function SearchForm({
           </div> */}
 
           {/* Add an X button for mobile closing */}
-          <div className="sticky top-0 z-50 flex items-center justify-end px-4 py-2">
-            <form method="dialog">
-              <button className="btn btn-lg btn-circle btn-accent">✕</button>
-            </form>
-          </div>
+          <form method="dialog">
+            <button className="btn btn-sm btn-soft btn-circle absolute right-2 top-2 z-50">
+              ✕
+            </button>
+          </form>
 
           {/* Scrollable Content */}
-          <div className="h-4/6 overflow-y-auto space-y-4">
+          <div className="h-175 overflow-y-auto space-y-4">
             {!searchResults.length ? (
               <div className="text-center animate-appear">No results found</div>
             ) : (
