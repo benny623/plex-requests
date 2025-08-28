@@ -190,7 +190,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
         loading: false,
       }));
 
-      setSearchResults(data);
+      setSearchResults(data.results);
     } catch (err) {
       console.error(err);
       setSearchQuery((prevState) => ({
