@@ -15,7 +15,7 @@ export default function SearchForm({
     status,
     searchQuery,
     searchResults,
-    resultPages,
+    //resultPages,
     rememberEmail,
     setReady,
     setRememberEmail,
