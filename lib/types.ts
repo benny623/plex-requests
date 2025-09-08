@@ -83,6 +83,8 @@ export type RequestTableProps = {
   loading: Status;
   table: boolean;
   setTable: React.Dispatch<React.SetStateAction<boolean>>;
+  refresh: boolean;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // Request Row Props

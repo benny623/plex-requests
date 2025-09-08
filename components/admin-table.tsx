@@ -12,6 +12,8 @@ const AdminTable: React.FC<RequestTableProps> = ({
   requests,
   setRequests,
   loading,
+  refresh,
+  setRefresh
 }) => {
   const [modalData, setModalData] = useState<Request | null>(null);
   const {
@@ -46,7 +48,29 @@ const AdminTable: React.FC<RequestTableProps> = ({
       <table className="table w-full xl:w-3/4 border-collapse table-pin-rows pt-10">
         <thead>
           <tr>
-            <th></th>
+            <th>
+              <button
+              className="btn btn-ghost"
+                onClick={() => {
+                  setRefresh(!refresh);
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+                  <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+                </svg>
+              </button>
+            </th>
             <th>Status</th>
             <th>Poster</th>
             <th>Title</th>
@@ -119,9 +143,9 @@ const AdminTable: React.FC<RequestTableProps> = ({
               </p>
               {modalData.request_note && (
                 <p className="col-span-2">
-                <span className="font-bold">Note: </span>
-                {modalData.request_note}
-              </p>
+                  <span className="font-bold">Note: </span>
+                  {modalData.request_note}
+                </p>
               )}
             </div>
 

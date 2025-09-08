@@ -30,6 +30,7 @@ const AdminPage = () => {
   );
   const [isAdmin, setIsAdmin] = useState(false);
   const [table, setTable] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   // Set isAdmin on page load
   useEffect(() => {
@@ -47,16 +48,21 @@ const AdminPage = () => {
     getData();
   }, []);
 
+  useEffect(() => {
+    const getData = async () => {
+      if (isAdmin) {
+        fetchCurrentData();
+        fetchCompletedData();
+      }
+    };
+    getData();
+  }, [refresh]);
+
   return (
     <div className="min-h-screen bg-base-200">
-      <div className="flex justify-start pl-10 pt-10">
-        <Link href={"/"} className="btn btn-primary">
-          Home
-        </Link>
-      </div>
       {isAdmin &&
         (!table ? (
-          <div className="text-center pt-4">
+          <div className="text-center pt-4 pt-10">
             <button
               onClick={() => {
                 setTable(!table);
@@ -67,7 +73,7 @@ const AdminPage = () => {
             </button>
           </div>
         ) : (
-          <div className="text-center text-xs pt-4">
+          <div className="text-center pt-4 pt-10">
             <button
               onClick={() => {
                 setTable(!table);
@@ -80,12 +86,22 @@ const AdminPage = () => {
         ))}
       <div className="flex justify-center items-center py-10">
         {!isAdmin ? (
-          <h1 className="font-bold">Not an admin</h1>
+          <div className="min-h-screen flex flex-col items-center justify-center bg-base-200">
+            <h2 className="text-3xl font-bold text-center text-primary m-3">
+              Page Not Found
+            </h2>
+            <p className="text-center">Could not find requested resource.</p>
+            <Link href="/" className="btn btn-primary m-5">
+              Return Home
+            </Link>
+          </div>
         ) : !table ? (
           <AdminTable
             requests={currentRequests}
             setRequests={setCurrentRequests}
             loading={currentStatus}
+            refresh={refresh}
+            setRefresh={setRefresh}
             table={table}
             setTable={setTable}
           />
@@ -94,6 +110,8 @@ const AdminPage = () => {
             requests={completedRequests}
             setRequests={setCompletedRequests}
             loading={completedStatus}
+            refresh={refresh}
+            setRefresh={setRefresh}
             table={table}
             setTable={setTable}
           />

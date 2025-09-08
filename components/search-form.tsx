@@ -15,6 +15,7 @@ export default function SearchForm({
     status,
     searchQuery,
     searchResults,
+    //resultPages,
     rememberEmail,
     setReady,
     setRememberEmail,
@@ -42,6 +43,8 @@ export default function SearchForm({
   const [selectedSeasons, setSelectedSeasons] = useState<{
     [id: string]: string;
   }>({});
+
+  //const [page, setPage] = useState(1);
 
   const checkOnServer = (onServer: boolean, season?: string) => {
     if (season && season !== "Complete") {
@@ -322,6 +325,18 @@ export default function SearchForm({
                 </div>
               ))
             )}
+            {/* TODO: Showing page count successfully, but we need to do more to fully get this working */}
+            {/* {resultPages > 10 && (
+              <div className="join">
+                <button className="join-item btn">{"<"}</button>
+                {Array.from({ length: Math.min(resultPages, 100) }, (_, i) => (
+                  <button key={i + 1} className="join-item btn">
+                    {i + 1}
+                  </button>
+                ))}
+                <button className="join-item btn">{">"}</button>
+              </div>
+            )} */}
           </div>
         </div>
 

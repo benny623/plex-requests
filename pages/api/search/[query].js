@@ -101,53 +101,56 @@ export default async function handler(req, res) {
 
     if (!rawData.Search) return [];
 
-    const detailedResults = await Promise.all(
-      rawData.Search.filter((item) => item.Type !== "game").map(
-        async (result) => {
-          const moreDataResponse = await fetch(
-            `${process.env.OMDB_BASE_URL}/?apikey=${
-              process.env.OMDB_API_KEY
-            }&i=${encodeURIComponent(result.imdbID)}`
-          );
+    const detailedResults = {
+      totalResults: rawData.totalResults,
+      results: await Promise.all(
+        rawData.Search.filter((item) => item.Type !== "game").map(
+          async (result) => {
+            const moreDataResponse = await fetch(
+              `${process.env.OMDB_BASE_URL}/?apikey=${
+                process.env.OMDB_API_KEY
+              }&i=${encodeURIComponent(result.imdbID)}`
+            );
 
-          const moreData = await moreDataResponse.json();
+            const moreData = await moreDataResponse.json();
 
-          // Pre-define media title, year and type so we can use for the onServer check
-          const title = moreData.Title;
-          const year = parseInt(moreData.Year.split("–")[0]) || 0;
-          const media_type = getMediaType(
-            moreData.Type,
-            moreData.Genre.split(",").map((tags) => tags.trim()),
-            moreData.Country
-          );
+            // Pre-define media title, year and type so we can use for the onServer check
+            const title = moreData.Title;
+            const year = parseInt(moreData.Year.split("–")[0]) || 0;
+            const media_type = getMediaType(
+              moreData.Type,
+              moreData.Genre.split(",").map((tags) => tags.trim()),
+              moreData.Country
+            );
 
-          return {
-            id: moreData.imdbID,
-            title,
-            year,
-            ...(moreData.Rated === "N/A"
-              ? { rated: "NR" }
-              : { rated: moreData.Rated }),
-            genre: moreData.Genre.split(",").map((tags) => tags.trim()),
-            ...(moreData.Plot !== "N/A" && { overview: moreData.Plot }),
-            ...(moreData.Poster !== "N/A" &&
-              (await checkImage(moreData.Poster)) && {
-                poster: moreData.Poster,
+            return {
+              id: moreData.imdbID,
+              title,
+              year,
+              ...(moreData.Rated === "N/A"
+                ? { rated: "NR" }
+                : { rated: moreData.Rated }),
+              genre: moreData.Genre.split(",").map((tags) => tags.trim()),
+              ...(moreData.Plot !== "N/A" && { overview: moreData.Plot }),
+              ...(moreData.Poster !== "N/A" &&
+                (await checkImage(moreData.Poster)) && {
+                  poster: moreData.Poster,
+                }),
+              media_type,
+              rating: parseFloat(moreData.imdbRating) || 0,
+              ...(moreData.totalSeasons && {
+                seasons: await getSeasonData(
+                  moreData.imdbID,
+                  parseInt(moreData.totalSeasons)
+                ),
               }),
-            media_type,
-            rating: parseFloat(moreData.imdbRating) || 0,
-            ...(moreData.totalSeasons && {
-              seasons: await getSeasonData(
-                moreData.imdbID,
-                parseInt(moreData.totalSeasons)
-              ),
-            }),
-            votes: parseInt(moreData.imdbVotes.replace(/,/g, "")) || 0,
-            onServer: await searchJellyfin(moreData.imdbID),
-          };
-        }
-      )
-    );
+              votes: parseInt(moreData.imdbVotes.replace(/,/g, "")) || 0,
+              onServer: await searchJellyfin(moreData.imdbID),
+            };
+          }
+        )
+      ),
+    };
 
     res.status(200).json(detailedResults);
   } catch (error) {
