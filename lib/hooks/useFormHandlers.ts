@@ -9,6 +9,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
   });
   const [rememberEmail, setRememberEmail] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [resultPages, setResultPages] = useState(0);
   const [formState, setFormState] = useState<FormState>({
     title: "",
     email: "",
@@ -191,6 +192,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
       }));
 
       setSearchResults(data.results);
+      setResultPages(Math.ceil(data.totalResults / 10))
     } catch (err) {
       console.error(err);
       setSearchQuery((prevState) => ({
@@ -319,6 +321,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     status,
     searchQuery,
     searchResults,
+    resultPages,
     rememberEmail,
     setReady,
     setRememberEmail,
