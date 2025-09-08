@@ -30,6 +30,7 @@ const AdminPage = () => {
   );
   const [isAdmin, setIsAdmin] = useState(false);
   const [table, setTable] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   // Set isAdmin on page load
   useEffect(() => {
@@ -46,6 +47,16 @@ const AdminPage = () => {
     };
     getData();
   }, []);
+
+  useEffect(() => {
+    const getData = async () => {
+      if (isAdmin) {
+        fetchCurrentData();
+        fetchCompletedData();
+      }
+    };
+    getData();
+  }, [refresh]);
 
   return (
     <div className="min-h-screen bg-base-200">
@@ -89,6 +100,8 @@ const AdminPage = () => {
             requests={currentRequests}
             setRequests={setCurrentRequests}
             loading={currentStatus}
+            refresh={refresh}
+            setRefresh={setRefresh}
             table={table}
             setTable={setTable}
           />
@@ -97,6 +110,8 @@ const AdminPage = () => {
             requests={completedRequests}
             setRequests={setCompletedRequests}
             loading={completedStatus}
+            refresh={refresh}
+            setRefresh={setRefresh}
             table={table}
             setTable={setTable}
           />
