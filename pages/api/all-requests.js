@@ -16,8 +16,9 @@ export default async function handler(req, res) {
           FROM requests
           ORDER BY
             CASE
-              WHEN request_status = 'In Progress' THEN 0
-              ELSE 1
+              WHEN request_status = 'New' THEN 0
+              WHEN request_status = 'In Progress' THEN 1
+              ELSE 2
             END,
             request_timestamp DESC;
         `);
