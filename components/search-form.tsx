@@ -44,7 +44,7 @@ export default function SearchForm({
     [id: string]: string;
   }>({});
 
-  const [page, setPage] = useState(1);
+  //const [page, setPage] = useState(1);
 
   const checkOnServer = (onServer: boolean, season?: string) => {
     if (season && season !== "Complete") {
