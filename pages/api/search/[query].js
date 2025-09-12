@@ -71,6 +71,7 @@ export default async function handler(req, res) {
 
   try {
     const { query } = req.query;
+    const [title, page] = query.split("-");
 
     if (!query) {
       return res.status(400).json({ error: "Query parameter is required" });
@@ -84,7 +85,7 @@ export default async function handler(req, res) {
     const response = await fetch(
       `${process.env.OMDB_BASE_URL}/?apikey=${
         process.env.OMDB_API_KEY
-      }&s=${encodeURIComponent(query)}`
+      }&s=${encodeURIComponent(title)}&page=${page}`
     );
 
     if (!response.ok) {
