@@ -342,7 +342,7 @@ export default function SearchForm({
             )} */}
             {resultPages > 1 && currentPage !== resultPages && (
               <button
-                className="btn btn-primary w-1/4 self-center"
+                className="btn btn-primary w-3/4 sm:w-1/4 self-center"
                 disabled={searchQuery.loading}
                 onClick={(e) => {
                   e.preventDefault();
