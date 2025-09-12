@@ -10,6 +10,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
   const [rememberEmail, setRememberEmail] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [resultPages, setResultPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(29);
   const [formState, setFormState] = useState<FormState>({
     title: "",
     email: "",
@@ -174,15 +175,19 @@ export const useFormHandlers = (refetchRequests: () => void) => {
   //   };
   // };
 
-  const handleSearch = async (title: string) => {
+  const handleSearch = async (title: string, page: number) => {
     if (!title.trim()) return;
-    setSearchResults([]);
+
     if (searchQuery.loading) return;
 
     setSearchQuery((prevState) => ({ ...prevState, loading: true }));
 
+    // Resets page count and results upon new search
+    setSearchResults([]);
+    setCurrentPage(2);
+
     try {
-      const response = await fetch(`/api/search/${title}`);
+      const response = await fetch(`/api/search/${title}-${page}`);
       const data = await response.json();
 
       setSearchQuery((prevState) => ({
@@ -192,12 +197,53 @@ export const useFormHandlers = (refetchRequests: () => void) => {
       }));
 
       setSearchResults(data.results);
-      setResultPages(Math.ceil(data.totalResults / 10))
+      setResultPages(Math.ceil(data.totalResults / 10));
     } catch (err) {
       console.error(err);
       setSearchQuery((prevState) => ({
         ...prevState,
-        error: "Failed to search movies",
+        error: "Failed to search",
+      }));
+    } finally {
+      setSearchQuery((prevState) => ({
+        ...prevState,
+        loading: false,
+        error: "",
+      }));
+      (
+        document.getElementById("search_modal") as HTMLDialogElement
+      ).showModal();
+    }
+  };
+
+  const handleLoadMore = async (title: string, page: number) => {
+    if (!title.trim()) return;
+
+    if (searchQuery.loading) return;
+
+    setSearchQuery((prevState) => ({ ...prevState, loading: true }));
+
+    if (currentPage < resultPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+
+    try {
+      const response = await fetch(`/api/search/${title}-${page}`);
+      const data = await response.json();
+
+      setSearchQuery((prevState) => ({
+        ...prevState,
+        error: "",
+        loading: false,
+      }));
+
+      setSearchResults([...searchResults, ...data.results]);
+      setResultPages(Math.ceil(data.totalResults / 10));
+    } catch (err) {
+      console.error(err);
+      setSearchQuery((prevState) => ({
+        ...prevState,
+        error: "Failed to search",
       }));
     } finally {
       setSearchQuery((prevState) => ({
@@ -287,16 +333,16 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     }));
   };
 
-  const handleSearchChange = (e: any) => {
-    const { name, value } = e.target;
+  // const handleSearchChange = (e: any) => {
+  //   const { name, value } = e.target;
 
-    setFormState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  //   setFormState((prevState) => ({
+  //     ...prevState,
+  //     [name]: value,
+  //   }));
 
-    handleSearch(value);
-  };
+  //   handleSearch(value);
+  // };
 
   const handleCheckboxChange = (e: any) => {
     const isChecked = e.target.checked;
@@ -323,6 +369,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     searchResults,
     resultPages,
     rememberEmail,
+    currentPage,
     setReady,
     setRememberEmail,
     setFormState,
@@ -330,8 +377,9 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     handleSubmit,
     sendNotification,
     handleSearch,
+    handleLoadMore,
     selectResult,
-    handleSearchChange,
+    //handleSearchChange,
     handleCheckboxChange,
     updateStoredEmail,
   };

@@ -15,14 +15,16 @@ export default function SearchForm({
     status,
     searchQuery,
     searchResults,
-    //resultPages,
     rememberEmail,
+    resultPages,
+    currentPage,
     setReady,
     setRememberEmail,
     setFormState,
     handleChange,
     handleSubmit,
     handleSearch,
+    handleLoadMore,
     selectResult,
     //handleSearchChange, -- This may come back if we fix the search below
     handleCheckboxChange,
@@ -90,9 +92,10 @@ export default function SearchForm({
               />
               <button
                 className="btn btn-soft btn-primary join-item w-[86px]"
+                disabled={searchQuery.loading}
                 onClick={(e) => {
                   e.preventDefault();
-                  handleSearch(formState.title);
+                  handleSearch(formState.title, 1);
                 }}
               >
                 {searchQuery.loading ? (
@@ -213,7 +216,7 @@ export default function SearchForm({
           </form>
 
           {/* Scrollable Content */}
-          <div className="h-175 overflow-y-auto space-y-4">
+          <div className="h-175 overflow-y-auto space-y-4 flex flex-col">
             {!searchResults.length ? (
               <div className="text-center animate-appear">No results found</div>
             ) : (
@@ -337,6 +340,22 @@ export default function SearchForm({
                 <button className="join-item btn">{">"}</button>
               </div>
             )} */}
+            {resultPages > 1 && currentPage !== resultPages && (
+              <button
+                className="btn btn-primary w-1/4 self-center"
+                disabled={searchQuery.loading}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleLoadMore(formState.title, currentPage); // this is where we need the dynamic page number
+                }}
+              >
+                {searchQuery.loading ? (
+                  <span className="loading loading-dots loading-xs"></span>
+                ) : (
+                  "Load More"
+                )}
+              </button>
+            )}
           </div>
         </div>
 
