@@ -230,33 +230,42 @@ export default function Home() {
                       {modalData.request_optional.year}
                     </p>
                   )}
-                  <p className="text-sm italic font-normal text-accent">
+                  <p className="text-sm italic font-normal">
                     {modalData.request_type}
                   </p>
                 </div>
                 <div className="flex flex-col justify-center">
                   {modalData.request_optional.rated && (
-                    <p className="badge badge-neutral">
+                    <p className="badge badge-sm text-slate-400 bg-slate-800">
                       {modalData.request_optional.rated}
                     </p>
                   )}
                 </div>
               </div>
-              <p
-                className={`badge badge-sm badge-outline py-4 ${statusColor(modalData.request_status)}`}
-              >
-                {modalData.request_status}
-              </p>
-              <p className="my-4">
-                <span className="font-bold">Requested On: </span>
-                {formatDate(modalData.request_timestamp)}
-              </p>
-              {modalData.request_note && (
-                <p className="my-4">
-                  <span className="font-bold">Note: </span>
-                  {modalData.request_note}
-                </p>
-              )}
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col">
+                  <label className="text-xs text-slate-400">Status</label>
+                  <p
+                    className={`badge badge-sm badge-soft py-4 ${statusColor(
+                      modalData.request_status
+                    )}`}
+                  >
+                    {modalData.request_status}
+                  </p>
+                </div>
+                
+                <div className="flex flex-col">
+                  <label className="text-xs text-slate-400">Date</label>
+                  <p className="text-sm">{formatDate(modalData.request_timestamp)}</p>
+                </div>
+
+                {modalData.request_note && (
+                  <div className="flex flex-col">
+                    <label className="text-xs text-slate-400">Note</label>
+                    <p className="text-sm">{modalData.request_note}</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}

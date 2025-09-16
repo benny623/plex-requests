@@ -47,7 +47,7 @@ const RequestCard: React.FC<RequestCardProps> = ({ request, setModalData }) => {
         </p>
         <div className="card-actions justify-end">
           <div
-            className={`badge badge-outline ${statusColor(
+            className={`badge badge-soft ${statusColor(
               request.request_status
             )}`}
           >
