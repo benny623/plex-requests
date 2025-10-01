@@ -55,10 +55,10 @@ export default function NewEmail(props) {
     button: {
       display: "inline-block",
       padding: "12px 24px",
-      backgroundColor: "#00cdb7",
+      backgroundColor: "rgba(42, 123, 155, 1)",
       color: "#1d232a",
       textDecoration: "none",
-      borderRadius: "8px",
+      borderRadius: "32px",
       fontWeight: "bold",
     },
   };
@@ -90,7 +90,7 @@ export default function NewEmail(props) {
               <strong>Requested by:</strong> {email}
             </p>
             <a
-              href="https://plex-requests-plum.vercel.app/admin"
+              href="https://dwsrequests.site/admin"
               style={styles.button}
             >
               Admin Page

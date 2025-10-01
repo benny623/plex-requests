@@ -4,16 +4,16 @@ export default function UpdateEmail(props) {
   function statusColor(status) {
     switch (status) {
       case "New":
-        return "#ff52d9";
+        return "oklch(70% 0.165 254.624)";
       case "In Progress":
-        return "#7480ff";
+        return "oklch(85% 0.199 91.936)";
       case "Pending":
-        return "#ffbe00";
+        return "oklch(70% 0.213 47.604)";
       case "Complete":
-        return "#00a96e";
+        return "oklch(59% 0.145 163.225)";
       default:
         return "";
-    } // The colors here are subject to change depending on if the theme changes
+    }
   }
 
   // Inline styles
@@ -70,10 +70,10 @@ export default function UpdateEmail(props) {
     button: {
       display: "inline-block",
       padding: "12px 24px",
-      backgroundColor: "#00cdb7",
+      backgroundColor: "rgba(42, 123, 155, 1)",
       color: "#1d232a",
       textDecoration: "none",
-      borderRadius: "8px",
+      borderRadius: "32px",
       fontWeight: "bold",
     },
     badge: {
@@ -112,10 +112,7 @@ export default function UpdateEmail(props) {
                 <strong>Note:</strong> {note}
               </p>
             )}
-            <a
-              href="https://plex-requests-plum.vercel.app/"
-              style={styles.button}
-            >
+            <a href="https://dwsrequests.site/" style={styles.button}>
               Plex Requests Page
             </a>
           </td>
