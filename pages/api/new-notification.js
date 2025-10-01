@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     );
 
     const send = await resend.emails.send({
-      from: "PlexRequest Notification <plexrequest-notification@dwsrequests.site>",
+      from: "PlexRequest Notification <notification@dwsrequests.site>",
       to: [process.env.TEMP_EMAIL, process.env.TEMP_EMAIL2],
       subject: `New Request: ${title}`,
       html: htmlContent,

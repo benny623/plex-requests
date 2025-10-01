@@ -37,7 +37,7 @@ export default async function handler(req, res) {
 
     // Send notification
     const send = await resend.emails.send({
-      from: "PlexRequest Notification <plexrequest-notification@dwsrequests.site>",
+      from: "PlexRequest Notification <notification@dwsrequests.site>",
       to: emailData[0].request_requestor,
       subject: `${emailData[0].request_title} Update!`,
       html: htmlContent,
@@ -46,6 +46,7 @@ export default async function handler(req, res) {
     // Send success response after email is sent
     return res.status(200).json({
       status: "send success",
+      data: send,
     });
   } catch (err) {
     console.error("Error:", err);
