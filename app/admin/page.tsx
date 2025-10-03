@@ -59,7 +59,7 @@ const AdminPage = () => {
       }
     };
     getData();
-  }, [refresh]);
+  }, [refresh, isAdmin, fetchCurrentRequests, fetchAllCompletedRequests]);
 
   return (
     <div className="min-h-screen bg-base-200">

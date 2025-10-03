@@ -32,7 +32,7 @@ export default function Home() {
     if (table === "completed" && !completedRequests.length) {
       fetchCompletedRequests();
     }
-  }, [table, fetchCurrentRequests, fetchCompletedRequests]);
+  }, [table, fetchCurrentRequests, fetchCompletedRequests, completedRequests.length, currentRequests.length]);
 
   const renderCurrent = () => {
     return currentRequests.length ? (

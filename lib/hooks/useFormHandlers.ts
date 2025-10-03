@@ -79,19 +79,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     }));
   };
 
-  // Handle form submission
-  const handleSubmit = useCallback(
-    async (e: any) => {
-      e.preventDefault();
-
-      // Send notification to site admins
-      sendNotification();
-
-      setStatus({ loading: true, error: "", success: false });
-    },
-    [formState, refetchRequests]
-  );
-
   // Send notification for updated status
   const sendNotification = async () => {
     try {
@@ -165,6 +152,19 @@ export const useFormHandlers = (refetchRequests: () => void) => {
       });
     }
   };
+
+  // Handle form submission
+  const handleSubmit = useCallback(
+    async (e: any) => {
+      e.preventDefault();
+
+      // Send notification to site admins
+      sendNotification();
+
+      setStatus({ loading: true, error: "", success: false });
+    },
+    [formState, refetchRequests, sendNotification]
+  );
 
   // This was previously used for re-searching, may or may not re-add
   // const debounce = (func: (...args: any[]) => void, delay: number) => {
