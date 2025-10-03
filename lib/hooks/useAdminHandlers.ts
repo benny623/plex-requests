@@ -1,23 +1,19 @@
 import { Request } from "@/lib/types";
+import useRequestsStore from "@/stores/requestsStore";
+import useStatusStore from "@/stores/statusStore";
 
 export function useAdminHandlers(
   requests: Request[],
-  setRequests: React.Dispatch<React.SetStateAction<Request[]>>
+  setRequests: (data: Request[]) => void
 ) {
+  const { currentRequests, completedRequests } = useRequestsStore();
+  const { table } = useStatusStore();
+
   const handleStatusChange = async (
     e: React.ChangeEvent<HTMLSelectElement>,
     requestId: number
   ) => {
     const newStatus = e.target.value;
-
-    // Update state locally for immediate feedback
-    setRequests((prev) =>
-      prev.map((request) =>
-        request.request_id === requestId
-          ? { ...request, request_status: newStatus }
-          : request
-      )
-    );
 
     try {
       // Send update to server
@@ -38,17 +34,19 @@ export function useAdminHandlers(
 
       // Send notification
       sendNotification(requestId);
+
+      // Update state locally for immediate feedback
+      const temp = (
+        table === "current" ? currentRequests : completedRequests
+      ).map((request: any) =>
+        request.request_id === requestId
+          ? { ...request, request_status: newStatus }
+          : request
+      );
+
+      setRequests(temp);
     } catch (err) {
       console.error("Error updating status:", err);
-
-      // Revert the status if the update failed
-      setRequests((prev) =>
-        prev.map((request) =>
-          request.request_id === requestId
-            ? { ...request, request_status: request.request_status }
-            : request
-        )
-      );
     }
   };
 
@@ -58,14 +56,15 @@ export function useAdminHandlers(
   ) => {
     const newNote = e.target.value;
 
-    // Update state locally for immediate feedback
-    setRequests((prev) =>
-      prev.map((request) =>
-        request.request_id === requestId
-          ? { ...request, request_note: newNote }
-          : request
-      )
+    const temp = (
+      table === "current" ? currentRequests : completedRequests
+    ).map((request: any) =>
+      request.request_id === requestId
+        ? { ...request, request_note: newNote }
+        : request
     );
+
+    setRequests(temp);
   };
 
   const handleNoteBlur = async (
@@ -92,15 +91,6 @@ export function useAdminHandlers(
       }
     } catch (err) {
       console.error("Error updating note:", err);
-
-      // Revert the note if the update failed
-      setRequests((prev) =>
-        prev.map((request) =>
-          request.request_id === requestId
-            ? { ...request, request_noet: request.request_note }
-            : request
-        )
-      );
     }
   };
 
@@ -124,9 +114,11 @@ export function useAdminHandlers(
       }
 
       // Update local state by removing the deleted request
-      setRequests((prevRequests) =>
-        prevRequests.filter((request) => request.request_id !== requestId)
-      );
+      const temp = (
+        table === "current" ? currentRequests : completedRequests
+      ).filter((request: any) => request.request_id !== requestId);
+
+      setRequests(temp);
     } catch (err) {
       console.error("Error deleting request:", err);
     }

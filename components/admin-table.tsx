@@ -8,12 +8,13 @@ import AdminRow from "@/components/admin-row";
 import { Request, RequestTableProps } from "@/lib/types";
 import { useAdminHandlers } from "@/lib/hooks/useAdminHandlers";
 
+import useStatusStore from "@/stores/statusStore";
+
 const AdminTable: React.FC<RequestTableProps> = ({
   requests,
   setRequests,
-  loading,
   refresh,
-  setRefresh
+  setRefresh,
 }) => {
   const [modalData, setModalData] = useState<Request | null>(null);
   const {
@@ -22,6 +23,7 @@ const AdminTable: React.FC<RequestTableProps> = ({
     handleNoteBlur,
     handleDeletion,
   } = useAdminHandlers(requests, setRequests || (() => {}));
+  const { loading, hasFetched, error } = useStatusStore();
 
   const handleRequestDelete = async (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -45,12 +47,12 @@ const AdminTable: React.FC<RequestTableProps> = ({
 
   return (
     <>
-      <table className="table w-full xl:w-3/4 border-collapse table-pin-rows pt-10">
+      <table className="table w-full xl:w-11/12 border-collapse table-pin-rows pt-10">
         <thead>
           <tr>
             <th>
               <button
-              className="btn btn-ghost"
+                className="btn btn-ghost"
                 onClick={() => {
                   setRefresh(!refresh);
                 }}
@@ -80,29 +82,31 @@ const AdminTable: React.FC<RequestTableProps> = ({
           </tr>
         </thead>
         <tbody>
-          {!loading.loading && loading.success ? (
-            requests.length > 0 ? (
-              requests.map((request: Request) => (
-                <AdminRow
-                  key={request.request_id}
-                  request={request}
-                  onStatusChange={handleStatusChange}
-                  onNoteChange={handleNoteChange}
-                  onNoteBlur={handleNoteBlur}
-                  onRequestDelete={handleRequestDelete}
-                />
-              ))
-            ) : (
-              <tr>
-                <td colSpan={7} className="text-center">
-                  No current requests
-                </td>
-              </tr>
-            )
+          {loading || !hasFetched ? (
+            <tr>
+              <td colSpan={7} className="text-center">
+                <span className="loading loading-spinner loading-lg"></span>
+              </td>
+            </tr>
+          ) : error ? (
+            <div className="text-2xl font-bold">
+              Error Loading Requests: {error}
+            </div>
+          ) : requests.length > 0 ? (
+            requests.map((request: Request) => (
+              <AdminRow
+                key={request.request_id}
+                request={request}
+                onStatusChange={handleStatusChange}
+                onNoteChange={handleNoteChange}
+                onNoteBlur={handleNoteBlur}
+                onRequestDelete={handleRequestDelete}
+              />
+            ))
           ) : (
             <tr>
               <td colSpan={7} className="text-center">
-                <span className="loading loading-dots loading-md"></span>
+                No current requests
               </td>
             </tr>
           )}

@@ -1,42 +1,9 @@
-export const fetchAllRequests = async () => {
-  const response = await fetch("/api/all-requests");
+import useStatusStore from "@/stores/statusStore";
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch all requests");
-  }
-
-  return await response.json();
-};
-
-export const fetchCurrentRequests = async () => {
-  const response = await fetch("/api/current-requests");
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch all requests");
-  }
-
-  return await response.json();
-};
-
-export const fetchCompleteRequests = async () => {
-  const response = await fetch("/api/completed-requests");
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch all requests");
-  }
-
-  return await response.json();
-};
-
-export const fetchAllCompleteRequests = async () => {
-  const response = await fetch("/api/all-completed-requests");
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch all requests");
-  }
-
-  return await response.json();
-};
+const hasFetched = useStatusStore.getState().hasFetched;
+const setLoading = useStatusStore.getState().setLoading;
+const setError = useStatusStore.getState().setError;
+const setHasFetched = useStatusStore.getState().setHasFetched;
 
 export const fetchSingleRequest = async (id: string, token: string) => {
   const baseUrl =
@@ -59,7 +26,13 @@ export const fetchSingleRequest = async (id: string, token: string) => {
   return await response.json();
 };
 
-export const adminFetchCurrentRequests = async (token: string) => {
+export const fetchCurrentRequests = async (token: string) => {
+  if (hasFetched) {
+    setHasFetched(false);
+  }
+
+  setLoading(true);
+
   const response = await fetch("/api/current-requests", {
     method: "GET",
     headers: {
@@ -69,13 +42,51 @@ export const adminFetchCurrentRequests = async (token: string) => {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch all requests");
+    setLoading(false);
+    setError(response.statusText);
+    throw new Error("Failed to fetch current requests");
   }
 
-  return await response.json();
-}
+  setLoading(false);
+  setHasFetched(true);
 
-export const adminFetchAllCompleteRequests = async (token: string) => {
+  return await response.json();
+};
+
+export const fetchCompletedRequests = async (token: string) => {
+  if (hasFetched) {
+    setHasFetched(false);
+  }
+
+  setLoading(true);
+
+  const response = await fetch("/api/completed-requests", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    setLoading(false);
+    setError(response.statusText);
+    throw new Error("Failed to fetch completed requests");
+  }
+
+  setLoading(false);
+  setHasFetched(true);
+
+  return await response.json();
+};
+
+export const fetchAllCompletedRequests = async (token: string) => {
+  if (hasFetched) {
+    setHasFetched(false);
+  }
+
+  setLoading(true);
+
   const response = await fetch("/api/all-completed-requests", {
     method: "GET",
     headers: {
@@ -85,8 +96,13 @@ export const adminFetchAllCompleteRequests = async (token: string) => {
   });
 
   if (!response.ok) {
+    setLoading(false);
+    setError(response.statusText);
     throw new Error("Failed to fetch all requests");
   }
 
+  setLoading(false);
+  setHasFetched(true);
+
   return await response.json();
-}
+};

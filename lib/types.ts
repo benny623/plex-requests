@@ -37,13 +37,6 @@ export interface FormState {
   optional: Optional;
 }
 
-// Loading Status Type
-export interface Status {
-  loading: boolean;
-  error: string;
-  success: boolean;
-}
-
 // Search Result Type
 export interface SearchResult {
   id: number;
@@ -80,7 +73,6 @@ export type RequestCardProps = {
 export type RequestTableProps = {
   requests: Request[];
   setRequests?: React.Dispatch<React.SetStateAction<Request[]>> | undefined;
-  loading: Status;
   table: boolean;
   setTable: React.Dispatch<React.SetStateAction<boolean>>;
   refresh: boolean;
