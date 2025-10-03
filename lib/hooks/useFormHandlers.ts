@@ -163,7 +163,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
 
       setStatus({ loading: true, error: "", success: false });
     },
-    [formState, refetchRequests, sendNotification]
+    [sendNotification]
   );
 
   // This was previously used for re-searching, may or may not re-add
