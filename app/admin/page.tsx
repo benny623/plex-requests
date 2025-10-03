@@ -7,7 +7,6 @@ import AdminTable from "@/components/admin-table";
 import useAdminStore from "@/stores/adminStore";
 import useStatusStore from "@/stores/statusStore";
 import useRequestsStore from "@/stores/requestsStore";
-import { fetchCompletedRequests } from "@/lib/fetchRequests";
 
 const AdminPage = () => {
   const [refresh, setRefresh] = useState(false);

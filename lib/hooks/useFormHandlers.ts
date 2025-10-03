@@ -80,90 +80,78 @@ export const useFormHandlers = (refetchRequests: () => void) => {
   };
 
   // Send notification for updated status
-  const sendNotification = async () => {
-    try {
-      const res = await fetch("/api/send-request", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formState),
-      });
-
-      const result = await res.json();
-
-      if (res.ok) {
-        // Refetch requests data for table
-        refetchRequests();
-
-        try {
-          const response = await fetch("/api/new-notification", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              title: formState.title,
-              type: formState.type,
-              email: formState.email,
-              optional: formState.optional,
-            }),
-          });
-
-          if (!response.ok) {
-            throw new Error("Failed to send notification");
-          }
-        } catch (err) {
-          console.error("Error sending notification", err);
-        }
-
-        setFormState((prevState) => ({
-          ...prevState,
-          title: "",
-          year: "",
-          type: "Movie",
-          image: "",
-          optional: {},
-        }));
-
-        setStatus({ loading: false, error: "", success: true });
-
-        // Set media ready state to false
-        setReady((prevState) => ({
-          ...prevState,
-          media: false,
-        }));
-      } else {
-        console.log(`POST Failure: ${result.error || "An error occurred"}`);
-
-        setStatus({
-          loading: false,
-          error: result.error || "An error occurred",
-          success: false,
-        });
-      }
-    } catch (err) {
-      console.error("Error:", err);
-
-      setStatus({
-        loading: false,
-        error: "An unexpected error occurred",
-        success: false,
-      });
-    }
-  };
+  
 
   // Handle form submission
   const handleSubmit = useCallback(
-    async (e: any) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
 
-      // Send notification to site admins
-      sendNotification();
-
       setStatus({ loading: true, error: "", success: false });
+
+      try {
+        const res = await fetch("/api/send-request", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formState),
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          refetchRequests();
+
+          try {
+            const response = await fetch("/api/new-notification", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                title: formState.title,
+                type: formState.type,
+                email: formState.email,
+                optional: formState.optional,
+              }),
+            });
+
+            if (!response.ok) {
+              throw new Error("Failed to send notification");
+            }
+          } catch (err) {
+            console.error("Error sending notification", err);
+          }
+
+          setFormState((prevState) => ({
+            ...prevState,
+            title: "",
+            year: "",
+            type: "Movie",
+            image: "",
+            optional: {},
+          }));
+
+          setStatus({ loading: false, error: "", success: true });
+          setReady((prev) => ({ ...prev, media: false }));
+        } else {
+          setStatus({
+            loading: false,
+            error: result.error || "An error occurred",
+            success: false,
+          });
+        }
+      } catch (err) {
+        console.error("Error:", err);
+        setStatus({
+          loading: false,
+          error: "An unexpected error occurred",
+          success: false,
+        });
+      }
     },
-    [sendNotification]
+    [formState, refetchRequests] // only the real deps
   );
 
   // This was previously used for re-searching, may or may not re-add
@@ -376,7 +364,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     setFormState,
     handleChange,
     handleSubmit,
-    sendNotification,
     handleSearch,
     handleLoadMore,
     selectResult,

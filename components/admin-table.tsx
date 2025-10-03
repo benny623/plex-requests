@@ -13,7 +13,6 @@ import useStatusStore from "@/stores/statusStore";
 const AdminTable: React.FC<RequestTableProps> = ({
   requests,
   setRequests,
-  refresh,
   setRefresh,
 }) => {
   const [modalData, setModalData] = useState<Request | null>(null);
