@@ -54,7 +54,7 @@ const AdminTable: React.FC<RequestTableProps> = ({
               <button
                 className="btn btn-ghost"
                 onClick={() => {
-                  setRefresh(!refresh);
+                  setRefresh(true);
                 }}
               >
                 <svg
