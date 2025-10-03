@@ -13,7 +13,6 @@ import useStatusStore from "@/stores/statusStore";
 const AdminTable: React.FC<RequestTableProps> = ({
   requests,
   setRequests,
-  refresh,
   setRefresh,
 }) => {
   const [modalData, setModalData] = useState<Request | null>(null);
@@ -54,7 +53,7 @@ const AdminTable: React.FC<RequestTableProps> = ({
               <button
                 className="btn btn-ghost"
                 onClick={() => {
-                  setRefresh(!refresh);
+                  setRefresh(true);
                 }}
               >
                 <svg

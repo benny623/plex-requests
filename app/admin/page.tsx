@@ -21,25 +21,41 @@ const AdminPage = () => {
     fetchAllCompletedRequests,
   } = useRequestsStore();
 
-  // Get admin and fetch initial data
+  // Get admin
   useEffect(() => {
-    const getAdminAndRequests = async () => {
+    const getAdmin = async () => {
       await fetchAdminStatus(window.localStorage.getItem("isAdmin") || "");
+    };
 
-      if (isAdmin) {
-        if (table === "current" && !currentRequests.length) {
-          fetchCurrentRequests(window.localStorage.getItem("isAdmin") || "");
-        }
+    getAdmin();
+  }, [fetchAdminStatus]);
 
-        if (table === "completed" && !completedRequests.length) {
-          fetchAllCompletedRequests(
-            window.localStorage.getItem("isAdmin") || ""
-          );
-        }
+  // Fetch initial data
+  useEffect(() => {
+    const token = window.localStorage.getItem("isAdmin") || "";
+
+    const getData = async () => {
+      if (!isAdmin) return;
+
+      const fetchMap: Record<string, (token: string) => void> = {
+        current: fetchCurrentRequests,
+        completed: fetchAllCompletedRequests,
+      };
+
+      const fetchFn = fetchMap[table];
+      if (!fetchFn) return;
+
+      const needsFetch =
+        (table === "current" && !currentRequests.length) ||
+        (table === "completed" && !completedRequests.length);
+
+      if (needsFetch || refresh) {
+        fetchFn(token);
+        if (refresh) setRefresh(false);
       }
     };
 
-    getAdminAndRequests();
+    getData();
   }, [
     isAdmin,
     table,
@@ -48,18 +64,20 @@ const AdminPage = () => {
     fetchAllCompletedRequests,
     currentRequests.length,
     completedRequests.length,
+    refresh,
+    setRefresh,
   ]);
 
   // Refresh button clicked
-  useEffect(() => {
-    const getData = async () => {
-      if (isAdmin) {
-        fetchCurrentRequests(window.localStorage.getItem("isAdmin") || "");
-        fetchAllCompletedRequests(window.localStorage.getItem("isAdmin") || "");
-      }
-    };
-    getData();
-  }, [refresh, isAdmin, fetchCurrentRequests, fetchAllCompletedRequests]);
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     if (isAdmin) {
+  //       fetchCurrentRequests(window.localStorage.getItem("isAdmin") || "");
+  //       fetchAllCompletedRequests(window.localStorage.getItem("isAdmin") || "");
+  //     }
+  //   };
+  //   getData();
+  // }, [isAdmin, fetchCurrentRequests, fetchAllCompletedRequests]);
 
   return (
     <div className="min-h-screen bg-base-200">
