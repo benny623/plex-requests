@@ -141,7 +141,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Request Card Table */}
+      {/* Request Cards */}
       <div className="requests-table min-h-screen flex justify-center items-center bg-base-200 px-4 py-8">
         {loading || !hasFetched ? (
           <span className="loading loading-spinner loading-lg"></span>
