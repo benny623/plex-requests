@@ -150,7 +150,7 @@ export default function Home() {
             Error Loading Requests: {error}
           </div>
         ) : (
-          <div className="flex flex-wrap gap-8 justify-center w-3/4">
+          <div className="flex flex-wrap gap-8 justify-center w-11/12">
             {table === "current" ? renderCurrent() : renderCompleted()}
           </div>
         )}
