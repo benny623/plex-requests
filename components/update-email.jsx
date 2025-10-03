@@ -4,13 +4,13 @@ export default function UpdateEmail(props) {
   function statusColor(status) {
     switch (status) {
       case "New":
-        return "oklch(70% 0.165 254.624)";
+        return "#4ea0ff";
       case "In Progress":
-        return "oklch(85% 0.199 91.936)";
+        return "#fdc700";
       case "Pending":
-        return "oklch(70% 0.213 47.604)";
+        return "#ff6700";
       case "Complete":
-        return "oklch(59% 0.145 163.225)";
+        return "#009764";
       default:
         return "";
     }

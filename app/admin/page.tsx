@@ -105,7 +105,6 @@ const AdminPage = () => {
           <AdminTable
             requests={currentRequests}
             setRequests={setCurrentRequests}
-            //loading={loading}
             refresh={refresh}
             setRefresh={setRefresh}
             table={table}
@@ -115,7 +114,6 @@ const AdminPage = () => {
           <AdminTable
             requests={completedRequests}
             setRequests={setCompletedRequests}
-            //loading={loading}
             refresh={refresh}
             setRefresh={setRefresh}
             table={table}
