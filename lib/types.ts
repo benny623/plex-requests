@@ -37,6 +37,13 @@ export interface FormState {
   optional: Optional;
 }
 
+// Loading Status Type
+export interface Status {
+  loading: boolean;
+  error: string;
+  success: boolean;
+}
+
 // Search Result Type
 export interface SearchResult {
   id: number;
