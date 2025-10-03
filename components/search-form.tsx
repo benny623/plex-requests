@@ -26,7 +26,6 @@ export default function SearchForm({
     handleSearch,
     handleLoadMore,
     selectResult,
-    //handleSearchChange, -- This may come back if we fix the search below
     handleCheckboxChange,
     updateStoredEmail,
   } = useFormHandlers(refetchRequests);
@@ -45,8 +44,6 @@ export default function SearchForm({
   const [selectedSeasons, setSelectedSeasons] = useState<{
     [id: string]: string;
   }>({});
-
-  //const [page, setPage] = useState(1);
 
   const checkOnServer = (onServer: boolean, season?: string) => {
     if (season && season !== "Complete") {
@@ -73,7 +70,7 @@ export default function SearchForm({
     <>
       {/* Search Card */}
       <form
-        className="card bg-base-100 shrink-0 shadow-2xl"
+        className="card bg-base-100 shrink-0 shadow-2xl transition-all duration-200 ease-in-out"
         onSubmit={handleSubmit}
       >
         <div className="card-body">
@@ -95,7 +92,7 @@ export default function SearchForm({
                 disabled={searchQuery.loading}
                 onClick={(e) => {
                   e.preventDefault();
-                  handleSearch(formState.title, 1);
+                  handleSearch(formState.title, 1, formState.optional.year);
                 }}
               >
                 {searchQuery.loading ? (
@@ -117,7 +114,7 @@ export default function SearchForm({
               className="input validator w-full"
               required
             />
-            <div className="text-center">
+            <div className="text-center animate-appear">
               {formState.email && (
                 <label className="label cursor-pointer">
                   <span className="label-text">Remember email</span>
@@ -144,7 +141,7 @@ export default function SearchForm({
                     className="rounded-lg"
                   />
                   <ul>
-                    <li className="font-bold text-lg">{formState.title}</li>
+                    <li className="font-bold text-xl">{formState.title}</li>
                     <li className="italic text-sm">{formState.type}</li>
                     {formState.optional.year && (
                       <li className="text-sm">{formState.optional.year}</li>
@@ -190,34 +187,58 @@ export default function SearchForm({
       {/* Search Modal */}
       <dialog id="search_modal" className="modal">
         <div className="modal-box w-11/12 max-w-5xl relative bg-base-200">
-          {/* Modal Header */}
-          {/* TODO: Fix errors that appeared due to new API. Commenting out for now */}
-          {/* <div className="sticky top-0 bg-base-100 z-50 flex items-center justify-between px-4 py-2 shadow-lg rounded-lg gap-4">
-            <input
-              id="search-title"
-              name="title"
-              type="text"
-              placeholder="Search..."
-              value={formState.title}
-              onChange={handleSearchChange}
-              className="input grow"
-              required
-            />
-            <form method="dialog">
-              <button className="btn btn-sm btn-circle btn-ghost">✕</button>
-            </form>
-          </div> */}
-
-          {/* Add an X button for mobile closing */}
-          <form method="dialog">
-            <button className="btn btn-sm btn-soft btn-circle absolute right-2 top-2 z-50">
-              ✕
-            </button>
-          </form>
-
           {/* Scrollable Content */}
           <div className="h-175 overflow-y-auto space-y-4 flex flex-col">
-            {!searchResults.length ? (
+            {/* Modal Header */}
+            <div className="sticky top-0 z-50 flex items-center justify-between px-4 py-2 rounded-lg gap-4">
+              <form onSubmit={handleSubmit} className="join grow">
+                <input
+                  id="title"
+                  name="title"
+                  type="text"
+                  placeholder="Media Title"
+                  value={formState.title}
+                  onChange={handleChange}
+                  className="input join-item grow"
+                  required
+                />
+                <input
+                  id="year"
+                  name="year"
+                  type="number"
+                  min="1900"
+                  max={`${new Date().getFullYear() + 5}`}
+                  placeholder="Year"
+                  maxLength={4}
+                  value={formState.optional.year || ""}
+                  onChange={handleChange}
+                  className="input join-item w-[90px]"
+                />
+                <button
+                  className="btn btn-soft btn-primary join-item w-[86px]"
+                  disabled={searchQuery.loading}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSearch(formState.title, 1, formState.optional.year);
+                  }}
+                >
+                  {searchQuery.loading ? (
+                    <span className="loading loading-dots loading-xs"></span>
+                  ) : (
+                    "Search"
+                  )}
+                </button>
+              </form>
+              <form method="dialog">
+                <button className="btn btn-sm btn-circle bg-base-100">✕</button>
+              </form>
+            </div>
+            {searchQuery.loading && (
+              <div className="h-full pb-10 flex justify-center items-center">
+                <span className="loading loading-spinner loading-xl text-center"></span>
+              </div>
+            )}
+            {!searchResults ? (
               <div className="text-center animate-appear">No results found</div>
             ) : (
               searchResults.map((result: any) => (
@@ -265,7 +286,9 @@ export default function SearchForm({
                       </div>
                       <div className="flex flex-col justify-center gap-2">
                         {result.rated && (
-                          <p className="badge badge-outline">{result.rated}</p>
+                          <p className="badge badge-sm text-slate-400 bg-slate-800">
+                            {result.rated}
+                          </p>
                         )}
                         <p
                           className={`${ratingColor(
@@ -278,7 +301,7 @@ export default function SearchForm({
                     </div>
                     <p className="max-h-15 overflow-auto">{result.overview}</p>
                     {result.genre && (
-                      <div className="card-actions justify-start line-clamp-1">
+                      <div className="card-actions justify-start line-clamp-1 flex flex-nowrap">
                         {result.genre.map((tag: string, index: number) => (
                           <div key={index} className="badge badge-outline">
                             {tag}
@@ -328,25 +351,15 @@ export default function SearchForm({
                 </div>
               ))
             )}
-            {/* TODO: Showing page count successfully, but we need to do more to fully get this working */}
-            {/* {resultPages > 10 && (
-              <div className="join">
-                <button className="join-item btn">{"<"}</button>
-                {Array.from({ length: Math.min(resultPages, 100) }, (_, i) => (
-                  <button key={i + 1} className="join-item btn">
-                    {i + 1}
-                  </button>
-                ))}
-                <button className="join-item btn">{">"}</button>
-              </div>
-            )} */}
+
+            {/* Load More Button */}
             {resultPages > 1 && currentPage !== resultPages && (
               <button
                 className="btn btn-primary w-3/4 sm:w-1/4 self-center"
                 disabled={searchQuery.loading}
                 onClick={(e) => {
                   e.preventDefault();
-                  handleLoadMore(formState.title, currentPage); // this is where we need the dynamic page number
+                  handleLoadMore(formState.title, currentPage);
                 }}
               >
                 {searchQuery.loading ? (

@@ -154,16 +154,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     [formState, refetchRequests] // only the real deps
   );
 
-  // This was previously used for re-searching, may or may not re-add
-  // const debounce = (func: (...args: any[]) => void, delay: number) => {
-  //   let timeout: NodeJS.Timeout;
-  //   return (...args: any[]) => {
-  //     clearTimeout(timeout);
-  //     timeout = setTimeout(() => func(...args), delay);
-  //   };
-  // };
-
-  const handleSearch = async (title: string, page: number) => {
+  const handleSearch = async (title: string, page: number, year?: string | number) => {
     if (!title.trim()) return;
 
     if (searchQuery.loading) return;
@@ -175,7 +166,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     setCurrentPage(2);
 
     try {
-      const response = await fetch(`/api/search/${title}-${page}`);
+      const response = await fetch(`/api/search/${title}-${page}${year ? `-${year}` : ""}`);
       const data = await response.json();
 
       setSearchQuery((prevState) => ({
@@ -367,7 +358,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     handleSearch,
     handleLoadMore,
     selectResult,
-    //handleSearchChange,
     handleCheckboxChange,
     updateStoredEmail,
   };
