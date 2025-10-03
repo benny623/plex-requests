@@ -38,7 +38,7 @@ export default function ManualForm({
         email: true,
       }));
     }
-  }, []);
+  }, [setFormState, setRememberEmail]);
 
   // Check to make sure the title exists before setting media ready state
   useEffect(() => {

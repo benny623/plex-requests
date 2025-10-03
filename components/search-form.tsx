@@ -67,7 +67,7 @@ export default function SearchForm({
       ...prevState,
       email: true,
     }));
-  }, []);
+  }, [setFormState, setReady, setRememberEmail]);
 
   return (
     <>
