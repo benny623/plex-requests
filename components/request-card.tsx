@@ -21,7 +21,7 @@ const RequestCard: React.FC<RequestCardProps> = ({ request, setModalData }) => {
 
   return (
     <div
-      className="card card-side bg-base-100 shadow-xl w-full hover:scale-105 transition-all duration-200 ease-in-out"
+      className="card card-side bg-base-100 shadow-xl hover:scale-105 transition-all duration-200 ease-in-out"
       style={{ cursor: "pointer" }}
       onClick={(e) => {
         handleRequestSelect(e, request);
@@ -47,7 +47,7 @@ const RequestCard: React.FC<RequestCardProps> = ({ request, setModalData }) => {
         </p>
         <div className="card-actions justify-end">
           <div
-            className={`badge badge-outline ${statusColor(
+            className={`badge badge-soft ${statusColor(
               request.request_status
             )}`}
           >

@@ -2,39 +2,65 @@
 
 import { useEffect, useState } from "react";
 
-import { useFetchData } from "@/lib/hooks/useFetchData";
 import { ModalType } from "@/lib/types";
 import { statusColor, formatDate } from "@/lib/helpers";
-import {
-  fetchCurrentRequests,
-  fetchCompleteRequests,
-} from "@/lib/fetchRequests";
 
 import SearchForm from "@/components/search-form";
 import ManualForm from "@/components/manual-form";
 import RequestCard from "@/components/request-card";
 
+import useRequestsStore from "@/stores/requestsStore";
+import useStatusStore from "@/stores/statusStore";
+
 export default function Home() {
   const {
-    requests: currentRequests,
-    status: currentStatus,
-    fetchData: fetchCurrentData,
-  } = useFetchData(fetchCurrentRequests);
-  const {
-    requests: completedRequests,
-    status: completedStatus,
-    fetchData: fetchCompletedData,
-  } = useFetchData(fetchCompleteRequests);
-
-  const [table, setTable] = useState(false);
+    currentRequests,
+    completedRequests,
+    fetchCurrentRequests,
+    fetchCompletedRequests,
+  } = useRequestsStore();
+  const { loading, hasFetched, error, table, setTable } = useStatusStore();
   const [manual, setManual] = useState(false);
   const [modalData, setModalData] = useState<ModalType | null>(null);
 
-  // Fetch inital data
+  // Fetch data
   useEffect(() => {
-    fetchCurrentData();
-    fetchCompletedData();
-  }, []);
+    if (table === "current" && !currentRequests.length) {
+      fetchCurrentRequests();
+    }
+
+    if (table === "completed" && !completedRequests.length) {
+      fetchCompletedRequests();
+    }
+  }, [table, fetchCurrentRequests, fetchCompletedRequests]);
+
+  const renderCurrent = () => {
+    return currentRequests.length ? (
+      currentRequests.map((request: any) => (
+        <RequestCard
+          key={request.request_id}
+          request={request}
+          setModalData={setModalData}
+        />
+      ))
+    ) : (
+      <div className="text-2xl font-bold">No current requests</div>
+    );
+  };
+
+  const renderCompleted = () => {
+    return completedRequests.length ? (
+      completedRequests.map((request: any) => (
+        <RequestCard
+          key={request.request_id}
+          request={request}
+          setModalData={setModalData}
+        />
+      ))
+    ) : (
+      <div className="text-2xl font-bold">No recently completed requests</div>
+    );
+  };
 
   return (
     <div className="h-screen text-slate-200">
@@ -107,76 +133,37 @@ export default function Home() {
           </div>
           <div className="card bg-base-100 w-full sm:w-80 md:w-96 lg:w-[28rem] shrink-0 shadow-2xl">
             {!manual ? (
-              <SearchForm refetchRequests={fetchCurrentData} />
+              <SearchForm refetchRequests={fetchCurrentRequests} />
             ) : (
-              <ManualForm refetchRequests={fetchCurrentData} />
+              <ManualForm refetchRequests={fetchCurrentRequests} />
             )}
           </div>
         </div>
       </div>
 
-      {/* Request Card Table */}
+      {/* Request Cards */}
       <div className="requests-table min-h-screen flex justify-center items-center bg-base-200 px-4 py-8">
-        <div className="grid gap-8 sm:grid-cols-1 p-4 lg:grid-cols-2 xl:grid-cols-3 w-11/12 sm:w-3/4 justify-items-center max-h-screen overflow-y-auto">
-          {!table ? (
-            !currentStatus.loading && currentStatus.success ? (
-              currentRequests.length > 0 ? (
-                currentRequests.length === 1 ? ( // TODO: Make this logic cleaner and add to Completed Requests section below
-                  <>
-                    <div></div>
-                    {currentRequests.map((request) => (
-                      <RequestCard
-                        key={request.request_id}
-                        request={request}
-                        setModalData={setModalData}
-                      />
-                    ))}
-                  </>
-                ) : (
-                  currentRequests.map((request) => (
-                    <RequestCard
-                      key={request.request_id}
-                      request={request}
-                      setModalData={setModalData}
-                    />
-                  ))
-                )
-              ) : (
-                <div className="text-2xl font-bold lg:col-span-2 xl:col-span-3">
-                  No current requests
-                </div>
-              )
-            ) : (
-              <span className="loading loading-dots loading-lg lg:col-span-2 xl:col-span-3"></span>
-            )
-          ) : !completedStatus.loading && completedStatus.success ? (
-            completedRequests.length > 0 ? (
-              completedRequests.map((request) => (
-                <RequestCard
-                  key={request.request_id}
-                  request={request}
-                  setModalData={setModalData}
-                />
-              ))
-            ) : (
-              <div className="text-2xl font-bold lg:col-span-2 xl:col-span-3">
-                No recently completed requests
-              </div>
-            )
-          ) : (
-            <span className="loading loading-dots loading-lg lg:col-span-2 xl:col-span-3"></span>
-          )}
-        </div>
+        {loading || !hasFetched ? (
+          <span className="loading loading-spinner loading-lg"></span>
+        ) : error ? (
+          <div className="text-2xl font-bold">
+            Error Loading Requests: {error}
+          </div>
+        ) : (
+          <div className="flex flex-wrap gap-8 justify-center w-3/4">
+            {table === "current" ? renderCurrent() : renderCompleted()}
+          </div>
+        )}
       </div>
 
       {/* Footer */}
       <footer className="footer footer-center bg-base-300 text-base-content py-4 mt-auto h-[88px]">
-        {!table ? (
+        {table === "current" ? (
           <div className="text-center text-xs font-bold text-base-content pt-4">
             Don&apos;t see your request? Check here:{" "}
             <button
               onClick={() => {
-                setTable(!table);
+                setTable("completed");
                 document.querySelector(".requests-table")?.scrollIntoView(true);
               }}
               className="cursor-pointer text-info font-bold hover:text-accent transition-all duration-200"
@@ -188,7 +175,7 @@ export default function Home() {
           <div className="text-center text-xs pt-4">
             <button
               onClick={() => {
-                setTable(!table);
+                setTable("current");
                 document.querySelector(".requests-table")?.scrollIntoView(true);
               }}
               className="cursor-pointer text-info font-bold hover:text-accent transition-all duration-200"
@@ -230,33 +217,44 @@ export default function Home() {
                       {modalData.request_optional.year}
                     </p>
                   )}
-                  <p className="text-sm italic font-normal text-accent">
+                  <p className="text-sm italic font-normal">
                     {modalData.request_type}
                   </p>
                 </div>
                 <div className="flex flex-col justify-center">
                   {modalData.request_optional.rated && (
-                    <p className="badge badge-neutral">
+                    <p className="badge badge-sm text-slate-400 bg-slate-800">
                       {modalData.request_optional.rated}
                     </p>
                   )}
                 </div>
               </div>
-              <p
-                className={`badge badge-sm badge-outline py-4 ${statusColor(modalData.request_status)}`}
-              >
-                {modalData.request_status}
-              </p>
-              <p className="my-4">
-                <span className="font-bold">Requested On: </span>
-                {formatDate(modalData.request_timestamp)}
-              </p>
-              {modalData.request_note && (
-                <p className="my-4">
-                  <span className="font-bold">Note: </span>
-                  {modalData.request_note}
-                </p>
-              )}
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col">
+                  <label className="text-xs text-slate-400">Status</label>
+                  <p
+                    className={`badge badge-sm badge-soft py-4 ${statusColor(
+                      modalData.request_status
+                    )}`}
+                  >
+                    {modalData.request_status}
+                  </p>
+                </div>
+
+                <div className="flex flex-col">
+                  <label className="text-xs text-slate-400">Date</label>
+                  <p className="text-sm">
+                    {formatDate(modalData.request_timestamp)}
+                  </p>
+                </div>
+
+                {modalData.request_note && (
+                  <div className="flex flex-col">
+                    <label className="text-xs text-slate-400">Note</label>
+                    <p className="text-sm">{modalData.request_note}</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}

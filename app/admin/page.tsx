@@ -4,55 +4,58 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import AdminTable from "@/components/admin-table";
 
-import {
-  adminFetchCurrentRequests,
-  adminFetchAllCompleteRequests,
-} from "@/lib/fetchRequests";
-import { useFetchData } from "@/lib/hooks/useFetchData";
-import { checkAdmin } from "@/lib/helpers";
+import useAdminStore from "@/stores/adminStore";
+import useStatusStore from "@/stores/statusStore";
+import useRequestsStore from "@/stores/requestsStore";
 
 const AdminPage = () => {
-  const {
-    requests: currentRequests,
-    setRequests: setCurrentRequests,
-    status: currentStatus,
-    fetchData: fetchCurrentData,
-  } = useFetchData(() =>
-    adminFetchCurrentRequests(window.localStorage.getItem("isAdmin") || "")
-  );
-  const {
-    requests: completedRequests,
-    setRequests: setCompletedRequests,
-    status: completedStatus,
-    fetchData: fetchCompletedData,
-  } = useFetchData(() =>
-    adminFetchAllCompleteRequests(window.localStorage.getItem("isAdmin") || "")
-  );
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [table, setTable] = useState(false);
   const [refresh, setRefresh] = useState(false);
+  const { isAdmin, fetchAdminStatus } = useAdminStore();
+  const { table, setTable } = useStatusStore();
+  const {
+    currentRequests,
+    completedRequests,
+    setCurrentRequests,
+    setCompletedRequests,
+    fetchCurrentRequests,
+    fetchAllCompletedRequests,
+  } = useRequestsStore();
 
-  // Set isAdmin on page load
+  // Get admin and fetch initial data
   useEffect(() => {
-    const getData = async () => {
-      const adminStatus = await checkAdmin(
-        window.localStorage.getItem("isAdmin") || ""
-      );
-      setIsAdmin(adminStatus);
+    const getAdminAndRequests = async () => {
+      await fetchAdminStatus(window.localStorage.getItem("isAdmin") || "");
 
-      if (adminStatus) {
-        fetchCurrentData();
-        fetchCompletedData();
+      if (isAdmin) {
+        if (table === "current" && !currentRequests.length) {
+          fetchCurrentRequests(window.localStorage.getItem("isAdmin") || "");
+        }
+
+        if (table === "completed" && !completedRequests.length) {
+          fetchAllCompletedRequests(
+            window.localStorage.getItem("isAdmin") || ""
+          );
+        }
       }
     };
-    getData();
-  }, []);
 
+    getAdminAndRequests();
+  }, [
+    isAdmin,
+    table,
+    fetchAdminStatus,
+    fetchCurrentRequests,
+    fetchAllCompletedRequests,
+    currentRequests.length,
+    completedRequests.length,
+  ]);
+
+  // Refresh button clicked
   useEffect(() => {
     const getData = async () => {
       if (isAdmin) {
-        fetchCurrentData();
-        fetchCompletedData();
+        fetchCurrentRequests(window.localStorage.getItem("isAdmin") || "");
+        fetchAllCompletedRequests(window.localStorage.getItem("isAdmin") || "");
       }
     };
     getData();
@@ -60,30 +63,33 @@ const AdminPage = () => {
 
   return (
     <div className="min-h-screen bg-base-200">
-      {isAdmin &&
-        (!table ? (
-          <div className="text-center pt-4 pt-10">
+      {isAdmin && (
+        <div className="flex justify-center items-center gap-8 text-center pt-10">
+          <Link href={"/"} className="btn btn-soft btn-primary">
+            Home
+          </Link>
+          {table === "current" ? (
             <button
               onClick={() => {
-                setTable(!table);
+                setTable("completed");
               }}
               className="btn btn-soft btn-secondary"
             >
               Completed Requests
             </button>
-          </div>
-        ) : (
-          <div className="text-center pt-4 pt-10">
+          ) : (
             <button
               onClick={() => {
-                setTable(!table);
+                setTable("current");
               }}
               className="btn btn-soft btn-secondary"
             >
               Current Requests
             </button>
-          </div>
-        ))}
+          )}
+        </div>
+      )}
+
       <div className="flex justify-center items-center py-10">
         {!isAdmin ? (
           <div className="min-h-screen flex flex-col items-center justify-center bg-base-200">
@@ -95,11 +101,10 @@ const AdminPage = () => {
               Return Home
             </Link>
           </div>
-        ) : !table ? (
+        ) : table === "current" ? (
           <AdminTable
             requests={currentRequests}
             setRequests={setCurrentRequests}
-            loading={currentStatus}
             refresh={refresh}
             setRefresh={setRefresh}
             table={table}
@@ -109,7 +114,6 @@ const AdminPage = () => {
           <AdminTable
             requests={completedRequests}
             setRequests={setCompletedRequests}
-            loading={completedStatus}
             refresh={refresh}
             setRefresh={setRefresh}
             table={table}

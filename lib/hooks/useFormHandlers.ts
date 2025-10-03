@@ -333,6 +333,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     }));
   };
 
+  // TODO: possibly reimplement this, not sure what the best way with the new API is though
   // const handleSearchChange = (e: any) => {
   //   const { name, value } = e.target;
 
