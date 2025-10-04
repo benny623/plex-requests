@@ -199,7 +199,7 @@ export default function SearchForm({
                   placeholder="Media Title"
                   value={formState.title}
                   onChange={handleChange}
-                  className="input join-item grow"
+                  className="input join-item grow shadow-2xl"
                   required
                 />
                 <input
@@ -212,7 +212,7 @@ export default function SearchForm({
                   maxLength={4}
                   value={formState.optional.year || ""}
                   onChange={handleChange}
-                  className="input join-item w-[90px]"
+                  className="input join-item w-[90px] shadow-2xl"
                 />
                 <button
                   className="btn btn-soft btn-primary join-item w-[86px]"
@@ -230,7 +230,7 @@ export default function SearchForm({
                 </button>
               </form>
               <form method="dialog">
-                <button className="btn btn-sm btn-circle bg-base-100">✕</button>
+                <button className="btn btn-sm btn-circle bg-base-100 shadow-2xl">✕</button>
               </form>
             </div>
             {searchQuery.loading && (
@@ -301,7 +301,7 @@ export default function SearchForm({
                     </div>
                     <p className="max-h-15 overflow-auto">{result.overview}</p>
                     {result.genre && (
-                      <div className="card-actions justify-start line-clamp-1 flex flex-nowrap">
+                      <div className="card-actions justify-start line-clamp-1">
                         {result.genre.map((tag: string, index: number) => (
                           <div key={index} className="badge badge-outline">
                             {tag}
