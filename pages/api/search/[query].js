@@ -102,11 +102,18 @@ export default async function handler(req, res) {
 
     if (!rawData.Search) return [];
 
+    const seen = new Set();
+
     const detailedResults = {
       totalResults: rawData.totalResults,
       results: await Promise.all(
-        rawData.Search.filter((item) => item.Type !== "game").map(
-          async (result) => {
+        rawData.Search.filter((item) => item.Type !== "game")
+          .filter((item) => {
+            if (seen.has(item.imdbID)) return false;
+            seen.add(item.imdbID);
+            return true;
+          })
+          .map(async (result) => {
             const moreDataResponse = await fetch(
               `${process.env.OMDB_BASE_URL}/?apikey=${
                 process.env.OMDB_API_KEY
@@ -148,8 +155,7 @@ export default async function handler(req, res) {
               votes: parseInt(moreData.imdbVotes.replace(/,/g, "")) || 0,
               onServer: await searchJellyfin(moreData.imdbID),
             };
-          }
-        )
+          })
       ),
     };
 
