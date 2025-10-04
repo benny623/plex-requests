@@ -186,7 +186,7 @@ export default function Home() {
         )}
       </footer>
 
-      {/* Request Modal */}
+      {/* Request Card Modal */}
       <dialog id="request_modal" className="modal">
         {modalData && (
           <div className="modal-box flex flex-col md:flex-row p-0 sm:w-3/4 md:w-6/12 xl:w-4/12 max-w-4xl transition-all duration-300 ease-in-out">
