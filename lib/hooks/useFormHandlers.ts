@@ -10,7 +10,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
   const [rememberEmail, setRememberEmail] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [resultPages, setResultPages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(29);
+  const [currentPage, setCurrentPage] = useState(2);
   const [formState, setFormState] = useState<FormState>({
     title: "",
     email: "",
@@ -311,18 +311,6 @@ export const useFormHandlers = (refetchRequests: () => void) => {
       media: true,
     }));
   };
-
-  // TODO: possibly reimplement this, not sure what the best way with the new API is though
-  // const handleSearchChange = (e: any) => {
-  //   const { name, value } = e.target;
-
-  //   setFormState((prevState) => ({
-  //     ...prevState,
-  //     [name]: value,
-  //   }));
-
-  //   handleSearch(value);
-  // };
 
   const handleCheckboxChange = (e: any) => {
     const isChecked = e.target.checked;

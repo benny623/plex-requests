@@ -186,9 +186,9 @@ export default function SearchForm({
 
       {/* Search Modal */}
       <dialog id="search_modal" className="modal">
-        <div className="modal-box w-11/12 max-w-5xl relative bg-base-200">
+        <div className="modal-box w-11/12 max-w-5xl h-full sm:h-auto relative bg-base-200">
           {/* Scrollable Content */}
-          <div className="h-175 overflow-y-auto space-y-4 flex flex-col">
+          <div className="h-full sm:h-175 overflow-y-auto space-y-4 flex flex-col">
             {/* Modal Header */}
             <div className="sticky top-0 z-50 flex items-center justify-between px-4 py-2 rounded-lg gap-4">
               <form onSubmit={handleSubmit} className="join grow">
@@ -230,16 +230,22 @@ export default function SearchForm({
                 </button>
               </form>
               <form method="dialog">
-                <button className="btn btn-sm btn-circle bg-base-100 shadow-2xl">✕</button>
+                <button className="btn btn-sm btn-circle bg-base-100 shadow-2xl">
+                  ✕
+                </button>
               </form>
             </div>
             {searchQuery.loading && (
-              <div className="h-full pb-10 flex justify-center items-center">
+              <div className="h-full pb-24 flex justify-center items-center">
                 <span className="loading loading-spinner loading-xl text-center"></span>
               </div>
             )}
             {!searchResults ? (
-              <div className="text-center animate-appear">No results found</div>
+              <div className="h-full flex justify-center items-center">
+                <div className="text-center animate-appear text-xl">
+                  No results found
+                </div>
+              </div>
             ) : (
               searchResults.map((result: any) => (
                 <div
@@ -251,9 +257,9 @@ export default function SearchForm({
                       <Image
                         src={`${result.poster}`}
                         width={500}
-                        height={750}
+                        height={500}
                         alt={result.title}
-                        className="h-full w-full object-cover"
+                        className="h-full w-full "
                       />
                     ) : (
                       <div className="w-full h-full bg-gray-400 flex items-center justify-center">
@@ -262,7 +268,7 @@ export default function SearchForm({
                     )}
                   </figure>
                   <div className="card-body overflow-hidden w-2/3">
-                    <h2 className="card-title line-clamp-1">{result.title}</h2>
+                    <h2 className="card-title line-clamp-2">{result.title}</h2>
                     <div className="flex items-center gap-4 h-24">
                       <div
                         className={`radial-progress max-sm:hidden ${ratingColor(
@@ -286,22 +292,24 @@ export default function SearchForm({
                       </div>
                       <div className="flex flex-col justify-center gap-2">
                         {result.rated && (
-                          <p className="badge badge-sm text-slate-400 bg-slate-800">
-                            {result.rated}
-                          </p>
+                          <>
+                            <p className="badge badge-sm text-slate-400 bg-slate-800">
+                              {result.rated}
+                            </p>
+                            <p
+                              className={`${ratingColor(
+                                result.rating
+                              )} font-bold block sm:hidden`}
+                            >
+                              {result.rating}/10
+                            </p>
+                          </>
                         )}
-                        <p
-                          className={`${ratingColor(
-                            result.rating
-                          )} font-bold block sm:hidden`}
-                        >
-                          {result.rating}/10
-                        </p>
                       </div>
                     </div>
                     <p className="max-h-15 overflow-auto">{result.overview}</p>
                     {result.genre && (
-                      <div className="card-actions justify-start line-clamp-1">
+                      <div className="card-actions justify-start line-clamp-1 py-4">
                         {result.genre.map((tag: string, index: number) => (
                           <div key={index} className="badge badge-outline">
                             {tag}
