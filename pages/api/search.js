@@ -1,6 +1,10 @@
 import { loadJellyfinCache, searchJellyfin } from "@/lib/jellyfinCache";
 
 export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
   const getMediaType = (type, genre, country) => {
     if (type !== "series" || type !== "movie") {
     }
@@ -70,11 +74,10 @@ export default async function handler(req, res) {
   };
 
   try {
-    const { query } = req.query;
-    const [title, page, year] = query.split("-");
+    const { title, page, year, type } = req.body;
 
-    if (!query) {
-      return res.status(400).json({ error: "Query parameter is required" });
+    if (!req.body) {
+      return res.status(400).json({ error: "Body is required" });
     }
 
     if (!global.jellyfinCacheLoaded) {
@@ -83,9 +86,11 @@ export default async function handler(req, res) {
     }
 
     const response = await fetch(
-      `${process.env.OMDB_BASE_URL}/?apikey=${
+      `${process.env.OMDB_BASE_URL}?apikey=${
         process.env.OMDB_API_KEY
-      }&s=${encodeURIComponent(title)}&page=${page}${year ? `&y=${year}` : ""}`
+      }&s=${encodeURIComponent(title)}&page=${page}${year ? `&y=${year}` : ""}${
+        type ? `&type=${type}` : ""
+      }`
     );
 
     if (!response.ok) {
