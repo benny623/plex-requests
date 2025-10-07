@@ -23,6 +23,7 @@ export default function SearchForm({
     setFormState,
     handleChange,
     handleSubmit,
+    handleSearchChange,
     handleSearch,
     handleLoadMore,
     selectResult,
@@ -44,6 +45,8 @@ export default function SearchForm({
   const [selectedSeasons, setSelectedSeasons] = useState<{
     [id: string]: string;
   }>({});
+
+  const [details, setDetails] = useState(false);
 
   const checkOnServer = (onServer: boolean, season?: string) => {
     if (season && season !== "Complete") {
@@ -84,21 +87,30 @@ export default function SearchForm({
                 placeholder="Media Title"
                 value={formState.title}
                 onChange={handleChange}
-                className="input join-item"
+                className="input join-item w-full"
                 required
               />
               <button
-                className="btn btn-soft btn-primary join-item w-[86px]"
+                className="btn btn-soft btn-primary join-item"
                 disabled={searchQuery.loading}
                 onClick={(e) => {
                   e.preventDefault();
-                  handleSearch(formState.title, 1, formState.optional.year);
+                  handleSearch();
                 }}
               >
                 {searchQuery.loading ? (
-                  <span className="loading loading-dots loading-xs"></span>
+                  <span className="loading loading-spinner loading-xs"></span>
                 ) : (
-                  "Search"
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-search"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                  </svg>
                 )}
               </button>
             </div>
@@ -165,7 +177,7 @@ export default function SearchForm({
             )}
             <button className="btn" disabled={!ready.media || !ready.email}>
               {status.loading ? (
-                <span className="loading loading-dots loading-xs"></span>
+                <span className="loading loading-spinner loading-xs"></span>
               ) : (
                 "Submit"
               )}
@@ -190,7 +202,13 @@ export default function SearchForm({
           {/* Scrollable Content */}
           <div className="h-full sm:h-175 overflow-y-auto space-y-4 flex flex-col">
             {/* Modal Header */}
-            <div className="sticky top-0 z-50 flex items-center justify-between px-4 py-2 rounded-lg gap-4">
+            <div className="sticky top-0 z-51 flex items-center justify-between px-4 rounded-lg sm:gap-4">
+              <button
+                className="btn btn-xs sm:btn-sm md:btn-md btn-soft btn-primary shadow-2xl"
+                onClick={() => setDetails(!details)}
+              >
+                Details
+              </button>
               <form onSubmit={handleSubmit} className="join grow">
                 <input
                   id="title"
@@ -202,30 +220,27 @@ export default function SearchForm({
                   className="input join-item grow shadow-2xl"
                   required
                 />
-                <input
-                  id="year"
-                  name="year"
-                  type="number"
-                  min="1900"
-                  max={`${new Date().getFullYear() + 5}`}
-                  placeholder="Year"
-                  maxLength={4}
-                  value={formState.optional.year || ""}
-                  onChange={handleChange}
-                  className="input join-item w-[90px] shadow-2xl"
-                />
                 <button
-                  className="btn btn-soft btn-primary join-item w-[86px]"
+                  className="btn  btn-soft btn-primary join-item"
                   disabled={searchQuery.loading}
                   onClick={(e) => {
                     e.preventDefault();
-                    handleSearch(formState.title, 1, formState.optional.year);
+                    handleSearch();
                   }}
                 >
                   {searchQuery.loading ? (
                     <span className="loading loading-dots loading-xs"></span>
                   ) : (
-                    "Search"
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      className="bi bi-search"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                    </svg>
                   )}
                 </button>
               </form>
@@ -235,6 +250,35 @@ export default function SearchForm({
                 </button>
               </form>
             </div>
+
+            {details && (
+              <div className="sticky top-10 z-50 flex items-center justify-between px-4 rounded-lg gap-4 animate-altappear ">
+                <input
+                  id="year"
+                  name="year"
+                  type="number"
+                  min="1900"
+                  max={`${new Date().getFullYear() + 5}`}
+                  placeholder="Year"
+                  maxLength={4}
+                  value={searchQuery.year}
+                  onChange={handleSearchChange}
+                  className="input join-item w-1/2 shadow-2xl"
+                />
+                <select
+                  id="type"
+                  name="type"
+                  value={searchQuery.type}
+                  onChange={handleSearchChange}
+                  className="select select-bordered w-1/2"
+                >
+                  <option value="">Type</option>
+                  <option value="movie">Movie</option>
+                  <option value="series">Series</option>
+                </select>
+              </div>
+            )}
+
             {searchQuery.loading && (
               <div className="h-full pb-24 flex justify-center items-center">
                 <span className="loading loading-spinner loading-xl text-center"></span>
@@ -250,16 +294,16 @@ export default function SearchForm({
               searchResults.map((result: any) => (
                 <div
                   key={result.id}
-                  className="card card-side bg-base-300 shadow-xl h-96 animate-altappear"
+                  className="card sm:card-side bg-base-300 shadow-xl lg:h-96 animate-altappear"
                 >
-                  <figure className="w-1/3">
+                  <figure className="sm:w-1/3">
                     {result.poster ? (
                       <Image
                         src={`${result.poster}`}
                         width={500}
                         height={500}
                         alt={result.title}
-                        className="h-full w-full "
+                        className="h-42 lg:h-full object-cover"
                       />
                     ) : (
                       <div className="w-full h-full bg-gray-400 flex items-center justify-center">
@@ -267,8 +311,8 @@ export default function SearchForm({
                       </div>
                     )}
                   </figure>
-                  <div className="card-body overflow-hidden w-2/3">
-                    <h2 className="card-title line-clamp-2">{result.title}</h2>
+                  <div className="card-body sm:w-2/3">
+                    <h2 className="card-title">{result.title}</h2>
                     <div className="flex items-center gap-4 h-24">
                       <div
                         className={`radial-progress max-sm:hidden ${ratingColor(
@@ -307,9 +351,9 @@ export default function SearchForm({
                         )}
                       </div>
                     </div>
-                    <p className="max-h-15 overflow-auto">{result.overview}</p>
+                    <p className="">{result.overview}</p>
                     {result.genre && (
-                      <div className="card-actions justify-start line-clamp-1 py-4">
+                      <div className="card-actions justify-start py-4">
                         {result.genre.map((tag: string, index: number) => (
                           <div key={index} className="badge badge-outline">
                             {tag}

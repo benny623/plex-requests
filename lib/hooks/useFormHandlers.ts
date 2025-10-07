@@ -14,7 +14,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
   const [formState, setFormState] = useState<FormState>({
     title: "",
     email: "",
-    type: "Movie",
+    type: "",
     optional: {},
   });
 
@@ -27,6 +27,8 @@ export const useFormHandlers = (refetchRequests: () => void) => {
   const [searchQuery, setSearchQuery] = useState({
     loading: false,
     error: "",
+    year: "",
+    type: "",
   });
 
   // Handle form input changes
@@ -73,14 +75,17 @@ export const useFormHandlers = (refetchRequests: () => void) => {
       }));
     }
 
+    setSearchQuery((prevState) => ({
+      ...prevState,
+      year: "",
+      type: "",
+    }));
+
     return setFormState((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
-
-  // Send notification for updated status
-  
 
   // Handle form submission
   const handleSubmit = useCallback(
@@ -154,8 +159,16 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     [formState, refetchRequests] // only the real deps
   );
 
-  const handleSearch = async (title: string, page: number, year?: string | number) => {
-    if (!title.trim()) return;
+  const handleSearchChange = (e: any) => {
+    const { name, value } = e.target;
+    return setSearchQuery((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSearch = async () => {
+    if (!formState.title.trim()) return;
 
     if (searchQuery.loading) return;
 
@@ -166,7 +179,18 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     setCurrentPage(2);
 
     try {
-      const response = await fetch(`/api/search/${title}-${page}${year ? `-${year}` : ""}`);
+      const response = await fetch("/api/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: formState.title,
+          page: 1,
+          year: searchQuery.year,
+          type: searchQuery.type,
+        }),
+      });
       const data = await response.json();
 
       setSearchQuery((prevState) => ({
@@ -343,6 +367,7 @@ export const useFormHandlers = (refetchRequests: () => void) => {
     setFormState,
     handleChange,
     handleSubmit,
+    handleSearchChange,
     handleSearch,
     handleLoadMore,
     selectResult,
